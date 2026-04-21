@@ -1,0 +1,27 @@
+@reference "../../../globals/globals.css";
+.site-content {
+    section.top-categories-month {
+        padding-top: 20px;
+        padding-bottom: 20px;
+
+        .elementor-container {
+            > .elementor-column:nth-child(7n + 1) { --item-color: var(--theme-color-1); }
+            > .elementor-column:nth-child(7n + 2) { --item-color: var(--theme-color-2); }
+            > .elementor-column:nth-child(7n + 3) { --item-color: var(--theme-color-3); }
+            > .elementor-column:nth-child(7n + 4) { --item-color: var(--theme-color-4); }
+            > .elementor-column:nth-child(7n + 5) { --item-color: var(--theme-color-5); }
+            > .elementor-column:nth-child(7n + 6) { --item-color: var(--theme-color-6); }
+            > .elementor-column:nth-child(7n + 7) { --item-color: var(--theme-color-7); }
+        }
+        .elementor-container {
+            gap: 24px;
+            .elementor-column {
+                box-shadow: 0 10px 30px color-mix(in srgb, var(--item-color) 40%, transparent);
+                @apply bg-white border-gray-200 rounded-2xl items-center md:w-1/2;
+                .mf-elementor-image-box {
+                    border:none;
+                }
+            }
+        }
+    }
+}
