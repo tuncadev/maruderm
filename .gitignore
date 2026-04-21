@@ -1,0 +1,28 @@
+# Ignore all files
+*
+
+# Do not ignore specific files
+!bitbucket-pipelines.yml
+!.sftp-deploy-ignore
+!.gitignore
+!.gitattributes
+!.editorconfig
+
+*~
+
+# Allow themes and everything inside
+!wp-content/
+!wp-content/fonts/
+!wp-content/fonts/**
+!wp-content/themes/
+!wp-content/themes/**
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.phpcs.cache

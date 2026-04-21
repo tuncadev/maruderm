@@ -1,0 +1,130 @@
+.martfury-image-box-carousel__heading {
+	display: flex;
+	align-items: center;
+	margin-bottom: 41px;
+
+	.slick-arrows {
+		position: relative;
+		margin-left: auto;
+
+		.slick-arrow {
+			display: inline-flex;
+			justify-content: center;
+			align-items: center;
+			position: static;
+			top: 0;
+			transform: none;
+			background-color: #e4e5ed;
+			border-radius: 6px;
+			width: 28px;
+			height: 28px;
+			font-size: 10px;
+			transition: .25s;
+
+			&.icon-chevron-left {
+				margin-right: 2px;
+			}
+
+			&:hover {
+				background-color: var(--mf-primary-color);
+				color: #ffffff;
+			}
+		}
+	}
+}
+
+.martfury-image-box-carousel__heading-title {
+	font-size: 30px;
+	line-height: 26px;
+	letter-spacing: -0.75px;
+	color: var( --mf-dark-color );
+	font-weight: 500;
+}
+
+.martfury-image-box-carousel__heading-button {
+	margin-left: 58px;
+
+	a,
+	span {
+		display: flex;
+		align-items: center;
+		font-size: 14px;
+		color: var( --mf-dark-color );
+		text-transform: uppercase;
+		line-height: 1;
+
+		&::after {
+			@include icon('\e93c');
+			font-size: inherit;
+			margin-left: 9px;
+		}
+	}
+}
+
+.martfury-image-box-carousel__wrapper {
+	margin: 0 -15px;
+
+	&:not( .slick-initialized ) {
+		display: flex;
+		flex-wrap: nowrap;
+	}
+}
+
+.martfury-image-box-carousel__content {
+	padding: 0 15px;
+}
+
+.martfury-image-box-carousel__image {
+	a {
+		display: block;
+		position: relative;
+	}
+}
+
+.martfury-image-box-carousel__image-title {
+	display: inline-flex;
+	justify-content: center;
+	text-align: center;
+	position: absolute;
+	top: 50%;
+	left: 0;
+	right: 0;
+	transform: translateY(-50%);
+	padding: 0 15px;
+	font-size: 26px;
+	line-height: 26px;
+	color: #ffffff;
+	text-transform: uppercase;
+	font-weight: 500;
+}
+
+.martfury-image-box-carousel__content-title {
+	margin-top: 15px;
+}
+
+.martfury-image-box-carousel__content-link {
+	display: inline;
+	font-size: 18px;
+	line-height: 26px;
+	font-weight: 500;
+	color: var( --mf-dark-color );
+
+	&:hover {
+		color: var( --mf-dark-color );
+	}
+}
+
+.elementor {
+	.martfury-image-box-carousel__content-link {
+		--mf-color-box-shadow: transparent;
+		box-shadow: inset 0 0 white, inset 0 -0.07em var(--mf-color-box-shadow);
+
+		&:hover {
+			--mf-color-box-shadow: #000;
+		}
+	}
+}
+
+.martfury-image-box-carousel__content-description {
+	margin-top: 10px;
+}

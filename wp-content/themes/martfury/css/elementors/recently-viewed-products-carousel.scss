@@ -1,0 +1,123 @@
+.mf-product-recently-viewed-carousel__heading {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 41px;
+}
+
+.mf-product-recently-viewed-carousel__heading-title {
+	font-size: 30px;
+	line-height: 26px;
+	letter-spacing: -0.75px;
+	color: var( --mf-dark-color );
+	font-weight: 500;
+}
+
+.mf-product-recently-viewed-carousel__heading-button {
+	margin-left: 58px;
+
+	a,
+	span {
+		display: flex;
+		align-items: center;
+		font-size: 14px;
+		color: var( --mf-dark-color );
+		text-transform: uppercase;
+		line-height: 1;
+
+		&::after {
+			@include icon('\e93c');
+			font-size: inherit;
+			margin-left: 9px;
+		}
+	}
+}
+
+.mf-product-recently-viewed-carousel {
+	ul.products {
+		&:not( .slick-initialized ) {
+			display: flex;
+			flex-wrap: nowrap;
+			overflow: hidden;
+
+			li.product {
+				flex-shrink: 0;
+			}
+		}
+
+		.slick-list {
+			margin-left: -1px;
+			margin-right: -1px;
+		}
+
+		.slick-dots {
+			margin-bottom: 0;
+			margin-top: 15px;
+
+			li {
+				button {
+					background-color: #ccc;
+					border: none;
+				}
+
+				&:hover,
+				&.slick-active {
+					button {
+						background-color: var(--mf-background-primary-color);
+					}
+				}
+			}
+
+		}
+
+		.slick-arrow {
+            font-size: 30px;
+            color: #ccc;
+            text-align: center;
+            transition: 0.35s;
+            z-index: 99;
+            &:hover {
+                color: $dark;
+            }
+
+            &.slick-disabled {
+                color: #ccc;
+                cursor: auto;
+            }
+        }
+
+        .slick-prev-arrow {
+            left: -50px;
+        }
+
+        .slick-next-arrow {
+            right: -50px;
+        }
+
+		li.product {
+			.product-inner {
+				display: flex;
+				padding: 19px;
+				margin-bottom: 0;
+
+				.mf-product-thumbnail {
+					max-width: 110px;
+					margin-right: 20px;
+					margin-bottom: 0;
+				}
+
+				.mf-product-content {
+					.woo-loop-product__title {
+						padding-bottom: 17px;
+
+						a {
+							&:hover {
+								text-decoration: none;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

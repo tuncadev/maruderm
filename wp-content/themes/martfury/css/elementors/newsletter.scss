@@ -1,0 +1,41 @@
+.elementor-page .martfury-newletter {
+	background-color: #f8f8f8;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #ccc;
+
+	.form-image {
+		text-align: center;
+	}
+
+	.btn-area {
+		justify-content: flex-start;
+	}
+
+	&.has-icon {
+		.mc4wp-form-fields {
+			position: relative;
+
+			input[type="email"] {
+				padding-left: 75px;
+			}
+
+			input[type="email"],
+			input[type="submit"] {
+				line-height: 42px;
+				height: 42px;
+			}
+
+			&::before {
+				@include icon('\e696');
+				position: absolute;
+				left: 30px;
+				top: 0;
+				bottom: 0;
+				font-size: 24px;
+				color: var(--mf-dark-color);
+				line-height: 38px;
+			}
+		}
+	}
+}

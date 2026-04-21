@@ -1,0 +1,129 @@
+.martfury-instagram-grid{
+    position: relative;
+
+    .instagram-wrapper{
+        list-style: none;
+        padding: 0;
+        margin: 0 -5px;
+        display: grid;
+        grid-gap: 0;
+        grid-template-columns: repeat(auto-fill, minmax(20%, 1fr));
+        grid-auto-flow: dense;
+
+        li {
+            margin: 0;
+			padding: 0 5px 5px 0;
+        }
+
+        img{
+            display: block;
+        }
+
+		a {
+			position: relative;
+
+			&:hover {
+				&:before,
+				.social {
+					opacity: 1;
+					visibility: visible;
+				}
+			}
+
+			&:before {
+				content: '';
+				position: absolute;
+				left: 0;
+				top: 0;
+				width: 100%;
+				height: 100%;
+				background-color: rgba(0, 0, 0, 0.5);
+				opacity: 0;
+				visibility: hidden;
+				transition: .3s;
+			}
+		}
+
+		.social {
+			font-size: 24px;
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate( -50%, -50% );
+			color: #fff;
+			opacity: 0;
+			visibility: hidden;
+			z-index: 1;
+			transition: .3s;
+		}
+    }
+}
+
+@media (min-width: 1025px) {
+	@for $i from 1 through 10 {
+        .columns-#{$i} {
+            .martfury-element-columns {
+                .elementor-column-item {
+                    @include column-width( $i );
+                }
+
+                .instagram-wrapper{
+                    grid-template-columns: repeat(auto-fill, minmax(calc(1/#{$i} * 100%), 1fr));
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 1024px) and (min-width: 768px) {
+	@for $i from 1 through 10 {
+        .columns--tablet#{$i} {
+            .martfury-element-columns {
+                .elementor-column-item {
+                    @include column-width( $i );
+                }
+
+                .instagram-wrapper{
+                    grid-template-columns: repeat(auto-fill, minmax(calc(1/#{$i} * 100%), 1fr));
+                }
+            }
+        }
+    }
+
+    .martfury-element-columns {
+        .elementor-column-item {
+            @include column-width( $i );
+        }
+
+        .instagram-wrapper{
+            grid-template-columns: repeat(auto-fill, minmax(calc(1/3 * 100%), 1fr));
+        }
+    }
+
+}
+
+@media (max-width: 767px) {
+	@for $i from 1 through 10 {
+        .columns--mobile#{$i} {
+            .martfury-element-columns {
+                .elementor-column-item {
+                    @include column-width( $i );
+                }
+
+                .instagram-wrapper{
+                    grid-template-columns: repeat(auto-fill, minmax(calc(1/#{$i} * 100%), 1fr));
+                }
+            }
+        }
+    }
+
+    .martfury-element-columns {
+        .elementor-column-item {
+            @include column-width( $i );
+        }
+
+        .instagram-wrapper{
+            grid-template-columns: repeat(auto-fill, minmax(calc(1/2 * 100%), 1fr));
+        }
+    }
+}
