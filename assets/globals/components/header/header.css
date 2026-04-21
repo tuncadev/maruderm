@@ -1,0 +1,42 @@
+#site-header {
+    .header-main:after, .mobile-menu:after {
+        content: "";
+        position: absolute;
+        bottom: 40px;
+        left: 0;
+        right: 0;
+        height: 4px;
+        z-index: 1;
+        background: linear-gradient(to right, #55e462 0%, #55e462 7.14%, #ff8565 7.14%, #ff8565 14.28%, #fbe104 14.28%, #fbe104 21.42%, #ae73de 21.42%, #ae73de 28.56%, #f9c7e2 28.56%, #f9c7e2 35.7%, #ff6ede 35.7%, #ff6ede 42.84%, #06b6eb 42.84%, #06b6eb 50%, #55e462 50%, #55e462 57.14%, #ff8565 57.14%, #ff8565 64.28%, #fbe104 64.28%, #fbe104 71.42%, #ae73de 71.42%, #ae73de 78.56%, #f9c7e2 78.56%, #f9c7e2 85.7%, #ff6ede 85.7%, #ff6ede 92.84%, #06b6eb 92.84%, #06b6eb 100%);
+        @media (max-width: 1199px) {
+            bottom: 34px;
+        }
+        @media (max-width: 991px) {
+            bottom: 0;
+        }
+    }
+    &.minimized {
+        .header-main:after, .mobile-menu:after {
+            bottom: -4px;
+        }
+
+    }
+}
+.page-header-page {
+    box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+    margin-top: 1px;
+    .page-breadcrumbs {
+        background-color: transparent;
+    }
+}
+.page-header-page .page-breadcrumbs .breadcrumbs {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.page-header ul.breadcrumbs li a {
+    @apply text-[12px];
+}
+#page .site-header .main-menu {
+    background-color: white;
+    border: none white;
+}

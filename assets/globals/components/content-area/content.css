@@ -1,0 +1,7 @@
+@layer components {
+    #content {
+        &.site-content {
+            background: var(--color-content-background);
+        }
+    }
+}

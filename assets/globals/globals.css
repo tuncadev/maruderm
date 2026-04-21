@@ -1,0 +1,169 @@
+@import "tailwindcss/theme";
+@import "tailwindcss/utilities";
+
+@import "./components/header/header.css";
+@import "./components/footer/footer.css";
+@import "./components/menu/menu.css";
+@import "./components/button/button.css";
+@import "./components/content-area/content.css";
+@import "./components/catalog/product-card.css";
+@import "./components/catalog/catalog.css";
+
+@font-face {
+    font-family: "Montserrat";
+    src: url("../fonts/Montserrat/Montserrat-500.woff2") format("woff2");
+    font-weight: 500;
+    font-display: swap;
+}
+@font-face {
+    font-family: "Montserrat";
+    src: url("../fonts/Montserrat/Montserrat-600.woff2") format("woff2");
+    font-weight: 600;
+    font-display: swap;
+}
+@font-face {
+    font-family: "Montserrat";
+    src: url("../fonts/Montserrat/Montserrat-700.woff2") format("woff2");
+    font-weight: 700;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Fixel Text";
+    src: url("../fonts/FixelText/FixelText-Regular.woff2") format("woff2");
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Fixel Text";
+    src: url("../fonts/FixelText/FixelText-Medium.woff2") format("woff2");
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Fixel Text";
+    src: url("../fonts/FixelText/FixelText-SemiBold.woff2") format("woff2");
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Fixel Text";
+    src: url("../fonts/FixelText/FixelText-Bold.woff2") format("woff2");
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Fixel Display";
+    src: url("../fonts/FixelDisplay/FixelDisplay-Regular.woff2") format("woff2");
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Fixel Display";
+    src: url("../fonts/FixelDisplay/FixelDisplay-Medium.woff2") format("woff2");
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Fixel Display";
+    src: url("../fonts/FixelDisplay/FixelDisplay-SemiBold.woff2") format("woff2");
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Fixel Display";
+    src: url("../fonts/FixelDisplay/FixelDisplay-Bold.woff2") format("woff2");
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+}
+
+@theme {
+    --theme-color-1: #06b6eb;
+    --theme-color-2: #ff6ede;
+    --theme-color-3: #f9c7e2;
+    --theme-color-4: #ae73de;
+    --theme-color-5: #fbe104;
+    --theme-color-6:#ff8565;
+    --theme-color-7: #55e462;
+    --background-color: #FFFFFF;
+    --color-content-background: #f8f9fa;
+    --primary-color: #06b6eb;
+    --secondary-color: #ff6ede;
+    --accent-color: #ae73de;
+    --border-color: #1A1A1A;
+    --text-color: #1A1A1A;
+
+    --text-base: 16px;
+    --text-md: 14px;
+    --text-sm: 13px;
+    --text-xs: 11px;
+
+    --breakpoint-sm: 480px;
+    --breakpoint-md: 768px;
+    --breakpoint-lg: 1024px;
+    --breakpoint-xl: 1280px;
+    --breakpoint-2xl: 1440px;
+
+}
+:root, body .elementor-kit-6 {
+    --font-family-sans: "Fixel Text", "Segoe UI", sans-serif;
+    --font-family-display: "Montserrat", "Fixel Text", "Segoe UI", sans-serif;
+
+    --e-global-typography-primary-font-family: "Montserrat";
+    --e-global-typography-primary-font-weight: 600;
+
+    --e-global-typography-secondary-font-family: "Montserrat";
+    --e-global-typography-secondary-font-weight: 500;
+
+    --e-global-typography-text-font-family: "Fixel Text";
+    --e-global-typography-text-font-weight: 400;
+
+    --e-global-typography-accent-font-family: "Montserrat";
+    --e-global-typography-accent-font-weight: 500;
+}
+
+html {
+    font-family: var(--font-family-sans), serif;
+}
+body {
+    @apply text-base;
+    color: #707070;
+    background-color: #FFFFFF;
+    font-weight: 400;
+    line-height: 1.7143;
+    margin: 0;
+}
+body,
+button,
+input,
+select,
+textarea {
+    font-family: var(--font-family-sans), serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.main-menu a,
+.maruderm-button {
+    font-family: var(--font-family-display), serif;
+}
+

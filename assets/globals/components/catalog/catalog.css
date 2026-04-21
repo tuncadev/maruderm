@@ -1,0 +1,68 @@
+.woocommerce  {
+    #primary-sidebar {
+        .widget {
+            @apply bg-white rounded-lg shadow-md;
+            .wpfMainWrapper {
+                .wpfFilterContent {
+                    ul.wpfFilterVerScroll {
+                        max-height: none;
+                        li {
+                            @apply text-sm;
+                        }
+                    }
+                }
+
+            }
+
+        }
+    }
+    #primary {
+        &.content-area {
+            .shop-toolbar {
+                background: transparent;
+                min-height: auto;
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+                flex-direction: row-reverse;
+                .woocommerce-ordering {
+                    min-height: auto;
+                   &> li.current {
+                       @apply border-gray-200 rounded text-sm  flex items-center;
+                   }
+                }
+               .shop-view {
+                   min-height: auto;
+                   @apply text-md;
+                   .mf-shop-view {
+                       @apply text-sm;
+                   }
+               }
+            }
+        }
+    }
+    .mf-catalog-categories {
+        .mf-image-box .thumbnail img {
+            max-height: 128px;
+            width: auto;
+        }
+        .row {
+            > .col-cat:nth-child(7n + 1) { --item-color: var(--theme-color-1); }
+            > .col-cat:nth-child(7n + 2) { --item-color: var(--theme-color-2); }
+            > .col-cat:nth-child(7n + 3) { --item-color: var(--theme-color-3); }
+            > .col-cat:nth-child(7n + 4) { --item-color: var(--theme-color-4); }
+            > .col-cat:nth-child(7n + 5) { --item-color: var(--theme-color-5); }
+            > .col-cat:nth-child(7n + 6) { --item-color: var(--theme-color-6); }
+            > .col-cat:nth-child(7n + 7) { --item-color: var(--theme-color-7); }
+        }
+        .row .col-cat .mf-image-box {
+            box-shadow: 0 10px 30px color-mix(in srgb, var(--item-color) 40%, transparent);
+            @apply border-gray-200 rounded-2xl items-center;
+            .image-content {
+                .box-title {
+                    @apply text-md font-semibold tracking-wider;
+                }
+            }
+        }
+    }
+}

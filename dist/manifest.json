@@ -1,0 +1,77 @@
+{
+  "assets/fonts/FixelDisplay/FixelDisplay-Bold.woff2": {
+    "file": "assets/FixelDisplay-Bold-Cr-t0h_O.woff2",
+    "src": "assets/fonts/FixelDisplay/FixelDisplay-Bold.woff2"
+  },
+  "assets/fonts/FixelDisplay/FixelDisplay-Medium.woff2": {
+    "file": "assets/FixelDisplay-Medium-ABEgljqF.woff2",
+    "src": "assets/fonts/FixelDisplay/FixelDisplay-Medium.woff2"
+  },
+  "assets/fonts/FixelDisplay/FixelDisplay-Regular.woff2": {
+    "file": "assets/FixelDisplay-Regular-BuKr9E3J.woff2",
+    "src": "assets/fonts/FixelDisplay/FixelDisplay-Regular.woff2"
+  },
+  "assets/fonts/FixelDisplay/FixelDisplay-SemiBold.woff2": {
+    "file": "assets/FixelDisplay-SemiBold-v6olFATC.woff2",
+    "src": "assets/fonts/FixelDisplay/FixelDisplay-SemiBold.woff2"
+  },
+  "assets/fonts/FixelText/FixelText-Bold.woff2": {
+    "file": "assets/FixelText-Bold-Dx5ClmPT.woff2",
+    "src": "assets/fonts/FixelText/FixelText-Bold.woff2"
+  },
+  "assets/fonts/FixelText/FixelText-Medium.woff2": {
+    "file": "assets/FixelText-Medium-CmiTwNnI.woff2",
+    "src": "assets/fonts/FixelText/FixelText-Medium.woff2"
+  },
+  "assets/fonts/FixelText/FixelText-Regular.woff2": {
+    "file": "assets/FixelText-Regular-Dv1kOdN_.woff2",
+    "src": "assets/fonts/FixelText/FixelText-Regular.woff2"
+  },
+  "assets/fonts/FixelText/FixelText-SemiBold.woff2": {
+    "file": "assets/FixelText-SemiBold-PkRqRl-Q.woff2",
+    "src": "assets/fonts/FixelText/FixelText-SemiBold.woff2"
+  },
+  "assets/fonts/Montserrat/Montserrat-500.woff2": {
+    "file": "assets/Montserrat-500-CBLtNvLV.woff2",
+    "src": "assets/fonts/Montserrat/Montserrat-500.woff2"
+  },
+  "assets/fonts/Montserrat/Montserrat-600.woff2": {
+    "file": "assets/Montserrat-600-cdzLiXYp.woff2",
+    "src": "assets/fonts/Montserrat/Montserrat-600.woff2"
+  },
+  "assets/fonts/Montserrat/Montserrat-700.woff2": {
+    "file": "assets/Montserrat-700-CnjeTNMi.woff2",
+    "src": "assets/fonts/Montserrat/Montserrat-700.woff2"
+  },
+  "assets/frontend/index.js": {
+    "file": "assets/frontend-CPPkirb2.js",
+    "name": "frontend",
+    "src": "assets/frontend/index.js",
+    "isEntry": true,
+    "css": [
+      "assets/frontend-DtSR0Ltz.css"
+    ]
+  },
+  "assets/globals/index.js": {
+    "file": "assets/globals-kyAFMUYq.js",
+    "name": "globals",
+    "src": "assets/globals/index.js",
+    "isEntry": true,
+    "css": [
+      "assets/globals-MH8s5Kkj.css"
+    ],
+    "assets": [
+      "assets/Montserrat-500-CBLtNvLV.woff2",
+      "assets/Montserrat-600-cdzLiXYp.woff2",
+      "assets/Montserrat-700-CnjeTNMi.woff2",
+      "assets/FixelText-Regular-Dv1kOdN_.woff2",
+      "assets/FixelText-Medium-CmiTwNnI.woff2",
+      "assets/FixelText-SemiBold-PkRqRl-Q.woff2",
+      "assets/FixelText-Bold-Dx5ClmPT.woff2",
+      "assets/FixelDisplay-Regular-BuKr9E3J.woff2",
+      "assets/FixelDisplay-Medium-ABEgljqF.woff2",
+      "assets/FixelDisplay-SemiBold-v6olFATC.woff2",
+      "assets/FixelDisplay-Bold-Cr-t0h_O.woff2"
+    ]
+  }
+}
