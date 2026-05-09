@@ -131,15 +131,15 @@ if ( ! function_exists( 'martfury_extra_account' ) ) :
 				esc_attr( $user_type ),
 				esc_url( $account_link ),
 				$logged_type,
-				esc_html__( 'Hello,', 'martfury' ) . ' ' . $author_name . '!',
+				esc_html__( 'Привіт,', 'martfury' ) . ' ' . $author_name . '!',
 				implode( ' ', $user_menu ),
 				esc_url( wp_logout_url( $account ) ),
-				esc_html__( 'Logout', 'martfury' )
+				esc_html__( 'Вийти', 'martfury' )
 			);
 		} else {
 
 			$register      = '';
-			$register_text = esc_html__( 'Register', 'martfury' );
+			$register_text = esc_html__( 'Зареєструватися', 'martfury' );
 
 			if ( get_option( 'woocommerce_enable_myaccount_registration' ) === 'yes' ) {
 				$register = sprintf(
@@ -155,7 +155,7 @@ if ( ! function_exists( 'martfury_extra_account' ) ) :
 					%s
 				</li>',
 				esc_url( get_permalink( get_option( 'woocommerce_myaccount_page_id' ) ) ),
-				esc_html__( 'Log in', 'martfury' ),
+				esc_html__( 'Вхід', 'martfury' ),
 				$register
 			);
 		}
