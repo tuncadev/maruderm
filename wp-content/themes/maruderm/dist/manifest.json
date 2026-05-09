@@ -44,12 +44,12 @@
     "src": "assets/fonts/Montserrat/Montserrat-700.woff2"
   },
   "assets/frontend/index.js": {
-    "file": "assets/frontend-n5f3UcUd.js",
+    "file": "assets/frontend-b7OCq8NF.js",
     "name": "frontend",
     "src": "assets/frontend/index.js",
     "isEntry": true,
     "css": [
-      "assets/frontend-UG7mtFbu.css"
+      "assets/frontend-C0Oy7c3i.css"
     ]
   },
   "assets/globals/index.js": {
