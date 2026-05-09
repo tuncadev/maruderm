@@ -1,4 +1,6 @@
 @import "./components/home-slider/home-slider.css";
 @import "./components/featured-block/featured-block.css";
 @import "./components/category-item/category-item.css";
+@import "./components/top-bar/top-bar.css";
+
 @import "./homepage.css";

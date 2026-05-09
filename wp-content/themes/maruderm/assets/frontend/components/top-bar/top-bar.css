@@ -1,0 +1,10 @@
+#topbar {
+    a.top-bar-link {
+        font-size: 14px;
+        color: #3C3C73;
+    }
+    .top-bar-greet {
+        font-size: 14px;
+        color: #3C3C73;
+    }
+}
