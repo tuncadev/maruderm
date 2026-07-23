@@ -499,6 +499,7 @@ final class KeyCRM_Sync_Admin
     {
         add_action('admin_menu', [$this, 'register_menu']);
         add_action('admin_init', [$this, 'register_settings']);
+        add_action('admin_enqueue_scripts', [$this, 'enqueue_assets']);
         add_action('admin_post_keycrm_sync_run', [$this, 'handle_sync_action']);
     }
 
@@ -522,6 +523,17 @@ final class KeyCRM_Sync_Admin
         ]);
     }
 
+    public function enqueue_assets(string $hook_suffix): void
+    {
+        if ($hook_suffix !== 'settings_page_keycrm-sync') {
+            return;
+        }
+
+        wp_register_style('keycrm-sync-admin', false, [], '1.0.0');
+        wp_enqueue_style('keycrm-sync-admin');
+        wp_add_inline_style('keycrm-sync-admin', $this->admin_css());
+    }
+
     public function render_page(): void
     {
         if (! current_user_can('manage_options')) {
@@ -532,66 +544,95 @@ final class KeyCRM_Sync_Admin
         $notice = get_transient($this->notice_key());
         delete_transient($this->notice_key());
         ?>
-        <div class="wrap">
-            <h1><?php esc_html_e('KeyCRM Sync', 'maruderm'); ?></h1>
+        <div class="wrap keycrm-sync-shell">
+            <div class="keycrm-sync-hero">
+                <div>
+                    <p class="keycrm-sync-eyebrow"><?php esc_html_e('WooCommerce integration', 'maruderm'); ?></p>
+                    <h1><?php esc_html_e('KeyCRM Sync', 'maruderm'); ?></h1>
+                    <p><?php esc_html_e('Manage endpoints, credentials, and manual product/category syncs from one controlled panel.', 'maruderm'); ?></p>
+                </div>
+                <div class="keycrm-sync-token">
+                    <span><?php esc_html_e('Token source', 'maruderm'); ?></span>
+                    <strong><?php echo esc_html($this->config->get_token_source()); ?></strong>
+                </div>
+            </div>
 
             <?php if (is_array($notice)) : ?>
-                <div class="notice notice-<?php echo esc_attr($notice['type'] ?? 'info'); ?> is-dismissible">
-                    <p><?php echo esc_html($notice['message'] ?? ''); ?></p>
-                    <?php if (! empty($notice['details']) && is_array($notice['details'])) : ?>
-                        <ul>
-                            <?php foreach (array_slice($notice['details'], 0, 25) as $detail) : ?>
-                                <li><?php echo esc_html((string) $detail); ?></li>
-                            <?php endforeach; ?>
-                        </ul>
-                    <?php endif; ?>
+                <div class="keycrm-sync-notice keycrm-sync-notice-<?php echo esc_attr($notice['type'] ?? 'info'); ?>">
+                    <div class="keycrm-sync-notice-summary">
+                        <span class="keycrm-sync-status-dot"></span>
+                        <p><?php echo esc_html($notice['message'] ?? ''); ?></p>
+                    </div>
+                    <?php $this->render_log_details((array) ($notice['details'] ?? [])); ?>
                 </div>
             <?php endif; ?>
 
-            <form method="post" action="options.php">
-                <?php settings_fields(KeyCRM_Sync_Config::OPTION_KEY); ?>
-                <table class="form-table" role="presentation">
-                    <tr>
-                        <th scope="row"><label for="keycrm-products-url"><?php esc_html_e('Products endpoint', 'maruderm'); ?></label></th>
-                        <td>
-                            <input id="keycrm-products-url" class="regular-text" type="url" name="<?php echo esc_attr(KeyCRM_Sync_Config::OPTION_KEY); ?>[products_url]" value="<?php echo esc_attr($this->config->get_products_url()); ?>" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row"><label for="keycrm-categories-url"><?php esc_html_e('Categories endpoint', 'maruderm'); ?></label></th>
-                        <td>
-                            <input id="keycrm-categories-url" class="regular-text" type="url" name="<?php echo esc_attr(KeyCRM_Sync_Config::OPTION_KEY); ?>[categories_url]" value="<?php echo esc_attr($this->config->get_categories_url()); ?>" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row"><label for="keycrm-api-token"><?php esc_html_e('API token', 'maruderm'); ?></label></th>
-                        <td>
-                            <input id="keycrm-api-token" class="regular-text" type="password" name="<?php echo esc_attr(KeyCRM_Sync_Config::OPTION_KEY); ?>[api_token]" value="" autocomplete="new-password" placeholder="<?php echo esc_attr($this->token_placeholder($options)); ?>" />
-                            <p class="description"><?php echo esc_html(sprintf('Current token source: %s.', $this->config->get_token_source())); ?></p>
-                        </td>
-                    </tr>
-                </table>
-                <?php submit_button(__('Save Settings', 'maruderm')); ?>
-            </form>
+            <div class="keycrm-sync-grid">
+                <section class="keycrm-sync-card keycrm-sync-settings-card">
+                    <div class="keycrm-sync-card-head">
+                        <h2><?php esc_html_e('Connection Settings', 'maruderm'); ?></h2>
+                        <p><?php esc_html_e('Keep API URLs and credentials centralized for CLI and dashboard syncs.', 'maruderm'); ?></p>
+                    </div>
+                    <form method="post" action="options.php" class="keycrm-sync-form">
+                        <?php settings_fields(KeyCRM_Sync_Config::OPTION_KEY); ?>
 
-            <hr />
+                        <div class="keycrm-sync-field">
+                            <label for="keycrm-products-url"><?php esc_html_e('Products endpoint', 'maruderm'); ?></label>
+                            <input id="keycrm-products-url" type="url" name="<?php echo esc_attr(KeyCRM_Sync_Config::OPTION_KEY); ?>[products_url]" value="<?php echo esc_attr($this->config->get_products_url()); ?>" />
+                        </div>
 
-            <h2><?php esc_html_e('Run Sync', 'maruderm'); ?></h2>
-            <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" style="display:inline-block;margin-right:12px;">
-                <?php wp_nonce_field('keycrm_sync_run'); ?>
-                <input type="hidden" name="action" value="keycrm_sync_run" />
-                <input type="hidden" name="sync_type" value="categories" />
-                <?php submit_button(__('Sync Categories', 'maruderm'), 'secondary', 'submit', false); ?>
-            </form>
+                        <div class="keycrm-sync-field">
+                            <label for="keycrm-categories-url"><?php esc_html_e('Categories endpoint', 'maruderm'); ?></label>
+                            <input id="keycrm-categories-url" type="url" name="<?php echo esc_attr(KeyCRM_Sync_Config::OPTION_KEY); ?>[categories_url]" value="<?php echo esc_attr($this->config->get_categories_url()); ?>" />
+                        </div>
 
-            <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" style="display:inline-block;">
-                <?php wp_nonce_field('keycrm_sync_run'); ?>
-                <input type="hidden" name="action" value="keycrm_sync_run" />
-                <input type="hidden" name="sync_type" value="products" />
-                <label for="keycrm-product-limit" style="margin-right:8px;"><?php esc_html_e('Product limit', 'maruderm'); ?></label>
-                <input id="keycrm-product-limit" type="number" name="product_limit" value="10" min="0" step="1" style="width:90px;" />
-                <?php submit_button(__('Sync Products', 'maruderm'), 'primary', 'submit', false); ?>
-            </form>
+                        <div class="keycrm-sync-field">
+                            <label for="keycrm-api-token"><?php esc_html_e('API token', 'maruderm'); ?></label>
+                            <input id="keycrm-api-token" type="password" name="<?php echo esc_attr(KeyCRM_Sync_Config::OPTION_KEY); ?>[api_token]" value="" autocomplete="new-password" placeholder="<?php echo esc_attr($this->token_placeholder($options)); ?>" />
+                            <p><?php echo esc_html(sprintf('Current token source: %s.', $this->config->get_token_source())); ?></p>
+                        </div>
+
+                        <div class="keycrm-sync-actions">
+                            <?php submit_button(__('Save Settings', 'maruderm'), 'primary', 'submit', false); ?>
+                        </div>
+                    </form>
+                </section>
+
+                <section class="keycrm-sync-card">
+                    <div class="keycrm-sync-card-head">
+                        <h2><?php esc_html_e('Run Sync', 'maruderm'); ?></h2>
+                        <p><?php esc_html_e('Trigger a controlled push from WooCommerce into the configured KeyCRM account.', 'maruderm'); ?></p>
+                    </div>
+
+                    <div class="keycrm-sync-run-list">
+                        <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" class="keycrm-sync-run-card">
+                            <?php wp_nonce_field('keycrm_sync_run'); ?>
+                            <input type="hidden" name="action" value="keycrm_sync_run" />
+                            <input type="hidden" name="sync_type" value="categories" />
+                            <div>
+                                <h3><?php esc_html_e('Categories', 'maruderm'); ?></h3>
+                                <p><?php esc_html_e('Validate mappings and create missing top-level KeyCRM categories.', 'maruderm'); ?></p>
+                            </div>
+                            <?php submit_button(__('Sync Categories', 'maruderm'), 'secondary keycrm-sync-button', 'submit', false); ?>
+                        </form>
+
+                        <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" class="keycrm-sync-run-card">
+                            <?php wp_nonce_field('keycrm_sync_run'); ?>
+                            <input type="hidden" name="action" value="keycrm_sync_run" />
+                            <input type="hidden" name="sync_type" value="products" />
+                            <div>
+                                <h3><?php esc_html_e('Products', 'maruderm'); ?></h3>
+                                <p><?php esc_html_e('Create missing products by SKU using the mapped KeyCRM category IDs.', 'maruderm'); ?></p>
+                            </div>
+                            <div class="keycrm-sync-limit">
+                                <label for="keycrm-product-limit"><?php esc_html_e('Limit', 'maruderm'); ?></label>
+                                <input id="keycrm-product-limit" type="number" name="product_limit" value="10" min="0" step="1" />
+                            </div>
+                            <?php submit_button(__('Sync Products', 'maruderm'), 'primary keycrm-sync-button', 'submit', false); ?>
+                        </form>
+                    </div>
+                </section>
+            </div>
         </div>
         <?php
     }
@@ -648,10 +689,65 @@ final class KeyCRM_Sync_Admin
                 continue;
             }
 
-            $details[] = strtoupper((string) ($message['level'] ?? 'log')) . ': ' . (string) ($message['message'] ?? '');
+            $details[] = [
+                'level' => (string) ($message['level'] ?? 'log'),
+                'message' => (string) ($message['message'] ?? ''),
+            ];
         }
 
         return $details;
+    }
+
+    private function render_log_details(array $details): void
+    {
+        if (empty($details)) {
+            return;
+        }
+        ?>
+        <div class="keycrm-sync-log-panel">
+            <div class="keycrm-sync-log-head">
+                <strong><?php esc_html_e('Sync log', 'maruderm'); ?></strong>
+                <span><?php echo esc_html(sprintf('%d entries', count($details))); ?></span>
+            </div>
+            <ol class="keycrm-sync-log-list">
+                <?php foreach (array_slice($details, 0, 25) as $detail) : ?>
+                    <?php $log = $this->normalize_log_detail($detail); ?>
+                    <li class="keycrm-sync-log-row keycrm-sync-log-<?php echo esc_attr($log['level']); ?>">
+                        <span class="keycrm-sync-log-badge"><?php echo esc_html(strtoupper($log['label'])); ?></span>
+                        <span class="keycrm-sync-log-message"><?php echo esc_html($log['message']); ?></span>
+                    </li>
+                <?php endforeach; ?>
+            </ol>
+        </div>
+        <?php
+    }
+
+    private function normalize_log_detail($detail): array
+    {
+        if (is_array($detail)) {
+            $level = sanitize_html_class((string) ($detail['level'] ?? 'log'));
+
+            return [
+                'level' => $level !== '' ? $level : 'log',
+                'label' => (string) ($detail['level'] ?? 'log'),
+                'message' => (string) ($detail['message'] ?? ''),
+            ];
+        }
+
+        $message = (string) $detail;
+        $label = 'log';
+
+        if (str_contains($message, ':')) {
+            [$label, $message] = array_map('trim', explode(':', $message, 2));
+        }
+
+        $level = sanitize_html_class(strtolower($label));
+
+        return [
+            'level' => $level !== '' ? $level : 'log',
+            'label' => $label !== '' ? $label : 'log',
+            'message' => $message,
+        ];
     }
 
     private function token_placeholder(array $options): string
@@ -673,6 +769,343 @@ final class KeyCRM_Sync_Admin
     private function notice_key(): string
     {
         return 'keycrm_sync_notice_' . get_current_user_id();
+    }
+
+    private function admin_css(): string
+    {
+        return <<<'CSS'
+.keycrm-sync-shell {
+    max-width: 1180px;
+}
+
+.keycrm-sync-shell * {
+    box-sizing: border-box;
+}
+
+.keycrm-sync-hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    margin: 24px 0 18px;
+    padding: 26px 30px;
+    border: 1px solid #bfdbfe;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #eff6ff 0%, #e0f2fe 100%);
+    box-shadow: 0 12px 30px rgba(37, 99, 235, 0.08);
+}
+
+.keycrm-sync-hero h1 {
+    margin: 0;
+    color: #0f172a;
+    font-size: 30px;
+    line-height: 1.2;
+}
+
+.keycrm-sync-hero p {
+    max-width: 680px;
+    margin: 8px 0 0;
+    color: #475569;
+    font-size: 14px;
+}
+
+.keycrm-sync-eyebrow {
+    margin: 0 0 8px !important;
+    color: #0369a1 !important;
+    font-size: 12px !important;
+    font-weight: 700;
+    letter-spacing: 0;
+    text-transform: uppercase;
+}
+
+.keycrm-sync-token {
+    min-width: 190px;
+    padding: 14px 16px;
+    border: 1px solid rgba(14, 165, 233, 0.32);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.72);
+}
+
+.keycrm-sync-token span {
+    display: block;
+    color: #64748b;
+    font-size: 12px;
+}
+
+.keycrm-sync-token strong {
+    display: block;
+    margin-top: 4px;
+    color: #075985;
+    font-size: 15px;
+}
+
+.keycrm-sync-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+    gap: 18px;
+}
+
+.keycrm-sync-card,
+.keycrm-sync-notice {
+    border: 1px solid #dbeafe;
+    border-radius: 8px;
+    background: #ffffff;
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+}
+
+.keycrm-sync-card {
+    padding: 22px;
+}
+
+.keycrm-sync-card-head {
+    margin-bottom: 18px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.keycrm-sync-card-head h2,
+.keycrm-sync-run-card h3 {
+    margin: 0;
+    color: #0f172a;
+    font-size: 18px;
+    line-height: 1.35;
+}
+
+.keycrm-sync-card-head p,
+.keycrm-sync-run-card p,
+.keycrm-sync-field p {
+    margin: 6px 0 0;
+    color: #64748b;
+    font-size: 13px;
+}
+
+.keycrm-sync-form {
+    display: grid;
+    gap: 16px;
+}
+
+.keycrm-sync-field label,
+.keycrm-sync-limit label {
+    display: block;
+    margin-bottom: 7px;
+    color: #334155;
+    font-weight: 600;
+}
+
+.keycrm-sync-field input,
+.keycrm-sync-limit input {
+    width: 100%;
+    min-height: 42px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    color: #0f172a;
+    background: #f8fafc;
+    box-shadow: none;
+}
+
+.keycrm-sync-field input:focus,
+.keycrm-sync-limit input:focus {
+    border-color: #38bdf8;
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.18);
+}
+
+.keycrm-sync-actions {
+    padding-top: 2px;
+}
+
+.keycrm-sync-shell .button,
+.keycrm-sync-shell .button-primary,
+.keycrm-sync-shell .button-secondary {
+    min-height: 38px;
+    padding: 4px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+.keycrm-sync-shell .button-primary {
+    border-color: #0284c7;
+    background: #0284c7;
+}
+
+.keycrm-sync-shell .button-primary:hover,
+.keycrm-sync-shell .button-primary:focus {
+    border-color: #0369a1;
+    background: #0369a1;
+}
+
+.keycrm-sync-shell .button-secondary {
+    border-color: #bae6fd;
+    color: #075985;
+    background: #f0f9ff;
+}
+
+.keycrm-sync-run-list {
+    display: grid;
+    gap: 14px;
+}
+
+.keycrm-sync-run-card {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 14px;
+    padding: 16px;
+    border: 1px solid #e0f2fe;
+    border-radius: 8px;
+    background: #f8fafc;
+}
+
+.keycrm-sync-limit {
+    width: 92px;
+}
+
+.keycrm-sync-limit input {
+    text-align: center;
+}
+
+.keycrm-sync-notice {
+    margin: 0 0 18px;
+    overflow: hidden;
+}
+
+.keycrm-sync-notice-summary {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 16px;
+    border-left: 4px solid #38bdf8;
+    background: #f0f9ff;
+}
+
+.keycrm-sync-notice-success .keycrm-sync-notice-summary {
+    border-left-color: #0ea5e9;
+}
+
+.keycrm-sync-notice-error .keycrm-sync-notice-summary {
+    border-left-color: #ef4444;
+    background: #fff7f7;
+}
+
+.keycrm-sync-notice-summary p {
+    margin: 0;
+    color: #0f172a;
+    font-weight: 600;
+}
+
+.keycrm-sync-status-dot {
+    width: 10px;
+    height: 10px;
+    flex: 0 0 10px;
+    border-radius: 50%;
+    background: #0ea5e9;
+    box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.14);
+}
+
+.keycrm-sync-notice-error .keycrm-sync-status-dot {
+    background: #ef4444;
+    box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.12);
+}
+
+.keycrm-sync-log-panel {
+    padding: 14px 16px 16px;
+    border-top: 1px solid #e2e8f0;
+    background: #ffffff;
+}
+
+.keycrm-sync-log-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    color: #334155;
+}
+
+.keycrm-sync-log-head span {
+    color: #64748b;
+    font-size: 12px;
+}
+
+.keycrm-sync-log-list {
+    display: grid;
+    gap: 8px;
+    margin: 0;
+}
+
+.keycrm-sync-log-row {
+    display: grid;
+    grid-template-columns: 76px minmax(0, 1fr);
+    align-items: start;
+    gap: 10px;
+    margin: 0;
+    padding: 10px 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    background: #f8fafc;
+}
+
+.keycrm-sync-log-badge {
+    display: inline-flex;
+    justify-content: center;
+    min-width: 64px;
+    padding: 3px 8px;
+    border-radius: 999px;
+    color: #0369a1;
+    background: #e0f2fe;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.45;
+}
+
+.keycrm-sync-log-warning .keycrm-sync-log-badge {
+    color: #92400e;
+    background: #fef3c7;
+}
+
+.keycrm-sync-log-success .keycrm-sync-log-badge {
+    color: #047857;
+    background: #d1fae5;
+}
+
+.keycrm-sync-log-error .keycrm-sync-log-badge {
+    color: #b91c1c;
+    background: #fee2e2;
+}
+
+.keycrm-sync-log-message {
+    min-width: 0;
+    color: #334155;
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 960px) {
+    .keycrm-sync-hero,
+    .keycrm-sync-grid {
+        display: block;
+    }
+
+    .keycrm-sync-token,
+    .keycrm-sync-card + .keycrm-sync-card {
+        margin-top: 18px;
+    }
+}
+
+@media (max-width: 640px) {
+    .keycrm-sync-hero,
+    .keycrm-sync-card {
+        padding: 18px;
+    }
+
+    .keycrm-sync-run-card,
+    .keycrm-sync-log-row {
+        grid-template-columns: 1fr;
+    }
+
+    .keycrm-sync-limit {
+        width: 100%;
+    }
+}
+CSS;
     }
 }
 
