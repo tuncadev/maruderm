@@ -1,0 +1,118 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [ "${MARUDERM_SKIP_PRECOMMIT:-}" = "1" ]; then
+  echo "pre-commit: skipped via MARUDERM_SKIP_PRECOMMIT=1"
+  exit 0
+fi
+
+repo_root="$(git rev-parse --show-toplevel)"
+cd "$repo_root"
+
+fail() {
+  printf 'pre-commit: %s\n' "$*" >&2
+  exit 1
+}
+
+section() {
+  printf '\npre-commit: %s\n' "$*"
+}
+
+mapfile -t staged_files < <(git diff --cached --name-only --diff-filter=ACMR)
+
+if [ "${#staged_files[@]}" -eq 0 ]; then
+  exit 0
+fi
+
+blocked_patterns=(
+  '^\.env($|[./])'
+  '^wp-config\.php$'
+  '^wp-admin/'
+  '^wp-includes/'
+  '^wp-content/plugins/'
+  '^wp-content/uploads/'
+  '^wp-content/upgrade/'
+  '^wp-content/languages/'
+  '\.sql$'
+  '\.sql\.gz$'
+  '\.tar$'
+  '\.tar\.gz$'
+  '\.zip$'
+)
+
+section "checking staged file scope"
+for file in "${staged_files[@]}"; do
+  for pattern in "${blocked_patterns[@]}"; do
+    if [[ "$file" =~ $pattern ]]; then
+      fail "blocked staged file: $file"
+    fi
+  done
+done
+
+section "checking staged content for obvious secrets"
+secret_pattern='(BEGIN (OPENSSH|RSA|DSA|EC|PRIVATE) KEY|define[[:space:]]*\([[:space:]]*['\''"](DB_PASSWORD|AUTH_KEY|SECURE_AUTH_KEY|LOGGED_IN_KEY|NONCE_KEY|AUTH_SALT|SECURE_AUTH_SALT|LOGGED_IN_SALT|NONCE_SALT)['\''"]|(^|[^A-Z0-9_])(API_KEY|TOKEN|PASSWORD|SECRET)[[:space:]]*=.+)'
+
+for file in "${staged_files[@]}"; do
+  if [ ! -f "$file" ]; then
+    continue
+  fi
+
+  if [ "$file" = ".githooks/pre-commit" ]; then
+    continue
+  fi
+
+  case "$file" in
+    *.png|*.jpg|*.jpeg|*.gif|*.webp|*.woff|*.woff2|*.ttf|*.otf|*.eot|*.svg|*.pdf)
+      continue
+      ;;
+  esac
+
+  if git show ":$file" | LC_ALL=C grep -E -n "$secret_pattern" >/dev/null; then
+    fail "possible secret in staged file: $file"
+  fi
+done
+
+mapfile -t php_files < <(printf '%s\n' "${staged_files[@]}" | grep -E '\.php$' || true)
+if [ "${#php_files[@]}" -gt 0 ]; then
+  command -v php >/dev/null 2>&1 || fail "php is required for PHP syntax checks"
+
+  section "checking PHP syntax"
+  for file in "${php_files[@]}"; do
+    php -l "$file" >/dev/null || fail "PHP syntax failed: $file"
+  done
+fi
+
+mapfile -t workflow_files < <(printf '%s\n' "${staged_files[@]}" | grep -E '^\.github/workflows/.*\.ya?ml$' || true)
+if [ "${#workflow_files[@]}" -gt 0 ]; then
+  command -v ruby >/dev/null 2>&1 || fail "ruby is required for workflow YAML checks"
+
+  section "checking GitHub workflow YAML"
+  for file in "${workflow_files[@]}"; do
+    ruby -e "require 'yaml'; YAML.load_file(ARGV.fetch(0))" "$file" || fail "YAML syntax failed: $file"
+  done
+fi
+
+frontend_build_needed=0
+for file in "${staged_files[@]}"; do
+  case "$file" in
+    wp-content/themes/maruderm/assets/*|wp-content/themes/maruderm/app/*|wp-content/themes/maruderm/vite.config.*|wp-content/themes/maruderm/package.json|wp-content/themes/maruderm/package-lock.json)
+      frontend_build_needed=1
+      ;;
+  esac
+done
+
+if [ "$frontend_build_needed" -eq 1 ]; then
+  command -v npm >/dev/null 2>&1 || fail "npm is required for Maruderm frontend build"
+
+  section "building Maruderm frontend"
+  npm --prefix wp-content/themes/maruderm run build
+
+  if ! git diff --quiet -- wp-content/themes/maruderm/dist; then
+    fail "frontend build changed wp-content/themes/maruderm/dist; stage generated assets and retry"
+  fi
+fi
+
+section "running staged diff whitespace check"
+git diff --cached --check
+
+printf '\npre-commit: checks passed\n'

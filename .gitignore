@@ -10,6 +10,8 @@
 !.github/
 !.github/workflows/
 !.github/workflows/**
+!.githooks/
+!.githooks/**
 
 *~
 
