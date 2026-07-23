@@ -7,13 +7,14 @@
 !.gitignore
 !.gitattributes
 !.editorconfig
+!.github/
+!.github/workflows/
+!.github/workflows/**
 
 *~
 
-# Allow themes and everything inside
+# Allow deployment workflow, themes, and MU plugins.
 !wp-content/
-!wp-content/fonts/
-!wp-content/fonts/**
 !wp-content/mu-plugins/
 !wp-content/mu-plugins/**
 !wp-content/themes/
