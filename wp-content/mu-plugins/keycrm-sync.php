@@ -154,23 +154,34 @@ final class KeyCRM_Sync_Service
             throw new RuntimeException($terms->get_error_message());
         }
 
+        $remote_categories = $this->remote_category_index();
+
         foreach ($terms as $term) {
             $stats['processed']++;
+            $mapped_id = (int) get_term_meta($term->term_id, '_keycrm_id', true);
+            $remote_name_key = $this->category_name_key($term->name);
 
-            if (get_term_meta($term->term_id, '_keycrm_id', true)) {
+            if ($mapped_id > 0 && ($remote_categories['ids'][$mapped_id] ?? '') === $remote_name_key) {
                 $stats['skipped']++;
-                $this->reporter->log("SKIP {$term->name} (already mapped)");
+                $this->reporter->log("SKIP {$term->name} (already mapped remotely)");
                 continue;
             }
 
-            $response = wp_remote_post($this->config->get_categories_url(), [
-                'headers' => $this->json_headers(),
-                'body' => wp_json_encode([
-                    'name' => $term->name,
-                    'parent_id' => null,
-                ]),
-                'timeout' => 20,
-            ]);
+            if ($mapped_id > 0 && isset($remote_categories['ids'][$mapped_id])) {
+                $this->reporter->log("REMAP {$term->name} (mapped KeyCRM ID {$mapped_id} belongs to a different remote category)");
+            } elseif ($mapped_id > 0) {
+                $this->reporter->log("RECREATE {$term->name} (mapped KeyCRM ID {$mapped_id} is missing remotely)");
+            }
+
+            if (isset($remote_categories['names'][$remote_name_key])) {
+                $remote_id = (int) $remote_categories['names'][$remote_name_key];
+                update_term_meta($term->term_id, '_keycrm_id', $remote_id);
+                $stats['skipped']++;
+                $this->reporter->log("MAP {$term->name} => {$remote_id} (already exists remotely)");
+                continue;
+            }
+
+            $response = $this->create_remote_category($term->name);
 
             if (is_wp_error($response)) {
                 $stats['failed']++;
@@ -184,6 +195,8 @@ final class KeyCRM_Sync_Service
 
             if ($code >= 200 && $code < 300 && $remote_id > 0) {
                 update_term_meta($term->term_id, '_keycrm_id', $remote_id);
+                $remote_categories['ids'][$remote_id] = $remote_name_key;
+                $remote_categories['names'][$remote_name_key] = $remote_id;
                 $stats['created']++;
                 $this->reporter->log("OK {$term->name} => {$remote_id}");
                 continue;
@@ -196,6 +209,62 @@ final class KeyCRM_Sync_Service
         $this->reporter->success('Categories synced.');
 
         return $this->with_messages($stats);
+    }
+
+    private function remote_category_index(): array
+    {
+        $response = wp_remote_get($this->config->get_categories_url(), [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $this->config->get_token(),
+                'Accept' => 'application/json',
+            ],
+            'timeout' => 20,
+        ]);
+
+        if (is_wp_error($response)) {
+            throw new RuntimeException('KeyCRM categories lookup failed: ' . $response->get_error_message());
+        }
+
+        $code = (int) wp_remote_retrieve_response_code($response);
+        if ($code < 200 || $code >= 300) {
+            throw new RuntimeException("KeyCRM categories lookup failed with HTTP {$code}.");
+        }
+
+        $body = json_decode((string) wp_remote_retrieve_body($response), true);
+        $items = is_array($body) ? (array) ($body['data'] ?? []) : [];
+        $index = [
+            'ids' => [],
+            'names' => [],
+        ];
+
+        foreach ($items as $item) {
+            if (! is_array($item) || empty($item['id'])) {
+                continue;
+            }
+
+            $id = (int) $item['id'];
+            $name = trim((string) ($item['name'] ?? ''));
+
+            if ($name !== '') {
+                $name_key = $this->category_name_key($name);
+                $index['ids'][$id] = $name_key;
+                $index['names'][$name_key] = $id;
+            }
+        }
+
+        return $index;
+    }
+
+    private function create_remote_category(string $name)
+    {
+        return wp_remote_post($this->config->get_categories_url(), [
+            'headers' => $this->json_headers(),
+            'body' => wp_json_encode([
+                'name' => $name,
+                'parent_id' => null,
+            ]),
+            'timeout' => 20,
+        ]);
     }
 
     public function sync_products(int $limit = 0): array
@@ -391,6 +460,17 @@ final class KeyCRM_Sync_Service
         }
 
         return 0;
+    }
+
+    private function category_name_key(string $name): string
+    {
+        $name = trim($name);
+
+        if (function_exists('mb_strtolower')) {
+            return mb_strtolower($name);
+        }
+
+        return strtolower($name);
     }
 
     private function is_public_url(string $url): bool
