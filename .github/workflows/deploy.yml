@@ -1,9 +1,6 @@
 name: Deploy production
 
 on:
-  push:
-    branches:
-      - master
   workflow_dispatch:
 
 concurrency:
@@ -12,14 +9,11 @@ concurrency:
 
 jobs:
   deploy:
-    name: Upload tracked code to server
+    name: Fast-forward production checkout
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
       - name: Configure SSH
         env:
           DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
@@ -39,39 +33,7 @@ jobs:
             ssh-keyscan -p "${DEPLOY_PORT}" "${DEPLOY_HOST}" > ~/.ssh/known_hosts
           fi
 
-      - name: Upload themes and MU plugins
-        env:
-          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
-          DEPLOY_PORT: ${{ secrets.DEPLOY_PORT || '22' }}
-          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
-          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
-        run: |
-          set -euo pipefail
-
-          ssh_command="ssh -i ~/.ssh/deploy_key -p ${DEPLOY_PORT}"
-
-          ssh \
-            -i ~/.ssh/deploy_key \
-            -p "${DEPLOY_PORT}" \
-            "${DEPLOY_USER}@${DEPLOY_HOST}" \
-            "mkdir -p '${DEPLOY_PATH}/wp-content/themes/maruderm' '${DEPLOY_PATH}/wp-content/themes/martfury' '${DEPLOY_PATH}/wp-content/mu-plugins'"
-
-          rsync -az --delete \
-            -e "${ssh_command}" \
-            wp-content/themes/maruderm/ \
-            "${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/wp-content/themes/maruderm/"
-
-          rsync -az --delete \
-            -e "${ssh_command}" \
-            wp-content/themes/martfury/ \
-            "${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/wp-content/themes/martfury/"
-
-          rsync -az --delete \
-            -e "${ssh_command}" \
-            wp-content/mu-plugins/ \
-            "${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/wp-content/mu-plugins/"
-
-      - name: Flush WordPress cache
+      - name: Pull master on production
         env:
           DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
           DEPLOY_PORT: ${{ secrets.DEPLOY_PORT || '22' }}
@@ -89,6 +51,23 @@ jobs:
           set -euo pipefail
 
           cd "${DEPLOY_PATH}"
+
+          test "$(git branch --show-current)" = "master"
+          test "$(git remote get-url origin)" = "https://github.com/tuncadev/maruderm.git"
+
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "Production worktree is dirty; refusing deployment." >&2
+            git status --short >&2
+            exit 1
+          fi
+
+          before_commit=$(git rev-parse HEAD)
+          git pull --ff-only origin master
+          after_commit=$(git rev-parse HEAD)
+
+          printf 'before_commit=%s\n' "${before_commit}"
+          printf 'after_commit=%s\n' "${after_commit}"
+
           if command -v wp >/dev/null 2>&1; then
             wp cache flush || true
           fi
