@@ -9,6 +9,10 @@ if (! defined('ABSPATH')) {
     exit;
 }
 
+if (! class_exists('Maruderm_KeyCRM_Status_Config')) {
+    return;
+}
+
 final class Maruderm_KeyCRM_Order_Status_Webhook
 {
     private const API_BASE_URL = 'https://openapi.keycrm.app/v1';
@@ -25,86 +29,16 @@ final class Maruderm_KeyCRM_Order_Status_Webhook
     private const SYNC_ORIGIN_META = '_maruderm_keycrm_status_sync_origin';
     private const LOG_SOURCE = 'maruderm-keycrm-status-webhook';
 
-    private const STATUS_GROUP_MAP = [
-        1 => 'pending',
-        2 => 'processing',
-        3 => 'processing',
-        4 => 'processing',
-        5 => 'completed',
-        6 => 'cancelled',
-    ];
+    private Maruderm_KeyCRM_Status_Config $config;
 
-    private const STATUS_ID_MAP = [
-        1 => 'keycrm-new',
-        2 => 'confirmed',
-        4 => 'wait-prepayment',
-        8 => 'ttn-created',
-        9 => 'ready-to-send',
-        10 => 'departing',
-        12 => 'completed',
-        19 => 'cancelled',
-    ];
-
-    private const CUSTOM_STATUSES = [
-        'keycrm-new' => 'New',
-        'confirmed' => 'Confirmed',
-        'wait-prepayment' => 'Waiting for Prepayment',
-        'ttn-created' => 'TTN Created',
-        'ready-to-send' => 'Ready to Send',
-        'departing' => 'Departing',
-    ];
+    public function __construct(Maruderm_KeyCRM_Status_Config $config)
+    {
+        $this->config = $config;
+    }
 
     public function register(): void
     {
-        add_action('init', [$this, 'register_order_statuses']);
-        add_filter('wc_order_statuses', [$this, 'add_order_statuses']);
-        add_filter('woocommerce_order_is_paid', [$this, 'preserve_paid_state'], 10, 2);
         add_action('rest_api_init', [$this, 'register_routes'], 100);
-    }
-
-    public function register_order_statuses(): void
-    {
-        foreach (self::CUSTOM_STATUSES as $status => $label) {
-            register_post_status(
-                'wc-' . $status,
-                [
-                    'label' => $label,
-                    'public' => false,
-                    'exclude_from_search' => false,
-                    'show_in_admin_all_list' => true,
-                    'show_in_admin_status_list' => true,
-                    'label_count' => _n_noop(
-                        $label . ' <span class="count">(%s)</span>',
-                        $label . ' <span class="count">(%s)</span>'
-                    ),
-                ]
-            );
-        }
-    }
-
-    public function add_order_statuses(array $statuses): array
-    {
-        $ordered_statuses = [];
-
-        foreach (self::CUSTOM_STATUSES as $status => $label) {
-            $ordered_statuses['wc-' . $status] = $label;
-        }
-
-        foreach ($statuses as $status => $label) {
-            $ordered_statuses[$status] = $label;
-        }
-
-        return $ordered_statuses;
-    }
-
-    public function preserve_paid_state(bool $is_paid, $order): bool
-    {
-        if ($is_paid || ! $order instanceof WC_Order) {
-            return $is_paid;
-        }
-
-        return isset(self::CUSTOM_STATUSES[$order->get_status()])
-            && $order->get_date_paid() !== null;
     }
 
     public function register_routes(): void
@@ -237,7 +171,7 @@ final class Maruderm_KeyCRM_Order_Status_Webhook
 
         $remote_order_id = $remote_order_id > 0 ? $remote_order_id : $stored_remote_order_id;
         $status_id = $this->remote_status_id($remote_order_id, $order_id, $status_group_id);
-        $target_status = $this->target_status($status_id, $status_group_id);
+        $target_status = $this->config->target_status($status_id, $status_group_id);
 
         if ($target_status === '' || ! array_key_exists('wc-' . $target_status, wc_get_order_statuses())) {
             $this->log('warning', 'Rejected an unmapped KeyCRM status.', $order_id, $status_group_id);
@@ -315,27 +249,6 @@ final class Maruderm_KeyCRM_Order_Status_Webhook
             'status' => $target_status,
             'keycrm_status_id' => $status_id,
         ], 200);
-    }
-
-    private function target_status(int $status_id, int $status_group_id): string
-    {
-        $status_id_map = apply_filters(
-            'maruderm_keycrm_status_id_map',
-            self::STATUS_ID_MAP
-        );
-
-        if (is_array($status_id_map) && isset($status_id_map[$status_id])) {
-            return sanitize_key((string) $status_id_map[$status_id]);
-        }
-
-        $status_group_map = apply_filters(
-            'maruderm_keycrm_status_group_map',
-            self::STATUS_GROUP_MAP
-        );
-
-        return is_array($status_group_map)
-            ? sanitize_key((string) ($status_group_map[$status_group_id] ?? ''))
-            : '';
     }
 
     private function remote_status_id(int $remote_order_id, int $order_id, int $status_group_id): int
@@ -424,4 +337,4 @@ final class Maruderm_KeyCRM_Order_Status_Webhook
     }
 }
 
-(new Maruderm_KeyCRM_Order_Status_Webhook())->register();
+(new Maruderm_KeyCRM_Order_Status_Webhook(Maruderm_KeyCRM_Status_Config::instance()))->register();
