@@ -1,0 +1,90 @@
+{
+    "key": "group_maruderm_category_submenu_panel",
+    "title": "Category Submenu Panel",
+    "fields": [
+        {
+            "key": "field_maruderm_submenu_panel_image",
+            "label": "Submenu image",
+            "name": "submenu_panel_image",
+            "aria-label": "",
+            "type": "image",
+            "instructions": "Optional image for the left promotional panel in the header submenu. Used for top-level product categories.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "id",
+            "library": "all",
+            "min_width": "",
+            "min_height": "",
+            "min_size": "",
+            "max_width": "",
+            "max_height": "",
+            "max_size": "",
+            "mime_types": "",
+            "preview_size": "medium"
+        },
+        {
+            "key": "field_maruderm_submenu_panel_eyebrow",
+            "label": "Submenu eyebrow",
+            "name": "submenu_panel_eyebrow",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "Optional small label displayed above the submenu text.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_maruderm_submenu_panel_text",
+            "label": "Submenu text",
+            "name": "submenu_panel_text",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "Optional main text for the left promotional panel.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "34",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "taxonomy",
+                "operator": "==",
+                "value": "product_cat"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "Optional presentation fields for the dynamic WooCommerce category submenu.",
+    "show_in_rest": 0,
+    "modified": 1786532503
+}

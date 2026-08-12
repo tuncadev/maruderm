@@ -1,4 +1,13 @@
 {
+  "assets/catalog/index.js": {
+    "file": "assets/catalog-DseZQi5U.js",
+    "name": "catalog",
+    "src": "assets/catalog/index.js",
+    "isEntry": true,
+    "css": [
+      "assets/catalog-Cmom8bwb.css"
+    ]
+  },
   "assets/fonts/FixelDisplay/FixelDisplay-Bold.woff2": {
     "file": "assets/FixelDisplay-Bold-Cr-t0h_O.woff2",
     "src": "assets/fonts/FixelDisplay/FixelDisplay-Bold.woff2"
@@ -53,12 +62,12 @@
     ]
   },
   "assets/globals/index.js": {
-    "file": "assets/globals-DbbU2q5J.js",
+    "file": "assets/globals-DmRmfQZi.js",
     "name": "globals",
     "src": "assets/globals/index.js",
     "isEntry": true,
     "css": [
-      "assets/globals-BNmaB558.css"
+      "assets/globals-M71W7-H7.css"
     ],
     "assets": [
       "assets/Montserrat-500-CBLtNvLV.woff2",
@@ -75,12 +84,12 @@
     ]
   },
   "assets/landing-page/index.js": {
-    "file": "assets/landing-page-CjxaLiNO.js",
+    "file": "assets/landing-page-BG2bzTqx.js",
     "name": "landing-page",
     "src": "assets/landing-page/index.js",
     "isEntry": true,
     "css": [
-      "assets/landing-page-ChhTrDfW.css"
+      "assets/landing-page-CQ5AZkpz.css"
     ]
   }
 }

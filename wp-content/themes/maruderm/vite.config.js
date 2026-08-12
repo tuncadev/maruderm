@@ -54,6 +54,7 @@ export default defineConfig({
       input: {
         globals: resolve(__dirname, "assets/globals/index.js"),
         frontend: resolve(__dirname, "assets/frontend/index.js"),
+        catalog: resolve(__dirname, "assets/catalog/index.js"),
         "landing-page": resolve(__dirname, "assets/landing-page/index.js"),
       },
     },

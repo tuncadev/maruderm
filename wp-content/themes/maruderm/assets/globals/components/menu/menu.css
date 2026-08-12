@@ -1,52 +1,407 @@
-#site-header {
+#site-header.site-header {
+    position: sticky;
+    z-index: 1000;
+    top: 0;
+    background: #fff;
+    box-shadow: 0 1px 0 rgba(32, 32, 35, 0.04);
+}
+
+body.admin-bar #site-header.site-header {
+    top: 32px;
+}
+
+#site-header > .main-menu {
+    display: none !important;
+}
+
+#site-header .header-main::after {
+    content: none;
+}
+
+.maruderm-menu {
+    position: relative;
     font-family: var(--font-family-sans), sans-serif;
-    .primary-nav {
-        > ul {
-            > li {
-                padding-top: 10px;
-                padding-bottom: 10px;
-            }
+}
 
-            > li:first-child {
-                padding-left: 22px;
-            }
-        }
+.maruderm-menu__nav {
+    position: relative;
+    border-top: 4px solid transparent;
+    border-bottom: 1px solid #e7e7ea;
+    background:
+        linear-gradient(#fff, #fff) padding-box,
+        linear-gradient(90deg, #55e462 0 14%, #ff8565 14% 28%, #fbe104 28% 42%, #ae73de 42% 56%, #ff6ede 56% 70%, #06b6eb 70% 84%, #55e462 84%) border-box;
+}
+
+.maruderm-menu__inner {
+    display: flex;
+    min-height: 48px;
+    align-items: center;
+    justify-content: center;
+    gap: 38px;
+}
+
+.maruderm-menu__item {
+    position: static;
+}
+
+.maruderm-menu__trigger {
+    display: flex;
+    align-items: center;
+}
+
+.maruderm-menu__trigger > a,
+.maruderm-menu__accent {
+    color: #202023;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.maruderm-menu__trigger > a {
+    padding: 17px 0;
+}
+
+.maruderm-menu__trigger > button {
+    display: grid;
+    width: 24px;
+    height: 32px;
+    border: 0;
+    padding: 0;
+    background: transparent;
+    place-items: center;
+}
+
+.maruderm-menu__trigger i {
+    width: 7px;
+    height: 7px;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    transform: translateY(-2px) rotate(45deg);
+    transition: transform 0.2s;
+}
+
+.maruderm-menu__item.is-open .maruderm-menu__trigger i {
+    transform: translateY(2px) rotate(225deg);
+}
+
+.maruderm-menu__accent {
+    color: #7b45a8;
+}
+
+.maruderm-menu__dropdown {
+    position: absolute;
+    z-index: 4;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    padding: 0 0 28px;
+    border-top: 1px solid #e7e7ea;
+    background: #fff;
+    box-shadow: 0 28px 50px rgba(32, 32, 35, 0.11);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-8px);
+    transition: opacity 0.2s, transform 0.2s;
+}
+
+.maruderm-menu__item.is-open .maruderm-menu__dropdown {
+    opacity: 1;
+    pointer-events: auto;
+    transform: none;
+}
+
+.maruderm-menu__dropdown-inner {
+    display: grid;
+    grid-template-columns: minmax(250px, 1.25fr) repeat(3, 1fr);
+    gap: 46px;
+    padding-top: 28px;
+}
+
+.maruderm-menu .maruderm-menu__dropdown-inner::before,
+.maruderm-menu .maruderm-menu__dropdown-inner::after {
+    display: none;
+    content: none;
+}
+
+.maruderm-menu__intro {
+    position: relative;
+    display: flex;
+    min-height: 172px;
+    overflow: hidden;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 24px;
+    border-radius: 22px;
+}
+
+.maruderm-menu__intro::after {
+    position: absolute;
+    z-index: 0;
+    inset: 0;
+    background-image: var(--maruderm-menu-art);
+    background-position: calc(100% + 22px) center;
+    background-repeat: no-repeat;
+    background-size: 64% auto;
+    content: '';
+    opacity: 0.4;
+    pointer-events: none;
+}
+
+.maruderm-menu__intro > * {
+    position: relative;
+    z-index: 1;
+}
+
+.maruderm-menu__intro--coral { background: #ffe1d8; }
+.maruderm-menu__intro--yellow { background: #fff2aa; }
+.maruderm-menu__intro--mint { background: #cdf6de; }
+.maruderm-menu__intro--lilac { background: #ead8ff; }
+.maruderm-menu__intro--blue { background: #d5f1ff; }
+
+.maruderm-menu__intro span,
+.maruderm-menu__group > span {
+    margin-bottom: 15px;
+    color: #7b45a8;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.maruderm-menu__intro strong {
+    max-width: 290px;
+    margin-bottom: 17px;
+    color: #202023;
+    font-family: "Fixel Display", sans-serif;
+    font-size: 23px;
+    line-height: 1.08;
+}
+
+.maruderm-menu__intro a {
+    color: #202023;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.maruderm-menu__group {
+    display: flex;
+    flex-direction: column;
+    padding-top: 13px;
+}
+
+.maruderm-menu__group a {
+    padding: 7px 0;
+    color: #55555c;
+    font-size: 13px;
+    transition: color 0.2s, transform 0.2s;
+}
+
+.maruderm-menu__group a:hover {
+    color: #7b45a8;
+    transform: translateX(3px);
+}
+
+.maruderm-menu__mobile-head,
+.maruderm-menu__overlay,
+.maruderm-menu__toggle {
+    display: none;
+}
+
+@media (hover: hover) and (min-width: 992px) {
+    .maruderm-menu__item:hover .maruderm-menu__dropdown {
+        opacity: 1;
+        pointer-events: auto;
+        transform: none;
     }
-    .main-menu {
-        .menu {
-           > .menu-item {
-                text-align: center;
+}
 
-                position: relative;
+@media (max-width: 991px) {
+    body.admin-bar #site-header.site-header {
+        top: 0;
+    }
 
-                &:nth-child(7n + 1) { --item-color: var(--theme-color-1); }
-                &:nth-child(7n + 2) { --item-color: var(--theme-color-2); }
-                &:nth-child(7n + 3) { --item-color: var(--theme-color-3); }
-                &:nth-child(7n + 4) { --item-color: var(--theme-color-4); }
-                &:nth-child(7n + 5) { --item-color: var(--theme-color-5); }
-                &:nth-child(7n + 6) { --item-color: var(--theme-color-6); }
-                &:nth-child(7n + 7) { --item-color: var(--theme-color-7); }
+    body.is-maruderm-menu-locked {
+        overflow: hidden;
+    }
 
-                &:hover::after {
-                    content: "";
-                    position: absolute;
-                    bottom: 0;
-                    left: 50%;
-                    transform: translateX(-50%);
-                    width: 100%;
-                    height: 3px;
-                    background: var(--item-color);
-                    transition: width .3s ease;
-                    border-radius: 3px 3px 0 0;
+    #site-header > .mobile-menu #mf-toggle-menu {
+        visibility: hidden;
+        pointer-events: none;
+    }
 
-                }
-                &:hover > a {
-                    color: var(--item-color);
-                }
-                a {
-                    @apply text-[12px];
-                }
-            }
-        }
+    .maruderm-menu {
+        height: 0;
+    }
+
+    .maruderm-menu__toggle {
+        position: absolute;
+        z-index: 6;
+        bottom: 13px;
+        left: 15px;
+        display: block;
+        border: 0;
+        padding: 8px;
+        background: transparent;
+    }
+
+    .maruderm-menu__toggle span {
+        display: block;
+        width: 24px;
+        height: 2px;
+        margin: 5px 0;
+        background: #202023;
+    }
+
+    .maruderm-menu__nav {
+        position: fixed;
+        z-index: 51;
+        top: 0;
+        left: 0;
+        width: min(360px, 88vw);
+        height: 100dvh;
+        overflow-y: auto;
+        padding: 0 24px 40px;
+        border: 0;
+        background: #fff;
+        box-shadow: 20px 0 60px rgba(0, 0, 0, 0.15);
+        transform: translateX(-110%);
+        transition: transform 0.3s;
+    }
+
+    .maruderm-menu__nav.is-open {
+        transform: none;
+    }
+
+    .maruderm-menu__inner {
+        width: 100%;
+        min-height: 0;
+        align-items: stretch;
+        flex-direction: column;
+        justify-content: start;
+        gap: 0;
+    }
+
+    .maruderm-menu__mobile-head {
+        position: sticky;
+        z-index: 2;
+        top: 0;
+        display: flex;
+        height: 76px;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid #e7e7ea;
+        background: #fff;
+    }
+
+    .maruderm-menu__mobile-head span {
+        font-family: "Fixel Display", sans-serif;
+        font-size: 20px;
+        font-weight: 600;
+    }
+
+    .maruderm-menu__mobile-head button {
+        width: 40px;
+        height: 40px;
+        border: 0;
+        background: transparent;
+        font-size: 30px;
+        font-weight: 300;
+    }
+
+    .maruderm-menu__item {
+        border-bottom: 1px solid #e7e7ea;
+    }
+
+    .maruderm-menu__trigger {
+        justify-content: space-between;
+    }
+
+    .maruderm-menu__trigger > a,
+    .maruderm-menu__accent {
+        padding: 17px 0;
+        font-size: 14px;
+    }
+
+    .maruderm-menu__trigger > button {
+        width: 44px;
+        height: 48px;
+    }
+
+    .maruderm-menu__dropdown {
+        position: static;
+        display: grid;
+        max-height: 0;
+        overflow: hidden;
+        padding: 0;
+        border: 0;
+        box-shadow: none;
+        opacity: 1;
+        pointer-events: auto;
+        transform: none;
+        transition: max-height 0.35s ease;
+    }
+
+    .maruderm-menu__item.is-open .maruderm-menu__dropdown {
+        max-height: 900px;
+    }
+
+    .maruderm-menu__dropdown-inner {
+        display: grid;
+        width: 100%;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        padding: 0 0 20px;
+    }
+
+    .maruderm-menu__intro {
+        min-height: 130px;
+        grid-column: 1 / -1;
+        padding: 18px;
+        border-radius: 16px;
+    }
+
+    .maruderm-menu__intro strong {
+        font-size: 19px;
+    }
+
+    .maruderm-menu__group {
+        padding-top: 0;
+    }
+
+    .maruderm-menu__group a {
+        padding: 5px 0;
+        font-size: 12px;
+    }
+
+    .maruderm-menu__overlay {
+        position: fixed;
+        z-index: 50;
+        inset: 0;
+        display: block;
+        border: 0;
+        background: rgba(28, 24, 34, 0.32);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s;
+    }
+
+    .maruderm-menu__overlay.is-open {
+        opacity: 1;
+        pointer-events: auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .maruderm-menu__dropdown-inner {
+        grid-template-columns: 1fr;
+    }
+
+    .maruderm-menu__intro {
+        grid-column: auto;
+    }
+}
+
+@media (max-width: 782px) {
+    body.admin-bar #site-header.site-header {
+        top: 0;
     }
 }

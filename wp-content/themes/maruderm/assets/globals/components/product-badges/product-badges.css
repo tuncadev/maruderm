@@ -1,0 +1,78 @@
+.maruderm-product-badges {
+  position: absolute;
+  z-index: 6;
+  top: 14px;
+  left: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  pointer-events: none;
+}
+
+.maruderm-product-badges--single {
+  top: 24px;
+  left: 24px;
+}
+
+.maruderm-product-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 29px;
+  padding: 7px 10px;
+  border-radius: 999px;
+  color: #6032ce;
+  background: #e7d6ff;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  line-height: 1.35;
+  text-transform: uppercase;
+}
+
+.maruderm-product-badge--bestseller {
+  color: #153e28;
+  background: #c9f7d8;
+}
+
+.maruderm-product-badge--out {
+  color: #fff;
+  background: #77777d;
+}
+
+.maruderm-product-badge--sale {
+  color: #7e1830;
+  background: #ffcfda;
+}
+
+.maruderm-product-badge--limited {
+  color: #5b4100;
+  background: #ffeb85;
+}
+
+.maruderm-product-badge--low {
+  color: #79320b;
+  background: #ffd5bd;
+}
+
+.maruderm-product-badge--featured {
+  color: #15445a;
+  background: #c6efff;
+}
+
+.maruderm-product-badge--exclusive {
+  color: #513071;
+  background: #ead5ff;
+}
+
+.woocommerce ul.products li.product .mf-product-thumbnail,
+.woocommerce div.product .mf-product-thumbnail,
+.woocommerce div.product .woocommerce-product-gallery {
+  position: relative;
+}
+
+@media (max-width: 767px) {
+  .maruderm-product-badges--single {
+    top: 16px;
+    left: 16px;
+  }
+}

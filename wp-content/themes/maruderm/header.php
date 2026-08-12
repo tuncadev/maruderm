@@ -26,6 +26,7 @@
 		<?php do_action( 'martfury_before_header' ); ?>
         <header id="site-header" class="site-header <?php martfury_header_class(); ?>">
 			<?php do_action( 'martfury_header' ); ?>
+			<?php get_template_part( 'components/menu/menu' ); ?>
         </header>
 	<?php } ?>
 	<?php do_action( 'martfury_after_header' ); ?>

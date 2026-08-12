@@ -12,6 +12,7 @@ if (!defined('ABSPATH')) {
 
 require_once __DIR__ . '/app/Bootstrap.php';
 add_filter('woocommerce_attribute_show_in_nav_menus', '__return_true');
+add_filter('martfury_get_sticky_header', '__return_false', 100);
 
 add_action('wp_enqueue_scripts', static function (): void {
     $isAuthTemplate = is_page_template('template-login-register.php') || is_page('login');

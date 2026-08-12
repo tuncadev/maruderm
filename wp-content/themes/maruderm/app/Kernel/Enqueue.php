@@ -22,6 +22,7 @@ final class Enqueue implements Registrable
     private const ENTRYPOINTS = [
         'globals' => 'assets/globals/index.js',
         'frontend' => 'assets/frontend/index.js',
+        'catalog' => 'assets/catalog/index.js',
         'landing-page' => 'assets/landing-page/index.js',
     ];
 
@@ -92,11 +93,18 @@ final class Enqueue implements Registrable
 
     private function should_enqueue_entrypoint(string $handle): bool
     {
-        if ($handle !== 'landing-page') {
-            return true;
+        if ($handle === 'catalog') {
+            return function_exists('is_shop')
+                && (is_shop() || is_product_taxonomy() || (is_search() && get_query_var('post_type') === 'product'));
         }
 
-        return is_page_template('page-landing-page.php') || is_page('landing-page');
+        if ($handle === 'landing-page') {
+            return is_front_page()
+                || is_page_template('page-landing-page.php')
+                || is_page('landing-page');
+        }
+
+        return true;
     }
 
     private function enqueue_entrypoint(string $handle, string $entrypoint): void

@@ -4,10 +4,9 @@
 @import "./components/header/header.css";
 @import "./components/footer/footer.css";
 @import "./components/menu/menu.css";
+@import "./components/product-badges/product-badges.css";
 @import "./components/button/button.css";
 @import "./components/content-area/content.css";
-@import "./components/catalog/product-card.css";
-@import "./components/catalog/catalog.css";
 
 @font-face {
     font-family: "Montserrat";
@@ -166,4 +165,3 @@ h6,
 .maruderm-button {
     font-family: var(--font-family-display), serif;
 }
-

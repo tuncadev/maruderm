@@ -1,0 +1,4 @@
+interface:
+  display_name: "Maintain Maruderm Catalog"
+  short_description: "Maintain catalog routes, filters, and cards"
+  default_prompt: "Use $maintain-maruderm-catalog to update and validate the Maruderm WooCommerce catalog."
