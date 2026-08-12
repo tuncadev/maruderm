@@ -2,3 +2,80 @@
   position: relative;
   overflow: hidden;
 }
+
+.maruderm-home-slider__track:not(.slick-initialized) {
+  display: flex;
+}
+
+.maruderm-home-slider__track:not(.slick-initialized) .maruderm-home-slider__slide {
+  flex: 0 0 100%;
+}
+
+.maruderm-home-slider__slide {
+  min-height: 390px;
+  background-repeat: no-repeat;
+}
+
+.maruderm-home-slider__content {
+  width: min(1170px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 72px 0;
+}
+
+.maruderm-home-slider__eyebrow {
+  display: block;
+  margin-bottom: 12px;
+  color: #444;
+  font-size: 18px;
+}
+
+.maruderm-home-slider__title {
+  max-width: 460px;
+  margin: 0 0 28px;
+  color: #111;
+  font-size: 38px;
+  font-weight: 500;
+  line-height: 1.18;
+}
+
+.maruderm-home-slider__title span {
+  color: var(--slide-accent);
+  font-weight: 600;
+}
+
+.maruderm-home-slider__slide--light .maruderm-home-slider__eyebrow,
+.maruderm-home-slider__slide--light .maruderm-home-slider__title {
+  color: #fff;
+}
+
+.maruderm-home-slider__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 0 24px;
+  background: #0071df;
+  color: #fff;
+  font-weight: 600;
+}
+
+.maruderm-home-slider .slick-dots {
+  bottom: 20px;
+}
+
+@media (max-width: 767px) {
+  .maruderm-home-slider__slide {
+    min-height: 330px;
+    background-position: center bottom !important;
+    background-size: 82% auto !important;
+  }
+
+  .maruderm-home-slider__content {
+    padding: 34px 0 160px;
+  }
+
+  .maruderm-home-slider__title {
+    max-width: 300px;
+    font-size: 24px;
+  }
+}

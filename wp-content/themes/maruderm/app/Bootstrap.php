@@ -17,6 +17,11 @@ require_once __DIR__ . '/Kernel/Dependencies.php';
 require_once __DIR__ . '/Kernel/Loadable.php';
 require_once __DIR__ . '/Kernel/Helpers.php';
 require_once __DIR__ . '/Kernel/Enqueue.php';
+require_once __DIR__ . '/Homepage/HomepageContent.php';
+require_once __DIR__ . '/Homepage/HomepageRenderer.php';
+require_once __DIR__ . '/LandingPage/LandingPageCatalog.php';
+require_once __DIR__ . '/LandingPage/LandingPageContent.php';
+require_once __DIR__ . '/LandingPage/LandingPageRenderer.php';
 
 Enqueue::load();
 Application::get_instance()->init();

@@ -44,21 +44,21 @@
     "src": "assets/fonts/Montserrat/Montserrat-700.woff2"
   },
   "assets/frontend/index.js": {
-    "file": "assets/frontend-n5f3UcUd.js",
+    "file": "assets/frontend-BQ4_qGBN.js",
     "name": "frontend",
     "src": "assets/frontend/index.js",
     "isEntry": true,
     "css": [
-      "assets/frontend-UG7mtFbu.css"
+      "assets/frontend-Br15v-zn.css"
     ]
   },
   "assets/globals/index.js": {
-    "file": "assets/globals-BxCib5Am.js",
+    "file": "assets/globals-DbbU2q5J.js",
     "name": "globals",
     "src": "assets/globals/index.js",
     "isEntry": true,
     "css": [
-      "assets/globals-p-19JzqH.css"
+      "assets/globals-BNmaB558.css"
     ],
     "assets": [
       "assets/Montserrat-500-CBLtNvLV.woff2",
@@ -72,6 +72,15 @@
       "assets/FixelDisplay-Medium-ABEgljqF.woff2",
       "assets/FixelDisplay-SemiBold-v6olFATC.woff2",
       "assets/FixelDisplay-Bold-Cr-t0h_O.woff2"
+    ]
+  },
+  "assets/landing-page/index.js": {
+    "file": "assets/landing-page-CjxaLiNO.js",
+    "name": "landing-page",
+    "src": "assets/landing-page/index.js",
+    "isEntry": true,
+    "css": [
+      "assets/landing-page-ChhTrDfW.css"
     ]
   }
 }

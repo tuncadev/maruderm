@@ -1,3 +1,133 @@
 @import "./components/section-home-deals/section-home-deals.css";
 @import "./components/section-two-banners/section-two-banners.css";
 @import "./components/section-top-categories-month/section-top-categories-month.css";
+
+.maruderm-home-section {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.maruderm-section-title {
+    margin: 0 0 24px;
+    font-size: 24px;
+    font-weight: 500;
+}
+
+.maruderm-benefits {
+    padding: 22px 0;
+    background: #fff;
+}
+
+.maruderm-benefits .icons-list-wrapper {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    border: 1px solid #e1e1e1;
+}
+
+.maruderm-benefits .box-item {
+    position: relative;
+    padding: 22px 24px;
+}
+
+.maruderm-benefits .box-wrapper {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 14px;
+    align-items: center;
+}
+
+.maruderm-benefits .box-icon {
+    grid-row: span 2;
+    color: #0071df;
+    font-size: 32px;
+}
+
+.maruderm-benefits .box-title {
+    color: #111;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.maruderm-benefits .desc {
+    color: #666;
+    font-size: 13px;
+}
+
+.maruderm-banner-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.maruderm-banner {
+    position: relative;
+    min-height: 190px;
+    overflow: hidden;
+    background: #f5f5f5;
+}
+
+.maruderm-banner .banner-content {
+    position: relative;
+    z-index: 2;
+    max-width: 50%;
+    padding: 34px 0 34px 34px;
+}
+
+.maruderm-banner .banner-title {
+    margin: 0 0 22px;
+    font-size: 24px;
+    line-height: 1.2;
+}
+
+.maruderm-banner .banner-featured-image {
+    position: absolute;
+    right: 18px;
+    bottom: 0;
+    width: 48%;
+    text-align: right;
+}
+
+.maruderm-category-grid {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
+.maruderm-products-section .cat-header {
+    background: #f4f4f4;
+    padding: 16px 20px;
+}
+
+@media (max-width: 991px) {
+    .maruderm-benefits .icons-list-wrapper,
+    .maruderm-banner-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .maruderm-category-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 767px) {
+    .maruderm-benefits .icons-list-wrapper,
+    .maruderm-banner-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .maruderm-banner .banner-content {
+        max-width: 64%;
+        padding: 24px 0 24px 20px;
+    }
+
+    .maruderm-banner .banner-title {
+        font-size: 20px;
+    }
+
+    .maruderm-category-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .maruderm-products-section .cat-header {
+        padding: 10px;
+    }
+}

@@ -22,6 +22,7 @@ final class Enqueue implements Registrable
     private const ENTRYPOINTS = [
         'globals' => 'assets/globals/index.js',
         'frontend' => 'assets/frontend/index.js',
+        'landing-page' => 'assets/landing-page/index.js',
     ];
 
     private ?array $manifest = null;
@@ -42,6 +43,10 @@ final class Enqueue implements Registrable
         }
 
         foreach (self::ENTRYPOINTS as $handle => $entrypoint) {
+            if (!$this->should_enqueue_entrypoint($handle)) {
+                continue;
+            }
+
             $this->enqueue_entrypoint($handle, $entrypoint);
         }
     }
@@ -65,6 +70,10 @@ final class Enqueue implements Registrable
         wp_script_add_data('maruderm-vite-client', 'type', 'module');
 
         foreach (self::ENTRYPOINTS as $handle => $entrypoint) {
+            if (!$this->should_enqueue_entrypoint($handle)) {
+                continue;
+            }
+
             $script_handle = sprintf('maruderm-%s', $handle);
 
             wp_enqueue_script(
@@ -79,6 +88,15 @@ final class Enqueue implements Registrable
         }
 
         return true;
+    }
+
+    private function should_enqueue_entrypoint(string $handle): bool
+    {
+        if ($handle !== 'landing-page') {
+            return true;
+        }
+
+        return is_page_template('page-landing-page.php') || is_page('landing-page');
     }
 
     private function enqueue_entrypoint(string $handle, string $entrypoint): void
