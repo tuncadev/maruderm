@@ -1,0 +1,665 @@
+<wpml-config>
+	<taxonomies>
+		<taxonomy translate="1">product_brand</taxonomy>
+	</taxonomies>
+	<shortcodes>
+		<shortcode>
+			<tag encoding="allow_html_tags">martfury_icon_box</tag>
+			<attributes>
+				<attribute type="media-ids">image</attribute>
+				<attribute>title</attribute>
+				<attribute type="link" encoding="vc_link">link</attribute>
+			</attributes>
+		</shortcode>
+		<shortcode>
+			<tag>martfury_icon_box_2</tag>
+			<attributes>
+				<attribute type="area" encoding="urlencoded_json">info</attribute>
+			</attributes>
+		</shortcode>
+		<shortcode>
+			<tag>martfury_icons_list</tag>
+			<attributes>
+				<attribute type="area" encoding="urlencoded_json">icons</attribute>
+			</attributes>
+		</shortcode>
+		<shortcode>
+			<tag>martfury_products_of_category</tag>
+			<attributes>
+				<attribute>title</attribute>
+				<attribute type="link" encoding="vc_link">link</attribute>
+				<attribute type="link">custom_links</attribute>
+				<attribute type="media-ids">images</attribute>
+				<attribute type="area" encoding="urlencoded_json">links_group</attribute>
+			</attributes>
+		</shortcode>
+		<shortcode>
+			<tag>martfury_products_of_category_2</tag>
+			<attributes>
+				<attribute>title</attribute>
+				<attribute>side_title</attribute>
+				<attribute type="link" encoding="vc_link">link</attribute>
+				<attribute type="link">custom_links</attribute>
+				<attribute type="media-ids">images</attribute>
+				<attribute type="area" encoding="urlencoded_json">links_group</attribute>
+				<attribute type="link" encoding="vc_link">side_link</attribute>
+			</attributes>
+		</shortcode>
+		<shortcode>
+			<tag>martfury_product_tabs</tag>
+			<attributes>
+				<attribute>title</attribute>
+				<attribute type="link" encoding="vc_link">link</attribute>
+				<attribute type="link" encoding="vc_link">all_link</attribute>
+			</attributes>
+		</shortcode>
+		<shortcode>
+			<tag>martfury_products_carousel</tag>
+			<attributes>
+				<attribute>title</attribute>
+				<attribute type="link" encoding="vc_link">link</attribute>
+				<attribute type="area" encoding="urlencoded_json">links_group</attribute>
+			</attributes>
+		</shortcode>
+		<shortcode>
+			<tag>martfury_products_grid</tag>
+			<attributes>
+				<attribute>title</attribute>
+				<attribute type="link" encoding="vc_link">link</attribute>
+			</attributes>
+		</shortcode>
+		<shortcode>
+			<tag>martfury_products_list</tag>
+			<attributes>
+				<attribute>title</attribute>
+				<attribute type="area" encoding="urlencoded_json">links_group</attribute>
+			</attributes>
+		</shortcode>
+		<shortcode>
+			<tag>martfury_products_list_carousel</tag>
+			<attributes>
+				<attribute>title</attribute>
+			</attributes>
+		</shortcode>
+		<shortcode>
+			<tag>martfury_deals_of_the_day</tag>
+			<attributes>
+				<attribute>title</attribute>
+				<attribute type="link" encoding="vc_link">link</attribute>
+				<attribute>custom_ends_in_text</attribute>
+			</attributes>
+		</shortcode>
+		<shortcode>
+			<tag>martfury_sales_countdown_timer</tag>
+			<attributes>
+				<attribute>title</attribute>
+				<attribute type="link" encoding="vc_link">link</attribute>
+				<attribute>custom_ends_in_text</attribute>
+			</attributes>
+		</shortcode>
+		<shortcode>
+			<tag>martfury_product_deals_carousel</tag>
+			<attributes>
+				<attribute>title</attribute>
+			</attributes>
+		</shortcode>
+		<shortcode>
+			<tag>martfury_product_deals_grid</tag>
+			<attributes>
+				<attribute>title</attribute>
+			</attributes>
+		</shortcode>
+		<shortcode>
+			<tag>martfury_brands_grid</tag>
+		</shortcode>
+		<shortcode>
+			<tag>martfury_recently_viewed_products</tag>
+		</shortcode>
+		<shortcode>
+			<tag>martfury_top_selling</tag>
+			<attributes>
+				<attribute>title</attribute>
+				<attribute type="area" encoding="urlencoded_json">links_group</attribute>
+			</attributes>
+		</shortcode>
+		<shortcode>
+			<tag>martfury_top_selling_2</tag>
+			<attributes>
+				<attribute>title</attribute>
+			</attributes>
+		</shortcode>
+		<shortcode>
+			<tag>martfury_category_tabs</tag>
+			<attributes>
+				<attribute>title</attribute>
+				<attribute>subtitle</attribute>
+			</attributes>
+		</shortcode>
+		<shortcode>
+			<tag>martfury_category_tab</tag>
+			<attributes>
+				<attribute>title</attribute>
+				<attribute>subtitle</attribute>
+				<attribute encoding="media-ids">image</attribute>
+				<attribute type="area" encoding="urlencoded_json">tags</attribute>
+			</attributes>
+		</shortcode>
+		<shortcode>
+			<tag>martfury_category_box</tag>
+			<attributes>
+				<attribute>title</attribute>
+				<attribute encoding="media-ids">image</attribute>
+				<attribute type="link" encoding="vc_link">link</attribute>
+				<attribute type="area" encoding="urlencoded_json">links_group</attribute>
+				<attribute type="link" encoding="vc_link">banner_link</attribute>
+			</attributes>
+		</shortcode>
+		<shortcode>
+			<tag>martfury_banners_grid</tag>
+			<attributes>
+				<attribute type="area" encoding="urlencoded_json">banners</attribute>
+			</attributes>
+		</shortcode>
+		<shortcode>
+			<tag>martfury_banners_grid_2</tag>
+			<attributes>
+				<attribute type="area" encoding="urlencoded_json">banners</attribute>
+			</attributes>
+		</shortcode>
+		<shortcode>
+			<tag>martfury_button</tag>
+			<attributes>
+				<attribute type="link" encoding="vc_link">link</attribute>
+			</attributes>
+		</shortcode>
+		<shortcode>
+			<tag>martfury_button</tag>
+			<attributes>
+				<attribute>title</attribute>
+				<attribute type="area" encoding="urlencoded_json">links_group</attribute>
+			</attributes>
+		</shortcode>
+		<shortcode>
+			<tag>martfury_image_box</tag>
+			<attributes>
+				<attribute type="media-ids">image</attribute>
+				<attribute>title</attribute>
+				<attribute type="link" encoding="vc_link">link</attribute>
+				<attribute type="area" encoding="urlencoded_json">links_group</attribute>
+			</attributes>
+		</shortcode>
+		<shortcode>
+			<tag>martfury_single_image</tag>
+			<attributes>
+				<attribute type="media-ids">image</attribute>
+				<attribute type="link" encoding="vc_link">link</attribute>
+			</attributes>
+		</shortcode>
+		<shortcode>
+			<tag>martfury_counter</tag>
+			<attributes>
+				<attribute>title</attribute>
+				<attribute>unit_before</attribute>
+				<attribute>unit_after</attribute>
+				<attribute type="media-ids">image</attribute>
+			</attributes>
+		</shortcode>
+		<shortcode>
+			<tag>martfury_journey</tag>
+			<attributes>
+				<attribute type="area" encoding="urlencoded_json">journey</attribute>
+			</attributes>
+		</shortcode>
+		<shortcode>
+			<tag>martfury_testimonial_slides</tag>
+			<attributes>
+				<attribute>title</attribute>
+				<attribute type="area" encoding="urlencoded_json">setting</attribute>
+			</attributes>
+		</shortcode>
+		<shortcode>
+			<tag>martfury_member</tag>
+			<attributes>
+				<attribute type="media-ids">image</attribute>
+				<attribute>name</attribute>
+				<attribute>job</attribute>
+				<attribute type="area" encoding="urlencoded_json">socials</attribute>
+			</attributes>
+		</shortcode>
+		<shortcode>
+			<tag>martfury_process</tag>
+			<attributes>
+				<attribute type="area" encoding="urlencoded_json">process</attribute>
+			</attributes>
+		</shortcode>
+		<shortcode>
+			<tag >martfury_bubbles</tag>
+			<attributes>
+				<attribute>value</attribute>
+				<attribute>title</attribute>
+			</attributes>
+		</shortcode>
+		<shortcode>
+			<tag>martfury_partner</tag>
+			<attributes>
+				<attribute type="media-ids">images</attribute>
+				<attribute type="link">custom_links</attribute>
+			</attributes>
+		</shortcode>
+		<shortcode>
+			<tag encoding="allow_html_tags">martfury_newsletter</tag>
+			<attributes>
+				<attribute>title</attribute>
+				<attribute type="media-ids">image</attribute>
+				<attribute type="area" encoding="urlencoded_json">btn_setting</attribute>
+			</attributes>
+		</shortcode>
+		<shortcode>
+			<tag>martfury_faqs</tag>
+			<attributes>
+				<attribute>title</attribute>
+				<attribute type="area" encoding="urlencoded_json">faqs</attribute>
+			</attributes>
+		</shortcode>
+		<shortcode>
+			<tag>martfury_images_grid</tag>
+			<attributes>
+				<attribute>title</attribute>
+				<attribute type="area" encoding="urlencoded_json">images</attribute>
+			</attributes>
+		</shortcode>
+		<shortcode>
+			<tag>martfury_countdown</tag>
+		</shortcode>
+		<shortcode>
+			<tag>martfury_gmap</tag>
+			<attributes>
+				<attribute type="area" encoding="urlencoded_json">info</attribute>
+			</attributes>
+		</shortcode>
+		<shortcode>
+			<tag encoding="allow_html_tags">martfury_banner_small</tag>
+			<attributes>
+				<attribute type="media-ids">image</attribute>
+				<attribute>title</attribute>
+				<attribute>price</attribute>
+				<attribute type="link" encoding="vc_link">link</attribute>
+			</attributes>
+		</shortcode>
+		<shortcode>
+			<tag encoding="allow_html_tags">martfury_banner_medium</tag>
+			<attributes>
+				<attribute type="media-ids">image</attribute>
+				<attribute>title</attribute>
+				<attribute>subtitle</attribute>
+				<attribute>subdesc</attribute>
+				<attribute type="link" encoding="vc_link">link</attribute>
+			</attributes>
+		</shortcode>
+		<shortcode>
+			<tag encoding="allow_html_tags">martfury_banner_large</tag>
+			<attributes>
+				<attribute type="media-ids">image</attribute>
+				<attribute>desc</attribute>
+				<attribute>price</attribute>
+				<attribute>sale_price</attribute>
+				<attribute type="link" encoding="vc_link">link</attribute>
+			</attributes>
+		</shortcode>
+		<shortcode>
+			<tag>martfury_brand_images</tag>
+			<attributes>
+				<attribute>title</attribute>
+			</attributes>
+		</shortcode>
+		<shortcode>
+			<tag>martfury_brand_images_carousel</tag>
+			<attributes>
+				<attribute>title</attribute>
+				<attribute type="link" encoding="vc_link">view_all_link</attribute>
+			</attributes>
+		</shortcode>
+	</shortcodes>
+
+	<elementor-widgets>
+		<widget name="martfury-banner-app">
+			<fields>
+				<field editor_type="AREA">title</field>
+				<field editor_type="AREA">description</field>
+			</fields>
+			<fields-in-item items_of="btn_settings">
+				<field editor_type="LINK">button_link>url</field>
+			</fields-in-item>
+		</widget>
+		<widget name="martfury-banner-large-2">
+			<fields>
+				<field editor_type="LINK">banner_url>url</field>
+				<field>discount_text</field>
+				<field>discount_subtitle</field>
+				<field>discount_title</field>
+				<field editor_type="AREA">title</field>
+				<field editor_type="AREA">description</field>
+				<field>regular_price</field>
+				<field>sale_price</field>
+				<field>link_text</field>
+				<field editor_type="LINK">link_url>url</field>
+			</fields>
+		</widget>
+		<widget name="martfury-banner-large">
+			<fields>
+				<field editor_type="AREA">title</field>
+				<field editor_type="AREA">highlight_title</field>
+				<field editor_type="AREA">desc</field>
+				<field>regular_price</field>
+				<field>sale_price</field>
+				<field>button_text</field>
+				<field editor_type="LINK">button_link>url</field>
+			</fields>
+		</widget>
+		<widget name="martfury-banner-medium">
+			<fields>
+				<field editor_type="AREA">title</field>
+				<field editor_type="AREA">highlight_title</field>
+				<field editor_type="AREA">desc</field>
+				<field>button_text</field>
+				<field editor_type="LINK">button_link>url</field>
+			</fields>
+		</widget>
+		<widget name="martfury-banner-small">
+			<fields>
+				<field editor_type="AREA">title</field>
+				<field editor_type="AREA">desc</field>
+				<field>price</field>
+				<field editor_type="LINK">button_link>url</field>
+			</fields>
+		</widget>
+		<widget name="mf-brand-images-carousel">
+			<fields>
+				<field>title</field>
+				<field>view_all_text</field>
+				<field editor_type="LINK">view_all_link>url</field>
+			</fields>
+		</widget>
+		<widget name="mf-brand-images">
+			<fields>
+				<field editor_type="AREA">title</field>
+			</fields>
+		</widget>
+		<widget name="martfury-bubbles">
+			<fields>
+				<field>value</field>
+				<field>title</field>
+			</fields>
+		</widget>
+		<widget name="martfury-category-box">
+			<fields>
+				<field>title</field>
+				<field editor_type="LINK">link>url</field>
+				<field editor_type="LINK">banner_link>url</field>
+			</fields>
+			<fields-in-item items_of="links_group">
+				<field>title</field>
+				<field editor_type="LINK">link>url</field>
+			</fields-in-item>
+		</widget>
+		<widget name="martfury-category-tabs">
+			<fields>
+				<field>title</field>
+				<field>subtitle</field>
+				<field>title_hot_trending</field>
+				<field>tab_title_1</field>
+				<field>tab_title_2</field>
+				<field>tab_title_3</field>
+				<field>tab_title_4</field>
+				<field>tab_title_5</field>
+				<field>tab_title_6</field>
+				<field>tab_title_7</field>
+				<field>tab_title_8</field>
+				<field>tab_title_9</field>
+				<field>tab_title_10</field>
+			</fields>
+		</widget>
+		<widget name="martfury-counter">
+			<fields>
+				<field>title</field>
+			</fields>
+		</widget>
+		<widget name="martfury-faqs">
+			<fields>
+				<field>title</field>
+			</fields>
+			<fields-in-item items_of="faqs_setting">
+				<field>title</field>
+				<field editor_type="AREA">desc</field>
+			</fields-in-item>
+		</widget>
+		<widget name="mf-elementor-icon-box">
+			<fields>
+				<field>title</field>
+				<field editor_type="AREA">desc</field>
+				<field>link_text</field>
+				<field editor_type="LINK">link>url</field>
+			</fields>
+		</widget>
+		<widget name="martfury-icons-list">
+			<fields-in-item items_of="icons">
+				<field>title</field>
+				<field editor_type="AREA">desc</field>
+				<field editor_type="LINK">link>url</field>
+			</fields-in-item>
+		</widget>
+		<widget name="martfury-image-box">
+			<fields>
+				<field>title</field>
+				<field editor_type="LINK">link>url</field>
+				<field>extra_link_text</field>
+				<field editor_type="LINK">extra_link>url</field>
+			</fields>
+			<fields-in-item items_of="subtitles">
+				<field>title</field>
+				<field editor_type="LINK">link>url</field>
+			</fields-in-item>
+		</widget>
+		<widget name="martfury-images-carousel">
+			<fields-in-item items_of="group_setting">
+				<field editor_type="LINK">link>url</field>
+			</fields-in-item>
+		</widget>
+		<widget name="martfury-images-grid">
+			<fields-in-item items_of="group_setting">
+				<field editor_type="LINK">image>url</field>
+				<field editor_type="LINK">link>url</field>
+			</fields-in-item>
+		</widget>
+		<widget name="martfury-journey">
+			<fields-in-item items_of="settings">
+				<field>year</field>
+				<field>title</field>
+				<field editor_type="AREA">desc</field>
+			</fields-in-item>
+		</widget>
+		<widget name="martfury-member">
+			<fields>
+				<field>name</field>
+				<field>job</field>
+			</fields>
+			<fields-in-item items_of="socials">
+				<field editor_type="LINK">link>url</field>
+			</fields-in-item>
+		</widget>
+		<widget name="martfury-newsletter">
+			<fields>
+				<field>title</field>
+				<field>desc</field>
+			</fields>
+			<fields-in-item items_of="btn_setting">
+				<field editor_type="LINK">button_link>url</field>
+			</fields-in-item>
+		</widget>
+		<widget name="martfury-post-grid">
+			<fields>
+				<field>title</field>
+				<field>view_all_text</field>
+				<field editor_type="LINK">view_all_link>url</field>
+			</fields>
+			<fields-in-item items_of="links_group">
+				<field>title</field>
+				<field editor_type="LINK">link>url</field>
+			</fields-in-item>
+		</widget>
+		<widget name="martfury-process">
+			<fields-in-item items_of="process_settings">
+				<field>title</field>
+				<field editor_type="AREA">desc</field>
+			</fields-in-item>
+		</widget>
+		<widget name="martfury-product-deals-carousel-2">
+			<fields>
+				<field>title</field>
+			</fields>
+		</widget>
+		<widget name="martfury-product-deals-carousel">
+			<fields>
+				<field>title</field>
+				<field>ends_in</field>
+				<field>view_all_text</field>
+				<field editor_type="LINK">view_all_link>url</field>
+			</fields>
+		</widget>
+		<widget name="martfury-product-deals-grid">
+			<fields>
+				<field>title</field>
+				<field>ends_in</field>
+				<field>view_all_text</field>
+				<field editor_type="LINK">view_all_link>url</field>
+			</fields>
+		</widget>
+		<widget name="martfury-product-tabs-carousel">
+			<fields>
+				<field>title</field>
+				<field editor_type="LINK">link>url</field>
+				<field>view_all_text</field>
+				<field editor_type="LINK">all_link>url</field>
+			</fields>
+			<fields-in-item items_of="special_products_tabs">
+				<field>title</field>
+			</fields-in-item>
+		</widget>
+		<widget name="martfury-product-tabs-carousel">
+			<fields>
+				<field>title</field>
+				<field editor_type="LINK">link>url</field>
+				<field>view_all_text</field>
+				<field editor_type="LINK">all_link>url</field>
+			</fields>
+			<fields-in-item items_of="special_products_tabs">
+				<field>title</field>
+			</fields-in-item>
+		</widget>
+		<widget name="martfury-products-carousel">
+			<fields>
+				<field>title</field>
+				<field editor_type="LINK">link>url</field>
+				<field>view_all_text</field>
+				<field editor_type="LINK">view_all_link>url</field>
+			</fields>
+			<fields-in-item items_of="link_group">
+				<field>title</field>
+				<field editor_type="LINK">link>url</field>
+			</fields-in-item>
+		</widget>
+		<widget name="martfury-products-grid">
+			<fields>
+				<field>title</field>
+				<field editor_type="LINK">link>url</field>
+				<field>view_all_text</field>
+				<field editor_type="LINK">view_all_link>url</field>
+			</fields>
+			<fields-in-item items_of="link_group">
+				<field>title</field>
+				<field editor_type="LINK">link>url</field>
+			</fields-in-item>
+		</widget>
+		<widget name="martfury-products-list-carousel">
+			<fields>
+				<field>title</field>
+			</fields>
+		</widget>
+		<widget name="martfury-products-list">
+			<fields>
+				<field>title</field>
+				<field editor_type="LINK">link>url</field>
+			</fields>
+			<fields-in-item items_of="link_group">
+				<field>title</field>
+				<field editor_type="LINK">link>url</field>
+			</fields-in-item>
+		</widget>
+		<widget name="martfury-products-of-category-2">
+			<fields>
+				<field>title</field>
+				<field editor_type="LINK">link>url</field>
+				<field>side_title</field>
+				<field>side_link_text</field>
+				<field editor_type="LINK">side_link_url>url</field>
+			</fields>
+			<fields-in-item items_of="links_group">
+				<field>link_text</field>
+				<field editor_type="LINK">link_url>url</field>
+			</fields-in-item>
+			<fields-in-item items_of="banners">
+				<field editor_type="LINK">image_link>url</field>
+			</fields-in-item>
+			<fields-in-item items_of="tabs">
+				<field>tab_title</field>
+			</fields-in-item>
+		</widget>
+		<widget name="martfury-products-of-category">
+			<fields>
+				<field>title</field>
+				<field editor_type="LINK">c_link>url</field>
+				<field>view_all_text</field>
+				<field editor_type="LINK">view_all_link>url</field>
+			</fields>
+			<fields-in-item items_of="links_group">
+				<field>link_text</field>
+				<field editor_type="LINK">link_url>url</field>
+			</fields-in-item>
+			<fields-in-item items_of="banners">
+				<field editor_type="LINK">image_link>url</field>
+			</fields-in-item>
+		</widget>
+		<widget name="martfury-slides">
+			<fields-in-item items_of="slides">
+				<field editor_type="AREA">subtitle</field>
+				<field editor_type="AREA">heading</field>
+				<field editor_type="AREA">description</field>
+				<field>button_text</field>
+				<field editor_type="LINK">link>url</field>
+				<field editor_type="AREA">price_box_text</field>
+			</fields-in-item>
+		</widget>
+		<widget name="martfury-testimonial-slides-2">
+			<fields>
+				<field>title</field>
+			</fields>
+			<fields-in-item items_of="settings">
+				<field editor_type="AREA">desc</field>
+				<field>name</field>
+				<field>job</field>
+			</fields-in-item>
+		</widget>
+		<widget name="martfury-testimonial-slides">
+			<fields>
+				<field>title</field>
+			</fields>
+			<fields-in-item items_of="settings">
+				<field editor_type="AREA">desc</field>
+				<field>name</field>
+				<field>job</field>
+				<field>link_text</field>
+				<field editor_type="LINK">link>url</field>
+			</fields-in-item>
+		</widget>
+	</elementor-widgets>
+</wpml-config>

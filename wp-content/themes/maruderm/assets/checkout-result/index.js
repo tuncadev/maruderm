@@ -1,0 +1,1 @@
+import './checkout-result.css';

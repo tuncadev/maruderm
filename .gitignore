@@ -21,7 +21,8 @@
 !wp-content/mu-plugins/**
 !wp-content/themes/
 !wp-content/themes/**
-
+!wp-content/plugins/
+!wp-content/plugins/**
 # macOS
 .DS_Store
 .AppleDouble

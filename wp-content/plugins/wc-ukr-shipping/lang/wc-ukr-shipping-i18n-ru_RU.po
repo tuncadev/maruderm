@@ -1,0 +1,1258 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wc-ukr-shipping\n"
+"POT-Creation-Date: 2026-06-16T12:38:00+03:00\n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
+"X-Generator: Poedit 3.9\n"
+"X-Domain: wc-ukr-shipping-i18n\n"
+
+#. Plugin Name of the plugin
+#, fuzzy
+#| msgid "Migrate from WC Ukraine Shipping PRO"
+msgid "WC Ukraine Shipping / SmartyParcel"
+msgstr "Миграция с WC Ukraine Shipping PRO"
+
+#. Plugin URI of the plugin
+msgid "https://smartyparcel.com"
+msgstr ""
+
+#. Description of the plugin
+msgid "Multi-carrier shipping solution for WooCommerce."
+msgstr ""
+
+#. Author of the plugin
+msgid "kirillbdev"
+msgstr ""
+
+#: lang/frontend.php:1
+msgid "Attach label for order"
+msgstr "Привязать накладную к заказу"
+
+#: lang/frontend.php:1
+msgid "Carrier"
+msgstr "Перевозчик"
+
+#: lang/frontend.php:1 views/partial/settings_top.php:16
+msgid "Nova Poshta"
+msgstr "Новая Почта"
+
+#: lang/frontend.php:1 src/Foundation/UkrPoshtaAddressShipping.php:60
+#: src/Foundation/UkrPoshtaShipping.php:19
+#: src/Foundation/UkrPoshtaShipping.php:60 views/partial/settings_top.php:20
+msgid "Ukrposhta"
+msgstr "Укрпочта"
+
+#: lang/frontend.php:1
+msgid "Nova Post (International)"
+msgstr "Nova Post (Международная)"
+
+#: lang/frontend.php:1
+msgid "Tracking number"
+msgstr "Трекинг номер"
+
+#: lang/frontend.php:1
+msgid "Add to tracking"
+msgstr "Добавить в трекинг"
+
+#: lang/frontend.php:1 views/order/ttn_widget.php:32
+msgid "Attach"
+msgstr "Привязать"
+
+#: lang/frontend.php:1
+msgid "Unable to attach label for order"
+msgstr "Не удалось привязать накладную к заказу"
+
+#: src/Component/ListTable/AutomationListTable.php:56 views/automation.php:26
+msgid "Name"
+msgstr "Название"
+
+#: src/Component/ListTable/AutomationListTable.php:57
+msgid "Event"
+msgstr ""
+
+#: src/Component/ListTable/AutomationListTable.php:58
+msgid "Event data"
+msgstr ""
+
+#: src/Component/ListTable/AutomationListTable.php:59 views/automation.php:32
+msgid "Active"
+msgstr "Активный"
+
+#: src/Component/ListTable/AutomationListTable.php:60
+msgid "Created At"
+msgstr "Дата создания"
+
+#: src/Component/ListTable/AutomationListTable.php:92
+#: src/Modules/Backend/OptionsPage.php:151
+#: src/Modules/Backend/OptionsPage.php:152
+msgid "Edit"
+msgstr "Редактировать"
+
+#: src/Component/ListTable/AutomationListTable.php:97
+msgid "Confirm action"
+msgstr ""
+
+#: src/Component/ListTable/AutomationListTable.php:98
+#: views/order/edit_order_metabox.php:31 views/order/ttn_widget.php:21
+msgid "Delete"
+msgstr "Удалить"
+
+#: src/Component/Validation/MeestCheckoutValidator.php:22
+msgid "Select warehouse of Meest Post"
+msgstr "Выберите отделение Meest"
+
+#: src/Component/Validation/NovaPoshtaCheckoutValidator.php:33
+msgid "Enter shipping address of Nova Poshta"
+msgstr "Выберите адрес доставки Новой Почтой"
+
+#: src/Component/Validation/NovaPoshtaCheckoutValidator.php:42
+msgid "Select warehouse of Nova Poshta"
+msgstr "Выберите отделение Новой Почты"
+
+#: src/Component/Validation/NovaPostCheckoutValidator.php:20
+msgid "Please provide shipping address"
+msgstr "Пожалуйста укажите адрес доставки"
+
+#: src/Component/Validation/RozetkaDeliveryCheckoutValidator.php:22
+msgid "Select warehouse for Rozetka Delivery"
+msgstr "Выберите отделение Rozetka"
+
+#: src/Component/Validation/UkrposhtaCheckoutValidator.php:22
+msgid "Select Ukrposhta warehouse"
+msgstr "Выберите отделение Укрпочты"
+
+#: src/Foundation/MeestAddressShipping.php:19
+#: src/Foundation/MeestAddressShipping.php:54
+msgid "Meest Post Address"
+msgstr ""
+
+#: src/Foundation/MeestAddressShipping.php:57
+#: src/Foundation/MeestShipping.php:57 src/Foundation/NovaGlobalAddress.php:57
+#: src/Foundation/NovaPoshtaShipping.php:84
+#: src/Foundation/NovaPostShipping.php:57
+#: src/Foundation/RozetkaDeliveryShipping.php:57
+#: src/Foundation/UkrPoshtaAddressShipping.php:73
+#: src/Foundation/UkrPoshtaShipping.php:73
+msgid "Type of shipping cost calculation"
+msgstr "Тип расчета стоимости доставки"
+
+#: src/Foundation/MeestAddressShipping.php:59
+#: src/Foundation/MeestShipping.php:59 src/Foundation/NovaGlobalAddress.php:59
+#: src/Foundation/NovaPoshtaShipping.php:86
+#: src/Foundation/NovaPostShipping.php:59
+#: src/Foundation/UkrPoshtaAddressShipping.php:75
+#: src/Foundation/UkrPoshtaShipping.php:75
+msgid "Access to the SmartyParcel Rates API is only available on paid plans"
+msgstr ""
+"Доступ к SmartyParcel Rates API возможен только на платных тарифных планах"
+
+#: src/Foundation/MeestAddressShipping.php:63
+#: src/Foundation/MeestShipping.php:63 src/Foundation/NovaGlobalAddress.php:63
+#: src/Foundation/NovaPoshtaShipping.php:90
+#: src/Foundation/NovaPostShipping.php:63
+#: src/Foundation/RozetkaDeliveryShipping.php:61
+#: src/Foundation/UkrPoshtaAddressShipping.php:79
+#: src/Foundation/UkrPoshtaShipping.php:79
+msgid "Fixed"
+msgstr "Фиксированный"
+
+#: src/Foundation/MeestAddressShipping.php:64
+#: src/Foundation/MeestShipping.php:64 src/Foundation/NovaGlobalAddress.php:64
+#: src/Foundation/NovaPoshtaShipping.php:91
+#: src/Foundation/NovaPostShipping.php:64
+#: src/Foundation/UkrPoshtaAddressShipping.php:80
+#: src/Foundation/UkrPoshtaShipping.php:80
+msgid "SmartyParcel Rates API"
+msgstr ""
+
+# End warehouse loader
+#: src/Foundation/MeestAddressShipping.php:69
+#: src/Foundation/MeestShipping.php:69 src/Foundation/NovaGlobalAddress.php:69
+#: src/Foundation/NovaPoshtaShipping.php:96
+#: src/Foundation/NovaPostShipping.php:69
+#: src/Foundation/RozetkaDeliveryShipping.php:66
+#: src/Foundation/UkrPoshtaAddressShipping.php:87
+#: src/Foundation/UkrPoshtaShipping.php:87
+msgid "Fixed shipping cost"
+msgstr "Фиксированная стоимость доставки"
+
+#: src/Foundation/MeestAddressShipping.php:77
+#: src/Foundation/MeestShipping.php:77
+#: src/Foundation/NovaPoshtaShipping.php:104
+#: src/Foundation/UkrPoshtaAddressShipping.php:95
+#: src/Foundation/UkrPoshtaShipping.php:95
+msgid "Include COD when calculating shipping cost"
+msgstr "Учитывать наложенный платеж при расчете стоимости доставки"
+
+#: src/Foundation/MeestAddressShipping.php:79
+#: src/Foundation/MeestShipping.php:79
+#: src/Foundation/NovaPoshtaShipping.php:106
+#: src/Foundation/UkrPoshtaAddressShipping.php:97
+#: src/Foundation/UkrPoshtaShipping.php:97
+msgid ""
+"If checked and function supported by carrier, the COD service will be "
+"included in shipping cost."
+msgstr ""
+"Если включено и поддерживается перевозчиком, услуга наложенного платежа "
+"будет включена в стоимость доставки."
+
+#: src/Foundation/MeestAddressShipping.php:85
+#: src/Foundation/MeestShipping.php:85 src/Foundation/NovaGlobalAddress.php:77
+#: src/Foundation/NovaPoshtaShipping.php:120
+#: src/Foundation/NovaPostShipping.php:77
+#: src/Foundation/RozetkaDeliveryShipping.php:74
+#: src/Foundation/UkrPoshtaAddressShipping.php:111
+#: src/Foundation/UkrPoshtaShipping.php:111
+msgid "Include shipping cost to order total"
+msgstr "Включать стоимость доставки в общую сумму заказа"
+
+#: src/Foundation/MeestAddressShipping.php:87
+#: src/Foundation/MeestShipping.php:87 src/Foundation/NovaGlobalAddress.php:79
+#: src/Foundation/NovaPoshtaShipping.php:122
+#: src/Foundation/NovaPostShipping.php:79
+#: src/Foundation/RozetkaDeliveryShipping.php:76
+#: src/Foundation/UkrPoshtaAddressShipping.php:113
+#: src/Foundation/UkrPoshtaShipping.php:113
+msgid "If checked, the shipping cost will be added to the order total."
+msgstr ""
+"Если включено, стоимость доставки будет добавлена ​​к общей сумме заказа."
+
+#: src/Foundation/MeestAddressShipping.php:92
+#: src/Foundation/MeestShipping.php:92 src/Foundation/NovaGlobalAddress.php:84
+#: src/Foundation/NovaPoshtaShipping.php:127
+#: src/Foundation/NovaPostShipping.php:84
+#: src/Foundation/RozetkaDeliveryShipping.php:81
+#: src/Foundation/UkrPoshtaAddressShipping.php:118
+#: src/Foundation/UkrPoshtaShipping.php:118
+msgid "Enable free shipping rule"
+msgstr "Включить правило бесплатной доставки"
+
+#: src/Foundation/MeestAddressShipping.php:94
+#: src/Foundation/MeestShipping.php:94 src/Foundation/NovaGlobalAddress.php:86
+#: src/Foundation/NovaPoshtaShipping.php:129
+#: src/Foundation/NovaPostShipping.php:86
+#: src/Foundation/RozetkaDeliveryShipping.php:83
+#: src/Foundation/UkrPoshtaAddressShipping.php:120
+#: src/Foundation/UkrPoshtaShipping.php:120
+msgid "If checked, free shipping would be available based on order amount."
+msgstr ""
+"Если эта опция включена, будет доступна бесплатная доставка в зависимости от "
+"суммы заказа."
+
+#: src/Foundation/MeestAddressShipping.php:99
+#: src/Foundation/MeestShipping.php:99 src/Foundation/NovaGlobalAddress.php:91
+#: src/Foundation/NovaPoshtaShipping.php:134
+#: src/Foundation/NovaPostShipping.php:91
+#: src/Foundation/RozetkaDeliveryShipping.php:88
+#: src/Foundation/UkrPoshtaAddressShipping.php:125
+#: src/Foundation/UkrPoshtaShipping.php:125
+msgid "Minimum amount for free shipping"
+msgstr "Минимальная сумма для бесплатной доставки"
+
+#: src/Foundation/MeestAddressShipping.php:106
+#: src/Foundation/MeestShipping.php:106 src/Foundation/NovaGlobalAddress.php:98
+#: src/Foundation/NovaPoshtaShipping.php:141
+#: src/Foundation/NovaPostShipping.php:98
+#: src/Foundation/RozetkaDeliveryShipping.php:95
+#: src/Foundation/UkrPoshtaAddressShipping.php:132
+#: src/Foundation/UkrPoshtaShipping.php:132
+msgid "Free shipping method name"
+msgstr "Название метода бесплатной доставки"
+
+#: src/Foundation/MeestAddressShipping.php:108
+#: src/Foundation/MeestShipping.php:108
+#: src/Foundation/NovaGlobalAddress.php:100
+#: src/Foundation/NovaPoshtaShipping.php:143
+#: src/Foundation/NovaPostShipping.php:100
+#: src/Foundation/RozetkaDeliveryShipping.php:97
+#: src/Foundation/UkrPoshtaAddressShipping.php:134
+#: src/Foundation/UkrPoshtaShipping.php:134
+msgid "Free shipping"
+msgstr "Бесплатная доставка"
+
+#: src/Foundation/MeestShipping.php:19 src/Foundation/MeestShipping.php:54
+msgid "Meest Post"
+msgstr ""
+
+#: src/Foundation/NovaGlobalAddress.php:19
+msgid "Nova Global Address"
+msgstr ""
+
+#: src/Foundation/NovaPoshtaShipping.php:65
+msgid "Delivery types"
+msgstr "Виды доставки"
+
+#: src/Foundation/NovaPoshtaShipping.php:68
+#: src/Modules/Frontend/AssetsLoader.php:99
+msgid "To warehouse"
+msgstr "В отделение"
+
+#: src/Foundation/NovaPoshtaShipping.php:69
+#: src/Modules/Frontend/AssetsLoader.php:100
+msgid "By courier"
+msgstr "Курьером"
+
+#: src/Foundation/NovaPoshtaShipping.php:70
+#: src/Modules/Frontend/AssetsLoader.php:101
+msgid "To poshtomat"
+msgstr "В почтомат"
+
+#: src/Foundation/NovaPoshtaShipping.php:74
+msgid ""
+"You can choose which types of delivery will be processed by this shipping "
+"method or create several shipping methods with concrete delivery types "
+"separately."
+msgstr ""
+"Вы можете выбрать, какие виды доставки будут обрабатываться этим методом, "
+"или создать несколько методов доставки с конкретными видами доставки "
+"раздельно."
+
+#: src/Foundation/NovaPoshtaShipping.php:78
+msgid "Combine poshtomats and warehouses"
+msgstr "Объединить почтоматы и отделения"
+
+#: src/Foundation/NovaPoshtaShipping.php:112
+#: src/Foundation/UkrPoshtaAddressShipping.php:103
+#: src/Foundation/UkrPoshtaShipping.php:103
+msgid "Send dimensions when calculating shipping cost"
+msgstr "Учитывать габариты при расчете стоимости"
+
+#: src/Foundation/NovaPoshtaShipping.php:114
+#: src/Foundation/UkrPoshtaAddressShipping.php:105
+#: src/Foundation/UkrPoshtaShipping.php:105
+msgid ""
+"If checked and function supported by carrier, the product dimensions will be "
+"send to rates api."
+msgstr ""
+"Если включено и поддерживается перевозчиком, габариты посылки будут "
+"отправляться в запросе на расчет ставок."
+
+#: src/Foundation/NovaPostShipping.php:19
+#: src/Foundation/NovaPostShipping.php:54
+msgid "Nova Post"
+msgstr ""
+
+#: src/Foundation/RozetkaDeliveryShipping.php:19
+#: src/Foundation/RozetkaDeliveryShipping.php:54
+msgid "Rozetka Delivery"
+msgstr ""
+
+#: src/Foundation/UkrPoshtaAddressShipping.php:19
+msgid "Ukrposhta Address"
+msgstr ""
+
+#: src/Foundation/UkrPoshtaAddressShipping.php:63
+#: src/Foundation/UkrPoshtaShipping.php:63
+msgid "Type of shipment"
+msgstr "Тип отправки"
+
+#: src/Foundation/UkrPoshtaAddressShipping.php:68
+#: src/Foundation/UkrPoshtaShipping.php:68
+msgid "STANDARD"
+msgstr "СТАНДАРТ"
+
+#: src/Foundation/UkrPoshtaAddressShipping.php:69
+#: src/Foundation/UkrPoshtaShipping.php:69
+msgid "EXPRESS"
+msgstr "ЭКСПРЕСС"
+
+#: src/Http/Controllers/MigrationController.php:28
+msgid "Migrations were successfully applied"
+msgstr "Миграции были успешно применены"
+
+#: src/Http/Controllers/MigrationController.php:35
+msgid "Unable to apply migrations"
+msgstr "Не удалось применить миграции"
+
+#: src/Http/Controllers/OptionsController.php:31 views/tools.php:26
+msgid "Settings saved successfully!"
+msgstr "Настройки успешно сохранены!"
+
+# Options page
+#: src/Modules/Backend/OptionsPage.php:92 views/settings_general.php:19
+#: views/settings_nova_poshta.php:19 views/settings_rozetka.php:19
+#: views/settings_ukrposhta.php:19
+msgid "Settings"
+msgstr "Настройки"
+
+#: src/Modules/Backend/OptionsPage.php:103
+#: src/Modules/Backend/OptionsPage.php:104
+msgid "Smarty Parcel"
+msgstr ""
+
+#: src/Modules/Backend/OptionsPage.php:112
+#: src/Modules/Backend/OptionsPage.php:113
+msgid "Create TTN"
+msgstr "Создать ТТН"
+
+#: src/Modules/Backend/OptionsPage.php:121
+#: src/Modules/Backend/OptionsPage.php:122 views/orders.php:4
+msgid "Orders"
+msgstr "Заказы"
+
+#: src/Modules/Backend/OptionsPage.php:130
+#: src/Modules/Backend/OptionsPage.php:131
+msgid "Automation"
+msgstr "Автоматизация"
+
+#: src/Modules/Backend/OptionsPage.php:142
+#: src/Modules/Backend/OptionsPage.php:143 views/order/ttn_widget.php:29
+msgid "Create"
+msgstr "Создать"
+
+#: src/Modules/Backend/OptionsPage.php:160
+#: src/Modules/Backend/OptionsPage.php:161 views/tools.php:14
+msgid "Tools"
+msgstr "Инструменты"
+
+# Warehouse loader
+#: src/Modules/Backend/OptionsPage.php:172
+msgid "Warehouses data of Nova Poshta"
+msgstr "Данные отделений Новой Почты"
+
+#: src/Modules/Backend/OptionsPage.php:173
+msgid "Last update date:"
+msgstr "Дата последнего обновления:"
+
+#: src/Modules/Backend/OptionsPage.php:174
+msgid "Status:"
+msgstr "Статус:"
+
+#: src/Modules/Backend/OptionsPage.php:175
+msgid "Not completed"
+msgstr "Не завершено"
+
+#: src/Modules/Backend/OptionsPage.php:176
+msgid "Completed"
+msgstr "Завершено"
+
+#: src/Modules/Backend/OptionsPage.php:177
+msgid "Unknown"
+msgstr "Неизвестный"
+
+#: src/Modules/Backend/OptionsPage.php:178
+msgid "Update warehouses"
+msgstr "Обновить отделения"
+
+#: src/Modules/Backend/OptionsPage.php:179
+msgid "Continue update"
+msgstr "Продолжить обновление"
+
+#: src/Modules/Backend/OptionsPage.php:180
+msgid "Load areas..."
+msgstr "Загрузка областей..."
+
+#: src/Modules/Backend/OptionsPage.php:181
+msgid "Load cities..."
+msgstr "Загрузка городов..."
+
+#: src/Modules/Backend/OptionsPage.php:182
+msgid "Load warehouses..."
+msgstr "Загрузка отделений..."
+
+#: src/Modules/Backend/OptionsPage.php:183
+msgid "Warehouses db updated successfully"
+msgstr "Данные отделений успешно обновлены"
+
+#: src/Modules/Backend/OptionsPage.php:186
+msgid "Are you sure to restart migrations? This action cannot be canceled."
+msgstr ""
+"Вы уверены, что хотите перезапустить миграции? Это действие не может быть "
+"отменено."
+
+#: src/Modules/Backend/OptionsPage.php:335
+msgid "Unable to detect carrier for order"
+msgstr "Не удалось определить перевозчика для заказа"
+
+#: src/Modules/Backend/OptionsPage.php:373
+msgid "Add rule"
+msgstr "Добавить правило"
+
+#: src/Modules/Backend/OptionsPage.php:391
+msgid "Rule not found"
+msgstr "Правило не найдено"
+
+#: src/Modules/Backend/OptionsPage.php:400
+msgid "Rule saved successfully"
+msgstr "Правило успешно сохранено"
+
+#: src/Modules/Backend/Orders.php:150
+msgid "SmartyParcel"
+msgstr ""
+
+#: src/Modules/Backend/Orders.php:165
+msgid "Purchase label is not available for this order."
+msgstr "Создание накладной недоступно для этого заказа."
+
+#: src/Modules/Backend/Orders.php:203
+msgid "Edit shipping address"
+msgstr "Редактировать адрес доставки"
+
+#: src/Modules/Backend/ShippingItemDrawer.php:45
+#: src/Modules/Backend/ShippingItemDrawer.php:51
+#: src/Modules/Backend/ShippingItemDrawer.php:54
+msgid "City"
+msgstr "Город"
+
+#: src/Modules/Backend/ShippingItemDrawer.php:46
+msgid "Warehouse / Poshtomat"
+msgstr "Отделение / Почтомат"
+
+#: src/Modules/Backend/ShippingItemDrawer.php:47
+msgid "Settlement"
+msgstr "Населенный пункт"
+
+#: src/Modules/Backend/ShippingItemDrawer.php:48
+msgid "Street"
+msgstr "Улица"
+
+#: src/Modules/Backend/ShippingItemDrawer.php:49
+msgid "House number"
+msgstr "Номер дома"
+
+#: src/Modules/Backend/ShippingItemDrawer.php:50
+msgid "Flat"
+msgstr "Квартира"
+
+#: src/Modules/Backend/ShippingItemDrawer.php:52
+#: src/Modules/Backend/ShippingItemDrawer.php:55
+msgid "Warehouse"
+msgstr "Отделение"
+
+#: src/Modules/Backend/ShippingItemDrawer.php:53
+msgid "Service type"
+msgstr "Тип сервиса"
+
+#: src/Modules/Frontend/Account.php:31 views/settings_nova_poshta.php:32
+#: views/settings_rozetka.php:31 views/settings_ukrposhta.php:31
+msgid "Shipping label"
+msgstr "Накладная"
+
+#: src/Modules/Frontend/AssetsLoader.php:98
+msgid "Select shipping address"
+msgstr "Укажите адрес доставки"
+
+#: src/Modules/Frontend/AssetsLoader.php:102
+msgid "To warehouse or poshtomat"
+msgstr "В отделение или почтомат"
+
+#: src/Modules/Frontend/AssetsLoader.php:104
+#: src/Modules/Frontend/AssetsLoader.php:115
+msgid "Select locality"
+msgstr "Выберите населенный пункт"
+
+#: src/Modules/Frontend/AssetsLoader.php:105
+msgid "Select warehouse"
+msgstr "Выберите отделение"
+
+#: src/Modules/Frontend/AssetsLoader.php:106
+msgid "Select poshtomat"
+msgstr "Выберите почтомат"
+
+#: src/Modules/Frontend/AssetsLoader.php:107
+msgid "Select warehouse or poshtomat"
+msgstr "Выберите отделение или почтомат"
+
+#: src/Modules/Frontend/AssetsLoader.php:108
+msgid "Enter address"
+msgstr "Введите адрес"
+
+#: src/Modules/Frontend/AssetsLoader.php:109
+msgid "Enter 3 or more characters to search"
+msgstr "Введите 3 или больше символов для поиска"
+
+#: src/Modules/Frontend/AssetsLoader.php:110
+msgid "Enter number or address of warehouse"
+msgstr "Введите номер или адрес отделения"
+
+#: src/Modules/Frontend/AssetsLoader.php:111
+msgid "Loading..."
+msgstr "Загрузка..."
+
+#: src/Modules/Frontend/AssetsLoader.php:112
+msgid "Load more"
+msgstr "Загрузить еще"
+
+#: src/Modules/Frontend/AssetsLoader.php:113
+msgid "Nothing found"
+msgstr "Ничего не найдено"
+
+#: src/Modules/Frontend/AssetsLoader.php:114
+msgid "Enter more chars"
+msgstr "Введите больше символов"
+
+#: src/Modules/Frontend/AssetsLoader.php:116
+msgid "Select street"
+msgstr "Выберите улицу"
+
+#: src/Modules/Frontend/AssetsLoader.php:117
+msgid "Enter house"
+msgstr "Укажите дом"
+
+#: src/Modules/Frontend/AssetsLoader.php:118
+msgid "Enter flat number"
+msgstr "Укажите квартиру"
+
+#: src/Modules/Frontend/AssetsLoader.php:119
+msgid "Something went wrong"
+msgstr "Что-то пошло не так"
+
+#: src/Modules/Frontend/Checkout.php:86
+msgid "Middle Name"
+msgstr "Отчество"
+
+#: views/automation.php:14
+msgid "Rule constructor"
+msgstr "Конструктор правил"
+
+#: views/automation.php:17 views/settings_general.php:23
+#: views/settings_nova_poshta.php:23 views/settings_rozetka.php:23
+#: views/settings_ukrposhta.php:23 views/tools.php:17
+msgid "Save"
+msgstr "Сохранить"
+
+#: views/order/edit_order_metabox.php:48
+msgid "Create shipping label"
+msgstr "Создать накладную"
+
+#: views/order/edit_order_metabox.php:52
+msgid "Attach shipping label"
+msgstr "Привязать накладную"
+
+#: views/partial/locator_message.php:13
+msgid "Use SmartyParcel Locator API"
+msgstr "Использовать SmartyParcel Locator API"
+
+#: views/partial/locator_message.php:18
+msgid ""
+"Connect your store to SmartyParcel to access a unified database of pickup "
+"points from multiple carriers — without worrying about data updates or "
+"signing additional agreements."
+msgstr ""
+"Подключите свой магазин к SmartyParcel, чтобы получить доступ к единой базе "
+"точек выдачи различных перевозчиков без забот об обновлении данных или "
+"заключении дополнительных договоров."
+
+#: views/partial/locator_message.php:19
+msgid "Learn more"
+msgstr "Узнать больше"
+
+#: views/partial/pro_promotion.php:12
+msgid "Need help?"
+msgstr "Нужна помощь?"
+
+#: views/partial/pro_promotion.php:20
+#: views/partial/settings_general/parcels.php:13
+#: views/partial/settings_nova_poshta/parcels.php:13
+#: views/partial/settings_rozetka/parcels.php:13
+#: views/partial/settings_ukrposhta/parcels.php:13
+msgid "Documentation"
+msgstr "Документация"
+
+#: views/partial/pro_promotion.php:27
+msgid "Open support chat"
+msgstr "Открыть чат поддержки"
+
+#: views/partial/pro_promotion.php:39
+msgid "Unlock more features with paid plans"
+msgstr "Разблокируйте больше функций с платным тарифом"
+
+#: views/partial/pro_promotion.php:43
+msgid "More shipments limit"
+msgstr "Больше лимитов на отправления"
+
+#: views/partial/pro_promotion.php:46
+msgid "More carrier accounts"
+msgstr "Больше аккаунтов перевозчика"
+
+#: views/partial/pro_promotion.php:49
+msgid "Automatic calculation of shipping costs."
+msgstr "Автоматический расчет стоимости доставки."
+
+#: views/partial/pro_promotion.php:52
+msgid "Shipping calculation based on order total"
+msgstr "Расчет стоимости доставки в зависимости от суммы заказа"
+
+#: views/partial/pro_promotion.php:55
+msgid "Possibility of mass generation of TTN in one click"
+msgstr "Возможность массового создания ТТН в один клик"
+
+#: views/partial/pro_promotion.php:58
+msgid "Extended parcels analytics"
+msgstr "Расширенная аналитика посылок"
+
+#: views/partial/pro_promotion.php:61
+msgid "Premium support"
+msgstr "Premium поддержка"
+
+#: views/partial/pro_promotion.php:69
+msgid "Switch to paid plan"
+msgstr "Перейти на платный тариф"
+
+#: views/partial/settings_general/carriers.php:15
+msgid ""
+"On this page, you can enable the carriers you want to integrate with your "
+"store."
+msgstr ""
+"На этой странице вы можете включить перевозчиков, которых хотите "
+"интегрировать в свой магазин."
+
+#: views/partial/settings_general/carriers.php:16
+msgid "List of supported carriers"
+msgstr "Список поддерживаемых перевозчиков"
+
+#: views/partial/settings_general/checkout.php:14
+msgid "Load translates from"
+msgstr "Загружать переводы из"
+
+#: views/partial/settings_general/checkout.php:16
+msgid "Plugin settings"
+msgstr "Настроек плагина"
+
+#: views/partial/settings_general/checkout.php:17
+msgid "Wordpress localization files"
+msgstr "Файлы локализации Wordpress"
+
+#: views/partial/settings_general/checkout.php:20
+msgid ""
+"If you are using language plugins such as WPML or Polylang - select "
+"\"Wordpress localization files\" option"
+msgstr ""
+"Если вы используете плагины локализации, такие как WPML или Polylang, то "
+"выберите опцию \"Файлы локализации Wordpress\""
+
+#: views/partial/settings_general/checkout.php:25
+msgid "Shipping block position on checkout page"
+msgstr "Позиция блока доставки на странице чекаута"
+
+#: views/partial/settings_general/checkout.php:27
+msgid "Default section"
+msgstr "Основная секция"
+
+#: views/partial/settings_general/checkout.php:28
+msgid "Additional section"
+msgstr "Дополнительная секция"
+
+#: views/partial/settings_general/checkout.php:35
+msgid "Color of spinner in frontend"
+msgstr "Цвет спинера во frontend"
+
+#: views/partial/settings_general/checkout.php:42
+msgid "Save last customer address"
+msgstr "Сохранять последний адрес пользователя"
+
+#: views/partial/settings_general/checkout.php:48
+msgid "Inject additional shipping fields"
+msgstr "Внедрить дополнительные поля доставки"
+
+#: views/partial/settings_general/checkout.php:54
+msgid "Use currency conversion on rates estimation"
+msgstr "Использовать конвертацию валюты при расчете стоимости доставки"
+
+#: views/partial/settings_general/checkout.php:56
+msgid ""
+"Carriers often return shipping costs in the destination currency. If this "
+"option is enabled, SmartyParcel will convert the shipping cost to the "
+"store’s selected currency using average worldwide exchange rates."
+msgstr ""
+"Перевозчики часто возвращают стоимость доставки в валюте страны назначения. "
+"Если эта опция включена, SmartyParcel будет конвертировать стоимость "
+"доставки в текущую валюту магазина, используя усредненные мировые обменные "
+"курсы."
+
+#: views/partial/settings_general/parcels.php:12
+#: views/partial/settings_nova_poshta/parcels.php:12
+#: views/partial/settings_rozetka/parcels.php:12
+#: views/partial/settings_ukrposhta/parcels.php:12
+#: views/ttn/ttn_forbidden.php:15
+msgid ""
+"The plugin must be connected to the Smarty Parcel service to use the "
+"functionality of creating a TTN"
+msgstr ""
+"Для использования функционала создания ТТН плагин должен быть подключен к "
+"сервису Smarty Parcel"
+
+#: views/partial/settings_general/parcels.php:19
+msgid "COD method"
+msgstr "Метод наложенного платежа"
+
+#: views/partial/settings_general/parcels.php:26
+msgid "Default description"
+msgstr "Описание по-умолчанию"
+
+#: views/partial/settings_general/parcels.php:35
+msgid "Default weight"
+msgstr "Вес по-умолчанию"
+
+#: views/partial/settings_general/parcels.php:41
+msgid "Default dimensions"
+msgstr "Габариты по-умолчанию"
+
+#: views/partial/settings_general/parcels.php:46
+msgid "Width (cm)"
+msgstr "Ширина (см)"
+
+#: views/partial/settings_general/parcels.php:56
+msgid "Height (cm)"
+msgstr "Высота (см)"
+
+#: views/partial/settings_general/parcels.php:66
+msgid "Length (cm)"
+msgstr "Длина (см)"
+
+#: views/partial/settings_general/pickup_points.php:21
+msgid "Bearer eCom token of Ukrposhta"
+msgstr "Bearer eCom токен Укрпочты"
+
+#: views/partial/settings_general/pickup_points.php:23
+msgid "Bearer eCom token is required to search for warehouses across Ukraine."
+msgstr "Bearer eCom токен необходим для поиска отделений по Украине."
+
+#: views/partial/settings_general/pickup_points.php:28
+msgid "API Key of Nova Post"
+msgstr "API ключ Nova Post"
+
+#: views/partial/settings_general/pickup_points.php:30
+msgid "API key is required to search for warehouses and PUDO across Europe"
+msgstr "API ключ необходим для поиска отделений и PUDO по всей Европе"
+
+#: views/partial/settings_general/pickup_points.php:35
+msgid "API Token of Meest Post"
+msgstr "API токен Meest"
+
+#: views/partial/settings_general/pickup_points.php:37
+msgid "API token is required to search for warehouses and PUDO of Meest Post"
+msgstr ""
+"API токен необходим для поиска отделений и пунктов выдачи Meest по Украине"
+
+#: views/partial/settings_nova_poshta/checkout.php:13
+msgid "Display language of cities and departments"
+msgstr "Язык отображения городов и отделений"
+
+#: views/partial/settings_nova_poshta/checkout.php:17
+msgid "Russian"
+msgstr "Русский"
+
+#: views/partial/settings_nova_poshta/checkout.php:18
+msgid "Ukrainian"
+msgstr "Украинский"
+
+#: views/partial/settings_nova_poshta/checkout.php:25
+msgid "Use Nova Poshta online directory for search settlements"
+msgstr ""
+"Использовать онлайн-справочник Новой Почты для поиска населенных пунктов"
+
+#: views/partial/settings_nova_poshta/checkout.php:27
+msgid ""
+"If enabled, the plugin will use online directory api for both warehouse and "
+"address delivery"
+msgstr ""
+"Если включено, плагин будет использовать API онлайн-справочника как для "
+"адресной доставки, так и для доставки на отделение"
+
+#: views/partial/settings_nova_poshta/parcels.php:18
+#: views/partial/settings_rozetka/parcels.php:19
+#: views/partial/settings_ukrposhta/parcels.php:19
+msgid "Delivery payer"
+msgstr "Плательщик за доставку"
+
+#: views/partial/settings_nova_poshta/parcels.php:22
+#: views/partial/settings_rozetka/parcels.php:21
+#: views/partial/settings_ukrposhta/parcels.php:21
+#: views/partial/settings_ukrposhta/parcels.php:53
+msgid "Sender"
+msgstr "Отправитель"
+
+#: views/partial/settings_nova_poshta/parcels.php:23
+#: views/partial/settings_rozetka/parcels.php:22
+#: views/partial/settings_ukrposhta/parcels.php:22
+#: views/partial/settings_ukrposhta/parcels.php:54
+msgid "Recipient"
+msgstr "Получатель"
+
+#: views/partial/settings_nova_poshta/parcels.php:29
+msgid "Payment method"
+msgstr "Способ оплаты"
+
+#: views/partial/settings_nova_poshta/parcels.php:33
+msgid "Cash"
+msgstr "Наличный расчет"
+
+#: views/partial/settings_nova_poshta/parcels.php:34
+msgid "NonCash"
+msgstr "Безналичный расчет"
+
+#: views/partial/settings_nova_poshta/parcels.php:41
+msgid "Payment control"
+msgstr "Контроль оплаты"
+
+#: views/partial/settings_nova_poshta/parcels.php:47
+msgid "Global params as default"
+msgstr "Глобальные параметры по-умолчанию"
+
+#: views/partial/settings_top.php:12
+msgid "General settings"
+msgstr "Общие настройки"
+
+#: views/partial/settings_top.php:24
+msgid "Rozetka delivery"
+msgstr ""
+
+#: views/partial/settings_ukrposhta/parcels.php:29
+msgid "On fail receive"
+msgstr "В случае невручения"
+
+#: views/partial/settings_ukrposhta/parcels.php:31
+msgid "Return"
+msgstr "Вернуть отправителю"
+
+#: views/partial/settings_ukrposhta/parcels.php:32
+msgid "Process as refusal"
+msgstr "Уничтожить отправление"
+
+#: views/partial/settings_ukrposhta/parcels.php:39
+msgid "Check on delivery"
+msgstr "Осмотр при вручении"
+
+#: views/partial/settings_ukrposhta/parcels.php:45
+msgid "SMS notification"
+msgstr "SMS сообщение о прибытии посылки"
+
+#: views/partial/settings_ukrposhta/parcels.php:51
+msgid "COD payer"
+msgstr "Плательщик за услугу обратной доставки"
+
+#: views/settings_general.php:31
+msgid "Carriers"
+msgstr "Перевозчики"
+
+#: views/settings_general.php:32
+msgid "Pickup points"
+msgstr "Пункты выдачи"
+
+#: views/settings_general.php:33 views/settings_nova_poshta.php:31
+msgid "Checkout"
+msgstr ""
+
+#: views/settings_general.php:34
+msgid "Shipping Label"
+msgstr "Накладная"
+
+#: views/tools.php:30
+msgid "Migrate from WC Ukraine Shipping PRO"
+msgstr "Миграция с WC Ukraine Shipping PRO"
+
+#: views/tools.php:33
+msgid "Sync old TTNs"
+msgstr "Синхронизация старых ТТН"
+
+#: views/tools.php:36
+msgid "Available <strong>%d TTNs</strong> to sync"
+msgstr "Доступно <strong>%d ТТН</strong> для синхронизации"
+
+#: views/tools.php:40
+msgid "Start sync"
+msgstr "Запустить синхронизацию"
+
+#: views/ttn/ttn_custom.php:12 views/ttn/ttn_forbidden.php:12
+msgid "New TTN"
+msgstr "Новая накладная"
+
+#: views/ttn/ttn_custom.php:16
+msgid "The order has non-standard shipping method"
+msgstr "Этот заказ содержит нестандартный способ доставки"
+
+#: views/ttn/ttn_custom.php:22
+msgid "Create for Nova Poshta"
+msgstr "Создать для Новой Почты"
+
+#: views/ttn/ttn_custom.php:27
+msgid "Create for Ukrposhta"
+msgstr "Создать для Укрпочты"
+
+#: views/ttn/ttn_forbidden.php:20
+msgid "Read more"
+msgstr "Подробнее"
+
+#~ msgid "Use SmartyParcel addresses as default"
+#~ msgstr "Использовать адреса SmartyParcel по-умолчанию"
+
+#~ msgid "Default carrier account"
+#~ msgstr "Аккаунт перевозчика по-умолчанию"
+
+#~ msgid "Unable to detect order shipping method or carrier"
+#~ msgstr "Не удалось определить способ доставки заказа или перевозчика."
+
+#~ msgid "Return after 7 days"
+#~ msgstr "Вернуть после 7 дней хранения"
+
+#~ msgid ""
+#~ "Integration of Nova Poshta and Ukrposhta delivery services for WooCommerce"
+#~ msgstr "Интеграция службы доставки Новая Почта и Укрпочта для WooCommerce"
+
+#~ msgid "Additional settings also available at"
+#~ msgstr "Дополнительные параметры также доступны на"
+
+#~ msgid "plugin settings page"
+#~ msgstr "странице настроек плагина"
+
+#~ msgid "You can manage shipping method options at"
+#~ msgstr "Вы можете настроить метод доставки на"
+
+#~ msgid "The part of options have been moved to the shipping method settings."
+#~ msgstr "Часть опций была перенесена в настройки способа доставки."
+
+#~ msgid "Calculate shipping cost for view only"
+#~ msgstr "Рассчитывать стоимость доставки только для просмотра"
+
+#~ msgid "Use 0 to disable shipping calculation"
+#~ msgstr "Введите 0 для отключения расчета стоимости"
+
+#~ msgid "Take COD into account when calculating shipping cost"
+#~ msgstr "Учитывать наложенный платеж при расчете стоимости доставки"
+
+#~ msgid "Shipping"
+#~ msgstr "Доставка"
+
+#~ msgid "Delivery methods"
+#~ msgstr "Способы доставки"
+
+#~ msgid "Enable address shipping"
+#~ msgstr "Включить адресную доставку"
+
+#~ msgid "Show poshtomats"
+#~ msgstr "Показывать почтоматы"
+
+#~ msgid "Select area"
+#~ msgstr "Выберите область"
+
+#~ msgid "Select city"
+#~ msgstr "Выберите город"
+
+#~ msgid "Need address delivery"
+#~ msgstr "Нужна адресная доставка"
+
+#~ msgid "Shipping block title"
+#~ msgstr "Заголовок блока доставки"
+
+#~ msgid "Placeholder of select area field"
+#~ msgstr "Placeholder выбора области"
+
+#~ msgid "Placeholder of select city field"
+#~ msgstr "Placeholder выбора города"
+
+#~ msgid "Placeholder of select warehouse field"
+#~ msgstr "Placeholder выбора отделения"
+
+#~ msgid "Label of address selector"
+#~ msgstr "Checkbox адресной доставки"
+
+#~ msgid "Placeholder of address field"
+#~ msgstr "Placeholder адресной доставки"
+
+#~ msgid "Empty result text"
+#~ msgstr "Текст пустого результата поиска"
+
+#~ msgid "Translates"
+#~ msgstr "Переводы"
+
+#~ msgid "Connect store"
+#~ msgstr "Подключить магазин"
+
+#~ msgid "Use Nova Poshta API for address shipping"
+#~ msgstr "Использовать API новой Почты для адресной доставки"
+
+#~ msgid "General"
+#~ msgstr "Общие"
+
+#~ msgid "Automatically add shipments to tracking"
+#~ msgstr "Автоматически добавлять посылки в трекинг"
+
+#~ msgid "Enable legacy tracking compatibility"
+#~ msgstr "Включить совместимость с устаревшей функцией трекинга"
+
+#~ msgid ""
+#~ "If you have previously used our tracking service, enable this option to "
+#~ "receive statuses for already added invoices."
+#~ msgstr ""
+#~ "Если вы ранее пользовались нашей услугой отслеживания, включите эту "
+#~ "опцию, чтобы получать статусы для ранее созданных накладных."
+
+#~ msgid "Enter value for search"
+#~ msgstr "Введите значение для поиска"
+
+#~ msgid "House"
+#~ msgstr "Дом"
+
+#~ msgid "to doors"
+#~ msgstr "до дверей"
+
+#~ msgid "Upgrade pricing plan"
+#~ msgstr "Сменить тарифный план"
+
+#~ msgid "Unlimited number of shipments"
+#~ msgstr "Неограниченное количество отправлений"
+
+#~ msgid "Unlimited carrier accounts"
+#~ msgstr "Неограниченное количество аккаунтов перевозчика"
+
+#~ msgid ""
+#~ "Unfortunately, you have exhausted your trial quota on the Free plan. To "
+#~ "continue creating invoices, please upgrade to the Advanced plan."
+#~ msgstr ""
+#~ "К сожалению вы исчерпали свою пробную квоту для бесплатного плана. Чтобы "
+#~ "продолжить создание накладных, пожалуйста, перейдите на Advanced план."
+
+#~ msgid "Unlock powerful logistics automation tools"
+#~ msgstr "Разблокируйте мощные инструменты автоматизации логистики"
+
+#~ msgid "Calculation of delivery via courier"
+#~ msgstr "Расчет стоимости через курьера"
+
+#~ msgid "Calculation of delivery depending on the order amount"
+#~ msgstr "Расчет стоимости в зависимости от суммы заказа"
+
+#~ msgid "Creating invoices"
+#~ msgstr "Создание ТТН"
+
+#~ msgid "Printing invoices"
+#~ msgstr "Печать ТТН"
+
+#~ msgid "Tracking invoices"
+#~ msgstr "Трекинг ТТН"
+
+#~ msgid "Bulk generation of invoices in one click"
+#~ msgstr "Массовое создание ТТН в один клик"
+
+#~ msgid "year"
+#~ msgstr "год"
+
+#~ msgid "Switch to"
+#~ msgstr "Сменить на"
+
+# PRO features
+#~ msgid "Get more features from SmartyParcel Advanced"
+#~ msgstr "Получите больше возможностей от SmartyParcel Advanced"
+
+#~ msgid "SMS notifications"
+#~ msgstr "СМС оповещения"
+
+#~ msgid "Sender first name"
+#~ msgstr "Имя отправителя"
+
+#~ msgid "Sender last name"
+#~ msgstr "Фамилия отправителя"
+
+#~ msgid "Sender phone"
+#~ msgstr "Телефон отправителя"
+
+#~ msgid "Use new UI"
+#~ msgstr "Использовать новый UI"
+
+#~ msgid ""
+#~ "We recommend to enable this setting as the old UI will be removed in "
+#~ "version 2.0"
+#~ msgstr ""
+#~ "Мы рекомендуем включить эту настройку, так как старый UI будет удален в "
+#~ "версии 2.0"
+
+#~ msgid "This option is not working with old UI"
+#~ msgstr "Данная опция не работает со старым UI"
+
+#~ msgid "COD"
+#~ msgstr "Наложенный платеж"
+
+#~ msgid "Free"
+#~ msgstr "Бесплатно"
+
+#~ msgid "Basic set of functions for logistics automation."
+#~ msgstr "Базовый набор функций по автоматизации доставки"
+
+#~ msgid "Selecting a delivery department"
+#~ msgstr "Выбор отделения доставки"
+
+#~ msgid "Fixed cost calculation"
+#~ msgstr "Фиксированный расчет стоимости"
+
+#~ msgid "25 invoices at a time (creation / tracking)"
+#~ msgstr "25 накладных единоразово (создание / трекинг)"
+
+#~ msgid "month"
+#~ msgstr "месяц"
+
+#~ msgid "Select monthly turnover"
+#~ msgstr "Выберите месячный оборот посылок"
+
+#~ msgid "parcels / month"
+#~ msgstr "посылок / месяц"
+
+#~ msgid "per extra parcel"
+#~ msgstr "за посылку сверх лимита"
+
+#~ msgid "Ability to customize separated shipping costs for address shipping"
+#~ msgstr ""
+#~ "Возможность настроить отдельный расчет стоимости для адресной доставки"
+
+#~ msgid "TTN Tracking"
+#~ msgstr "Отслеживание статусов ТТН"
+
+#~ msgid "Constructor of business rules automation"
+#~ msgstr "Визуальный конструктор автоматизации бизнес-процессов"
+
+#~ msgid "Danger zone"
+#~ msgstr "Опасная зона"
+
+#~ msgid "Re-run migrations"
+#~ msgstr "Перезапустить миграции"
+
+#~ msgid ""
+#~ "Be careful when performing this action. Be sure to refresh the list of "
+#~ "warehouses after this action will be completed."
+#~ msgstr ""
+#~ "Будьте осторожны при выполнении данного действия. Не забудьте обновить "
+#~ "базу отделений после выполнения этой операции."
+
+#~ msgid "Full address shipping integration (using Nova Poshta address API)"
+#~ msgstr ""
+#~ "Полноценная интеграция адресной доставки (использование онлайн "
+#~ "справочника Новой Почты)"
+
+#~ msgid "Ability to generate TTN. Support all of types: W2W, W2D, D2W, D2D"
+#~ msgstr ""
+#~ "Генерация ТТН. Поддержка типов: Отделение-Отделение, Отделение-Адрес, "
+#~ "Адрес-Адрес, Адрес-Отделение"
+
+#~ msgid ""
+#~ "Print TTN of all types: A4 (1 copy), A4 (2 copies), sticker 85x85, "
+#~ "sticker 100х100 (zebra)"
+#~ msgstr ""
+#~ "Печать ТТН всех видов: A4 (1 копия), A4 (2 копии), наклейка 85х85, "
+#~ "наклейка 100х100 (зебра)"
+
+#~ msgid "Automatic email notifications after TTN creation"
+#~ msgstr "Автоматическое email оповещение после создания ТТН"
+
+#~ msgid "Buy PRO version"
+#~ msgstr "Купить PRO версию"
+
+#~ msgid "Request demo"
+#~ msgstr "Запросить демо"
+
+#~ msgid "Become PRO"
+#~ msgstr "Стать PRO клиентом"
+
+#, fuzzy
+#~ msgid "Poshtomat"
+#~ msgstr "Показывать почтоматы"
+
+#~ msgid "After order notes"
+#~ msgstr "После примечания к заказу"

@@ -1,4 +1,26 @@
 {
+  "_delivery-080NXxuv.css": {
+    "file": "assets/delivery-080NXxuv.css",
+    "src": "_delivery-080NXxuv.css"
+  },
+  "assets/bank-transfer/index.js": {
+    "file": "assets/bank-transfer-Dy15dZit.js",
+    "name": "bank-transfer",
+    "src": "assets/bank-transfer/index.js",
+    "isEntry": true,
+    "css": [
+      "assets/bank-transfer-D2ULZN3T.css"
+    ]
+  },
+  "assets/cart/index.js": {
+    "file": "assets/cart-DGY4VYtV.js",
+    "name": "cart",
+    "src": "assets/cart/index.js",
+    "isEntry": true,
+    "css": [
+      "assets/cart-Dl0VBz1q.css"
+    ]
+  },
   "assets/catalog/index.js": {
     "file": "assets/catalog-DseZQi5U.js",
     "name": "catalog",
@@ -6,6 +28,24 @@
     "isEntry": true,
     "css": [
       "assets/catalog-Cmom8bwb.css"
+    ]
+  },
+  "assets/checkout-result/index.js": {
+    "file": "assets/checkout-result-CXnVaXzc.js",
+    "name": "checkout-result",
+    "src": "assets/checkout-result/index.js",
+    "isEntry": true,
+    "css": [
+      "assets/checkout-result-Sqd3iJqI.css"
+    ]
+  },
+  "assets/delivery/index.js": {
+    "file": "assets/delivery-M-0TYmOG.js",
+    "name": "delivery",
+    "src": "assets/delivery/index.js",
+    "isEntry": true,
+    "css": [
+      "assets/delivery-080NXxuv.css"
     ]
   },
   "assets/fonts/FixelDisplay/FixelDisplay-Bold.woff2": {
@@ -62,12 +102,12 @@
     ]
   },
   "assets/globals/index.js": {
-    "file": "assets/globals-DmRmfQZi.js",
+    "file": "assets/globals-VT8Zj21-.js",
     "name": "globals",
     "src": "assets/globals/index.js",
     "isEntry": true,
     "css": [
-      "assets/globals-M71W7-H7.css"
+      "assets/globals-CkanJJy9.css"
     ],
     "assets": [
       "assets/Montserrat-500-CBLtNvLV.woff2",
@@ -84,12 +124,22 @@
     ]
   },
   "assets/landing-page/index.js": {
-    "file": "assets/landing-page-BG2bzTqx.js",
+    "file": "assets/landing-page-yFJtepsf.js",
     "name": "landing-page",
     "src": "assets/landing-page/index.js",
     "isEntry": true,
     "css": [
       "assets/landing-page-CQ5AZkpz.css"
+    ]
+  },
+  "assets/payment/index.js": {
+    "file": "assets/payment-BwtgtMCE.js",
+    "name": "payment",
+    "src": "assets/payment/index.js",
+    "isEntry": true,
+    "css": [
+      "assets/payment-CS9m14yU.css",
+      "assets/delivery-080NXxuv.css"
     ]
   }
 }

@@ -1,0 +1,74 @@
+.maruderm-checkout-result {
+  --ink: #202023;
+  --muted: #6d6d72;
+  --line: rgba(32,32,35,.13);
+  --purple: #7647e9;
+  --mint: #c9f5dc;
+  --yellow: #f8e88c;
+  --aqua: #cbeefa;
+  --lilac: #e7d6ff;
+  --shell: 1320px;
+  --display: var(--font-family-display), sans-serif;
+  color: var(--ink);
+  font-family: var(--font-family-sans), sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+}
+.maruderm-checkout-result *, .maruderm-checkout-result *::before, .maruderm-checkout-result *::after { box-sizing: border-box; }
+.maruderm-checkout-result svg { display: block; max-width: 100%; }
+.maruderm-checkout-result a { color: inherit; text-decoration: none; }
+.maruderm-checkout-result .shell { width: min(var(--shell),calc(100% - 48px)); margin-inline: auto; }
+.maruderm-checkout-result .kicker { display: inline-flex; align-items: center; gap: 10px; color: #515158; font-size: 11px; font-weight: 600; letter-spacing: .13em; text-transform: uppercase; }
+.maruderm-checkout-result .kicker::before { width: 28px; height: 2px; content: ''; background: currentColor; }
+.maruderm-checkout-result .button { display: inline-flex; min-height: 56px; align-items: center; justify-content: center; gap: 18px; border-radius: 999px; padding: 0 24px; font-size: 11px; font-weight: 600; }
+.maruderm-checkout-result .button--dark { color: #fff; background: var(--ink); }
+.maruderm-checkout-result .button svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.7; }
+.maruderm-checkout-result .text-link { border-bottom: 1px solid; font-size: 10px; font-weight: 600; }
+.checkout-result { min-height: 760px; padding: 72px 0 100px; background: radial-gradient(circle at 10% 15%,rgba(201,245,220,.62),transparent 18%),linear-gradient(130deg,#fffdfb,#f8f4ff 55%,#fff0f7); }
+.checkout-result--thanks { background: radial-gradient(circle at 10% 15%,rgba(189,239,247,.7),transparent 18%),linear-gradient(130deg,#fffdfb,#f1fbf6 50%,#f5f0ff); }
+.checkout-result__shell { display: grid; grid-template-columns: minmax(360px,.85fr) minmax(0,1.15fr); align-items: center; gap: clamp(55px,8vw,120px); }
+.checkout-result__visual { position: relative; display: grid; min-height: 520px; place-items: center; }
+.checkout-result__visual::before { position: absolute; width: min(430px,88%); aspect-ratio: 1; border-radius: 42% 48% 38% 50%; content: ''; background: rgba(255,255,255,.72); box-shadow: 0 34px 90px rgba(67,47,89,.11); transform: rotate(-5deg); }
+.checkout-result__icon { position: relative; z-index: 2; display: grid; width: 145px; height: 145px; border-radius: 48px; color: #267a43; background: var(--mint); box-shadow: 0 24px 50px rgba(44,117,70,.15); transform: rotate(-4deg); place-items: center; }
+.checkout-result--thanks .checkout-result__icon { color: #275f77; background: var(--aqua); }
+.checkout-result__icon svg { width: 64px; height: 64px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.6; }
+.checkout-result__orbit { position: absolute; z-index: 1; border-radius: 50%; }
+.checkout-result__orbit--one { width: 430px; height: 430px; border: 1px solid rgba(118,71,233,.2); }
+.checkout-result__orbit--two { width: 480px; height: 235px; border: 1px solid rgba(255,98,182,.25); transform: rotate(-17deg); }
+.checkout-result__note { position: absolute; z-index: 3; right: 6%; bottom: 15%; padding: 9px 14px; border-radius: 999px; background: var(--yellow); font-size: 8px; font-weight: 600; letter-spacing: .1em; transform: rotate(5deg); }
+.checkout-result__content h1 { max-width: 720px; margin: 16px 0 20px; font-family: var(--display); font-size: clamp(42px,5vw,70px); font-weight: 600; letter-spacing: -.055em; line-height: 1.02; }
+.checkout-result__content > p { max-width: 600px; margin: 0; color: var(--muted); font-size: 14px; }
+.checkout-result__meta { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 10px; max-width: 680px; margin: 32px 0; }
+.checkout-result__meta > div { display: grid; gap: 7px; padding: 17px; border: 1px solid rgba(32,32,35,.09); border-radius: 17px; background: rgba(255,255,255,.75); }
+.checkout-result__meta span { color: var(--muted); font-size: 8px; letter-spacing: .07em; text-transform: uppercase; }
+.checkout-result__meta strong { font-size: 11px; }
+.checkout-result__actions { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
+.checkout-result__help { display: flex; max-width: 680px; align-items: center; gap: 10px; border-top: 1px solid var(--line); margin-top: 38px; padding-top: 20px; font-size: 9px; }
+.checkout-result__help > span { display: grid; width: 28px; height: 28px; border-radius: 50%; color: #6032ce; background: var(--lilac); font-weight: 600; place-items: center; }
+.checkout-result__help p { margin: 0; color: var(--muted); }
+.checkout-result__help a { border-bottom: 1px solid; margin-left: auto; font-weight: 600; }
+@media (max-width:900px) {
+  .checkout-result__shell { grid-template-columns: 1fr; gap: 20px; }
+  .checkout-result__visual { min-height: 360px; }
+  .checkout-result__visual::before { width: min(330px,85%); }
+  .checkout-result__orbit--one { width: 330px; height: 330px; }
+  .checkout-result__orbit--two { width: 370px; height: 185px; }
+  .checkout-result__content { text-align: center; }
+  .checkout-result__content > p,.checkout-result__meta,.checkout-result__help { margin-right: auto; margin-left: auto; }
+  .checkout-result__actions { justify-content: center; }
+}
+@media (max-width:600px) {
+  .maruderm-checkout-result .shell { width: min(var(--shell),calc(100% - 32px)); }
+  .checkout-result { min-height: 0; padding: 40px 0 70px; }
+  .checkout-result__visual { min-height: 290px; }
+  .checkout-result__icon { width: 110px; height: 110px; border-radius: 36px; }
+  .checkout-result__icon svg { width: 48px; height: 48px; }
+  .checkout-result__orbit--one { width: 270px; height: 270px; }
+  .checkout-result__orbit--two { width: 300px; height: 150px; }
+  .checkout-result__meta { grid-template-columns: 1fr; }
+  .checkout-result__actions { align-items: stretch; flex-direction: column; }
+  .checkout-result__actions .button { width: 100%; }
+  .checkout-result__actions .text-link { align-self: center; }
+  .checkout-result__help { align-items: flex-start; flex-wrap: wrap; text-align: left; }
+  .checkout-result__help a { margin-left: 38px; }
+}

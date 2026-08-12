@@ -23,6 +23,11 @@ final class Enqueue implements Registrable
         'globals' => 'assets/globals/index.js',
         'frontend' => 'assets/frontend/index.js',
         'catalog' => 'assets/catalog/index.js',
+        'cart' => 'assets/cart/index.js',
+        'delivery' => 'assets/delivery/index.js',
+        'payment' => 'assets/payment/index.js',
+        'bank-transfer' => 'assets/bank-transfer/index.js',
+        'checkout-result' => 'assets/checkout-result/index.js',
         'landing-page' => 'assets/landing-page/index.js',
     ];
 
@@ -96,6 +101,37 @@ final class Enqueue implements Registrable
         if ($handle === 'catalog') {
             return function_exists('is_shop')
                 && (is_shop() || is_product_taxonomy() || (is_search() && get_query_var('post_type') === 'product'));
+        }
+
+        if ($handle === 'cart') {
+            return function_exists('is_cart') && is_cart();
+        }
+
+        if ($handle === 'delivery') {
+            $step = isset($_GET['step']) ? sanitize_key(wp_unslash($_GET['step'])) : 'delivery';
+
+            return function_exists('is_checkout')
+                && is_checkout()
+                && !is_order_received_page()
+                && $step !== 'payment';
+        }
+
+        if ($handle === 'payment') {
+            $step = isset($_GET['step']) ? sanitize_key(wp_unslash($_GET['step'])) : 'delivery';
+
+            return function_exists('is_checkout')
+                && is_checkout()
+                && !is_order_received_page()
+                && $step === 'payment';
+        }
+
+        if ($handle === 'bank-transfer') {
+            return \Maruderm\Checkout\CheckoutResultPage::isBankTransferView();
+        }
+
+        if ($handle === 'checkout-result') {
+            return \Maruderm\Checkout\CheckoutResultPage::currentOrder() instanceof \WC_Order
+                && !\Maruderm\Checkout\CheckoutResultPage::isBankTransferView();
         }
 
         if ($handle === 'landing-page') {
