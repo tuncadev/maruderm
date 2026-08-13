@@ -167,7 +167,7 @@
 
 .md-hero h1 em {
   color: #7b45e9;
-  font-family: "Fixel Display", sans-serif;
+  font-family: var(--font-family-display), sans-serif;
   font-style: normal;
   font-weight: 400;
 }

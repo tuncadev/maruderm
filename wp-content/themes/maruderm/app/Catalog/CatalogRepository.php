@@ -83,6 +83,57 @@ final class CatalogRepository
         ));
     }
 
+    /** @return \WC_Product[] */
+    public function productsForCurrentView(): array
+    {
+        $products = [];
+
+        foreach ($this->products() as $product) {
+            $products[$product->get_id()] = $product;
+        }
+
+        $category = get_queried_object();
+
+        if (!$category instanceof \WP_Term || $category->taxonomy !== 'product_cat') {
+            return array_values($products);
+        }
+
+        global $wpdb;
+
+        $term_ids = [$category->term_id];
+        $children = get_term_children($category->term_id, 'product_cat');
+
+        if (!is_wp_error($children)) {
+            $term_ids = array_merge($term_ids, array_map('intval', $children));
+        }
+
+        $placeholders = implode(', ', array_fill(0, count($term_ids), '%d'));
+        $sql = $wpdb->prepare(
+            "SELECT DISTINCT product.ID
+            FROM {$wpdb->posts} product
+            INNER JOIN {$wpdb->term_relationships} relationship
+                ON relationship.object_id = product.ID
+            INNER JOIN {$wpdb->term_taxonomy} taxonomy
+                ON taxonomy.term_taxonomy_id = relationship.term_taxonomy_id
+            WHERE product.post_type = 'product'
+                AND product.post_status = 'publish'
+                AND taxonomy.taxonomy = 'product_cat'
+                AND taxonomy.term_id IN ({$placeholders})
+            ORDER BY product.post_date DESC, product.ID DESC",
+            ...$term_ids
+        );
+
+        foreach (array_map('intval', $wpdb->get_col($sql)) as $product_id) {
+            $product = wc_get_product($product_id);
+
+            if ($product instanceof \WC_Product && $product->get_catalog_visibility() !== 'hidden') {
+                $products[$product->get_id()] = $product;
+            }
+        }
+
+        return array_values($products);
+    }
+
     private function isProductTaxonomy(string $taxonomy): bool
     {
         return in_array($taxonomy, ['product_cat', 'product_tag'], true)

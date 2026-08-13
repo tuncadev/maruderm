@@ -171,7 +171,7 @@ body.admin-bar #site-header.site-header {
     max-width: 290px;
     margin-bottom: 17px;
     color: #202023;
-    font-family: "Fixel Display", sans-serif;
+    font-family: var(--font-family-display), sans-serif;
     font-size: 23px;
     line-height: 1.08;
 }
@@ -293,7 +293,7 @@ body.admin-bar #site-header.site-header {
     }
 
     .maruderm-menu__mobile-head span {
-        font-family: "Fixel Display", sans-serif;
+        font-family: var(--font-family-display), sans-serif;
         font-size: 20px;
         font-weight: 600;
     }

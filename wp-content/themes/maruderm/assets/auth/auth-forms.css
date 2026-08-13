@@ -4,7 +4,7 @@
     .md-auth-page,
     .md-wc-auth {
         color: var(--text-color);
-        font-family: "Space Grotesk", "Manrope", "Avenir Next", "Segoe UI", sans-serif;
+        font-family: var(--font-family-sans), sans-serif;
     }
 
     .md-auth-page {

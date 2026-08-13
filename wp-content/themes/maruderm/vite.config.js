@@ -55,6 +55,7 @@ export default defineConfig({
         globals: resolve(__dirname, "assets/globals/index.js"),
         frontend: resolve(__dirname, "assets/frontend/index.js"),
         catalog: resolve(__dirname, "assets/catalog/index.js"),
+        product: resolve(__dirname, "assets/product/index.js"),
         cart: resolve(__dirname, "assets/cart/index.js"),
         delivery: resolve(__dirname, "assets/delivery/index.js"),
         payment: resolve(__dirname, "assets/payment/index.js"),

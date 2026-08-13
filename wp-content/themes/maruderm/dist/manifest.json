@@ -3,8 +3,12 @@
     "file": "assets/delivery-080NXxuv.css",
     "src": "_delivery-080NXxuv.css"
   },
+  "_product-card-D6B5YJwF.css": {
+    "file": "assets/product-card-D6B5YJwF.css",
+    "src": "_product-card-D6B5YJwF.css"
+  },
   "assets/bank-transfer/index.js": {
-    "file": "assets/bank-transfer-Dy15dZit.js",
+    "file": "assets/bank-transfer-D_w8JEbT.js",
     "name": "bank-transfer",
     "src": "assets/bank-transfer/index.js",
     "isEntry": true,
@@ -13,7 +17,7 @@
     ]
   },
   "assets/cart/index.js": {
-    "file": "assets/cart-DGY4VYtV.js",
+    "file": "assets/cart-DBSW1mBv.js",
     "name": "cart",
     "src": "assets/cart/index.js",
     "isEntry": true,
@@ -22,16 +26,17 @@
     ]
   },
   "assets/catalog/index.js": {
-    "file": "assets/catalog-DseZQi5U.js",
+    "file": "assets/catalog-DXRjW1k8.js",
     "name": "catalog",
     "src": "assets/catalog/index.js",
     "isEntry": true,
     "css": [
-      "assets/catalog-Cmom8bwb.css"
+      "assets/catalog-CPugtZ-5.css",
+      "assets/product-card-D6B5YJwF.css"
     ]
   },
   "assets/checkout-result/index.js": {
-    "file": "assets/checkout-result-CXnVaXzc.js",
+    "file": "assets/checkout-result-9OS5NOcb.js",
     "name": "checkout-result",
     "src": "assets/checkout-result/index.js",
     "isEntry": true,
@@ -40,7 +45,7 @@
     ]
   },
   "assets/delivery/index.js": {
-    "file": "assets/delivery-M-0TYmOG.js",
+    "file": "assets/delivery-dubalOtY.js",
     "name": "delivery",
     "src": "assets/delivery/index.js",
     "isEntry": true,
@@ -48,49 +53,17 @@
       "assets/delivery-080NXxuv.css"
     ]
   },
-  "assets/fonts/FixelDisplay/FixelDisplay-Bold.woff2": {
-    "file": "assets/FixelDisplay-Bold-Cr-t0h_O.woff2",
-    "src": "assets/fonts/FixelDisplay/FixelDisplay-Bold.woff2"
+  "assets/fonts/RozetkaWeb/RozetkaWeb-Bold.woff2": {
+    "file": "assets/RozetkaWeb-Bold-02T3Aq_L.woff2",
+    "src": "assets/fonts/RozetkaWeb/RozetkaWeb-Bold.woff2"
   },
-  "assets/fonts/FixelDisplay/FixelDisplay-Medium.woff2": {
-    "file": "assets/FixelDisplay-Medium-ABEgljqF.woff2",
-    "src": "assets/fonts/FixelDisplay/FixelDisplay-Medium.woff2"
+  "assets/fonts/RozetkaWeb/RozetkaWeb-Medium.woff2": {
+    "file": "assets/RozetkaWeb-Medium-B1G2EL2e.woff2",
+    "src": "assets/fonts/RozetkaWeb/RozetkaWeb-Medium.woff2"
   },
-  "assets/fonts/FixelDisplay/FixelDisplay-Regular.woff2": {
-    "file": "assets/FixelDisplay-Regular-BuKr9E3J.woff2",
-    "src": "assets/fonts/FixelDisplay/FixelDisplay-Regular.woff2"
-  },
-  "assets/fonts/FixelDisplay/FixelDisplay-SemiBold.woff2": {
-    "file": "assets/FixelDisplay-SemiBold-v6olFATC.woff2",
-    "src": "assets/fonts/FixelDisplay/FixelDisplay-SemiBold.woff2"
-  },
-  "assets/fonts/FixelText/FixelText-Bold.woff2": {
-    "file": "assets/FixelText-Bold-Dx5ClmPT.woff2",
-    "src": "assets/fonts/FixelText/FixelText-Bold.woff2"
-  },
-  "assets/fonts/FixelText/FixelText-Medium.woff2": {
-    "file": "assets/FixelText-Medium-CmiTwNnI.woff2",
-    "src": "assets/fonts/FixelText/FixelText-Medium.woff2"
-  },
-  "assets/fonts/FixelText/FixelText-Regular.woff2": {
-    "file": "assets/FixelText-Regular-Dv1kOdN_.woff2",
-    "src": "assets/fonts/FixelText/FixelText-Regular.woff2"
-  },
-  "assets/fonts/FixelText/FixelText-SemiBold.woff2": {
-    "file": "assets/FixelText-SemiBold-PkRqRl-Q.woff2",
-    "src": "assets/fonts/FixelText/FixelText-SemiBold.woff2"
-  },
-  "assets/fonts/Montserrat/Montserrat-500.woff2": {
-    "file": "assets/Montserrat-500-CBLtNvLV.woff2",
-    "src": "assets/fonts/Montserrat/Montserrat-500.woff2"
-  },
-  "assets/fonts/Montserrat/Montserrat-600.woff2": {
-    "file": "assets/Montserrat-600-cdzLiXYp.woff2",
-    "src": "assets/fonts/Montserrat/Montserrat-600.woff2"
-  },
-  "assets/fonts/Montserrat/Montserrat-700.woff2": {
-    "file": "assets/Montserrat-700-CnjeTNMi.woff2",
-    "src": "assets/fonts/Montserrat/Montserrat-700.woff2"
+  "assets/fonts/RozetkaWeb/RozetkaWeb-Regular.woff2": {
+    "file": "assets/RozetkaWeb-Regular-D9f3z7ky.woff2",
+    "src": "assets/fonts/RozetkaWeb/RozetkaWeb-Regular.woff2"
   },
   "assets/frontend/index.js": {
     "file": "assets/frontend-BQ4_qGBN.js",
@@ -102,44 +75,46 @@
     ]
   },
   "assets/globals/index.js": {
-    "file": "assets/globals-VT8Zj21-.js",
+    "file": "assets/globals-DhIlW8T-.js",
     "name": "globals",
     "src": "assets/globals/index.js",
     "isEntry": true,
     "css": [
-      "assets/globals-CkanJJy9.css"
+      "assets/globals-Bx5VfDn0.css"
     ],
     "assets": [
-      "assets/Montserrat-500-CBLtNvLV.woff2",
-      "assets/Montserrat-600-cdzLiXYp.woff2",
-      "assets/Montserrat-700-CnjeTNMi.woff2",
-      "assets/FixelText-Regular-Dv1kOdN_.woff2",
-      "assets/FixelText-Medium-CmiTwNnI.woff2",
-      "assets/FixelText-SemiBold-PkRqRl-Q.woff2",
-      "assets/FixelText-Bold-Dx5ClmPT.woff2",
-      "assets/FixelDisplay-Regular-BuKr9E3J.woff2",
-      "assets/FixelDisplay-Medium-ABEgljqF.woff2",
-      "assets/FixelDisplay-SemiBold-v6olFATC.woff2",
-      "assets/FixelDisplay-Bold-Cr-t0h_O.woff2"
+      "assets/RozetkaWeb-Regular-D9f3z7ky.woff2",
+      "assets/RozetkaWeb-Medium-B1G2EL2e.woff2",
+      "assets/RozetkaWeb-Bold-02T3Aq_L.woff2"
     ]
   },
   "assets/landing-page/index.js": {
-    "file": "assets/landing-page-yFJtepsf.js",
+    "file": "assets/landing-page-CYjOVvsB.js",
     "name": "landing-page",
     "src": "assets/landing-page/index.js",
     "isEntry": true,
     "css": [
-      "assets/landing-page-CQ5AZkpz.css"
+      "assets/landing-page-CY3ipvi1.css"
     ]
   },
   "assets/payment/index.js": {
-    "file": "assets/payment-BwtgtMCE.js",
+    "file": "assets/payment-CDyg4T6R.js",
     "name": "payment",
     "src": "assets/payment/index.js",
     "isEntry": true,
     "css": [
       "assets/payment-CS9m14yU.css",
       "assets/delivery-080NXxuv.css"
+    ]
+  },
+  "assets/product/index.js": {
+    "file": "assets/product-BrifQyPg.js",
+    "name": "product",
+    "src": "assets/product/index.js",
+    "isEntry": true,
+    "css": [
+      "assets/product-CYratg8G.css",
+      "assets/product-card-D6B5YJwF.css"
     ]
   }
 }

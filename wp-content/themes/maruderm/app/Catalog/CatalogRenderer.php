@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Maruderm\Catalog;
 
-use Maruderm\WooCommerce\ProductBadges;
+use Maruderm\WooCommerce\ProductCardRenderer;
 
 if (!defined('ABSPATH')) {
     exit();
@@ -19,22 +19,25 @@ final class CatalogRenderer
     ];
 
     private CatalogRepository $repository;
-    private ProductBadges $badges;
+    private ProductCardRenderer $product_cards;
 
-    public function __construct(?CatalogRepository $repository = null, ?ProductBadges $badges = null)
-    {
+    public function __construct(
+        ?CatalogRepository $repository = null,
+        ?ProductCardRenderer $product_cards = null
+    ) {
         $this->repository = $repository ?? new CatalogRepository();
-        $this->badges = $badges ?? new ProductBadges();
+        $this->product_cards = $product_cards ?? new ProductCardRenderer($this->repository);
     }
 
     public function render(): void
     {
-        $products = $this->repository->products();
+        $products = $this->repository->productsForCurrentView();
         $categories = $this->repository->categoryOptions($products);
         $title = $this->archiveTitle();
         $description = $this->archiveDescription();
+        $initialCategory = $this->repository->initialCategory();
 
-        echo '<main class="maruderm-catalog" data-catalog-root data-catalog-url="' . esc_url(wc_get_page_permalink('shop')) . '" data-catalog-title="Каталог догляду" data-catalog-description="' . esc_attr($this->defaultDescription()) . '" data-site-name="' . esc_attr(get_bloginfo('name')) . '" data-initial-category="' . esc_attr($this->repository->initialCategory()) . '">';
+        echo '<main class="maruderm-catalog" data-catalog-root data-catalog-url="' . esc_url(wc_get_page_permalink('shop')) . '" data-catalog-title="Каталог догляду" data-catalog-description="' . esc_attr($this->defaultDescription()) . '" data-site-name="' . esc_attr(get_bloginfo('name')) . '" data-initial-category="' . esc_attr($initialCategory) . '" data-initial-category-label="' . esc_attr($initialCategory !== '' ? $title : '') . '" data-initial-category-description="' . esc_attr($initialCategory !== '' ? $description : '') . '" data-initial-category-url="' . esc_url($this->initialCategoryUrl()) . '">';
         woocommerce_output_all_notices();
         $this->renderHero($title, $description);
         echo '<section class="catalog-content"><div class="shell catalog-layout">';
@@ -148,44 +151,24 @@ final class CatalogRenderer
         echo '<div class="active-filters" data-active-filters hidden></div><div class="product-grid" data-product-grid data-collection="catalog">';
 
         foreach ($products as $product) {
-            $this->renderProductCard($product);
+            echo $this->product_cards->render($product); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Shared renderer escapes dynamic values.
         }
 
         echo '<div class="product-grid-empty" data-catalog-empty hidden><h3>Нічого не знайшлося</h3><p>Спробуй прибрати частину фільтрів або змінити пошук.</p></div>';
         echo '</div></div>';
     }
 
-    private function renderProductCard(\WC_Product $product): void
+    private function initialCategoryUrl(): string
     {
-        if (!$product->is_in_stock()) {
-            return;
+        $term = get_queried_object();
+
+        if (!$term instanceof \WP_Term || $term->taxonomy !== 'product_cat') {
+            return '';
         }
 
-        $categories = $this->repository->topCategories($product);
-        $category_slugs = $this->repository->categorySlugs($product);
-        $category_label = $categories[0]->name ?? 'Maruderm';
-        $badge = $this->badges->resolve($product);
-        $created_at = $product->get_date_created();
-        $created_timestamp = $created_at !== null ? $created_at->getTimestamp() : 0;
-        $button_label = $product->is_type('simple') ? 'Додати до кошика' : 'Обрати варіант';
-        $button_classes = implode(' ', array_filter([
-            'product-card__cart',
-            'button',
-            'product_type_' . $product->get_type(),
-            $product->supports('ajax_add_to_cart') ? 'add_to_cart_button ajax_add_to_cart' : '',
-        ]));
+        $url = get_term_link($term);
 
-        echo '<article class="product-card" data-product-id="' . esc_attr((string) $product->get_id()) . '" data-product-name="' . esc_attr(wp_strip_all_tags($product->get_name())) . '" data-category="' . esc_attr(implode(' ', $category_slugs)) . '" data-skin-types="' . esc_attr(implode(' ', $this->repository->termSlugs($product, 'pa_skin_type'))) . '" data-concerns="' . esc_attr(implode(' ', $this->repository->termSlugs($product, 'pa_skin_problem'))) . '" data-hair-needs="' . esc_attr(implode(' ', $this->repository->termSlugs($product, 'pa_hair_need'))) . '" data-price="' . esc_attr((string) (float) $product->get_price()) . '" data-popularity="' . esc_attr((string) $product->get_total_sales()) . '" data-created="' . esc_attr((string) $created_timestamp) . '">';
-        echo '<a class="product-card__image" href="' . esc_url($product->get_permalink()) . '">' . wp_kses_post($product->get_image('woocommerce_thumbnail', ['loading' => 'lazy']));
-
-        if ($badge !== null && $badge['tone'] !== 'out') {
-            echo '<span class="product-card__badge maruderm-product-badge maruderm-product-badge--' . esc_attr($badge['tone']) . '">' . esc_html($badge['label']) . '</span>';
-        }
-
-        echo '</a><button class="product-card__heart" type="button" aria-label="Додати в обране" data-wishlist-toggle>' . $this->heartIcon() . '</button>';
-        echo '<div class="product-card__body"><span class="product-card__category">' . esc_html($category_label) . '</span><h3><a href="' . esc_url($product->get_permalink()) . '">' . esc_html($product->get_name()) . '</a></h3>';
-        echo '<div class="product-card__footer"><span class="product-card__price">' . wp_kses_post($product->get_price_html()) . '</span>';
-        echo '<a class="' . esc_attr($button_classes) . '" href="' . esc_url($product->add_to_cart_url()) . '" data-quantity="1" data-product_id="' . esc_attr((string) $product->get_id()) . '" data-product_sku="' . esc_attr($product->get_sku()) . '" aria-label="' . esc_attr($button_label . ': ' . $product->get_name()) . '">' . $this->bagIcon() . '</a></div></div></article>';
+        return is_wp_error($url) ? '' : $url;
     }
 
     private function archiveTitle(): string
@@ -232,13 +215,4 @@ final class CatalogRenderer
         return '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"></path></svg>';
     }
 
-    private function heartIcon(): string
-    {
-        return '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.7a5.5 5.5 0 0 0-7.8 0L12 5.8l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.5a5.5 5.5 0 0 0 0-7.8Z"></path></svg>';
-    }
-
-    private function bagIcon(): string
-    {
-        return '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l-1 12H6L5 8Z"></path><path d="M9 9V6a3 3 0 0 1 6 0v3"></path></svg>';
-    }
 }

@@ -30,7 +30,7 @@ Preserve the verified catalog contract without researching it again. Work only i
 - Do not fetch after each filter change while every in-stock card is already present in the document.
 - Do not exclude unrelated category options on a category route; the route is initial filter state, not a reduced catalog dataset.
 - Do not change union/intersection semantics or permit a selectable zero-result combination.
-- Do not display out-of-stock products. If an unavailable product is rendered elsewhere, show only its stock badge.
+- Keep the general `/catalog/` dataset and merchandising queries in-stock only. On a product-category route, include unavailable products assigned to that category, show only their out-of-stock badge, suppress their cart action, and hide them again when no matching category is selected.
 - Do not edit generated files directly. Change source assets and rebuild.
 - Treat `.maruderm-catalog button, input, select { font: inherit; }` and component `display` declarations as cascade hazards; use catalog-scoped selectors with adequate specificity.
 

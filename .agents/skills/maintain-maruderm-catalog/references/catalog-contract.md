@@ -31,7 +31,7 @@ This contract records behavior verified locally on 2026-08-12. It is the primary
 - Non-default sorting uses `sort`; search accepts `search` or WordPress `s`.
 - Old `/kategoria-tovaru/.../` and a single legacy `/catalog/?category=slug` permanently redirect to the pretty category route.
 - While inside the loaded catalog, category/filter changes, chips, clear-all, catalog menu links, breadcrumbs, and Back/Forward use the History API and in-memory cards. They must not reload the page.
-- One pretty category route still renders the complete in-stock dataset and all usable category filters. The path supplies initial state only, so users can add or remove categories.
+- One pretty category route renders the complete in-stock dataset plus visible published products assigned to that category, including descendants. The path supplies initial state, so users can add or remove categories; unavailable cards become hidden when no matching category is selected.
 
 ## Product and badge invariants
 
@@ -40,8 +40,8 @@ This contract records behavior verified locally on 2026-08-12. It is the primary
 - Never let third-party archive query filters reduce the custom catalog dataset.
 - Product cards must expose direct and ancestor category slugs so selecting a parent includes descendants.
 - Cards expose the data consumed by JavaScript: product id/name, category, skin types, concerns, hair needs, price, popularity, and creation timestamp.
-- Out-of-stock products do not appear in catalog/homepage merchandising queries.
-- If an unavailable product is rendered in another context, its out-of-stock badge suppresses every promotional/custom badge.
+- Out-of-stock products do not appear in the general catalog or homepage merchandising queries.
+- A product-category route also renders its assigned unavailable products. Their out-of-stock badge suppresses every promotional/custom badge, and they have no add-to-cart action.
 - A homepage/catalog block with no in-stock products must not render an empty product section.
 
 ## Filter truth table

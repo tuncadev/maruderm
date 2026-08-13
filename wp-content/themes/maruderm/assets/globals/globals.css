@@ -7,85 +7,27 @@
 @import "./components/product-badges/product-badges.css";
 @import "./components/button/button.css";
 @import "./components/content-area/content.css";
+@import "./components/availability-notifications/availability-notifications.css";
 
 @font-face {
-    font-family: "Montserrat";
-    src: url("../fonts/Montserrat/Montserrat-500.woff2") format("woff2");
-    font-weight: 500;
-    font-display: swap;
-}
-@font-face {
-    font-family: "Montserrat";
-    src: url("../fonts/Montserrat/Montserrat-600.woff2") format("woff2");
-    font-weight: 600;
-    font-display: swap;
-}
-@font-face {
-    font-family: "Montserrat";
-    src: url("../fonts/Montserrat/Montserrat-700.woff2") format("woff2");
-    font-weight: 700;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: "Fixel Text";
-    src: url("../fonts/FixelText/FixelText-Regular.woff2") format("woff2");
+    font-family: "Rozetka Web";
+    src: url("../fonts/RozetkaWeb/RozetkaWeb-Regular.woff2") format("woff2");
     font-style: normal;
     font-weight: 400;
     font-display: swap;
 }
 
 @font-face {
-    font-family: "Fixel Text";
-    src: url("../fonts/FixelText/FixelText-Medium.woff2") format("woff2");
+    font-family: "Rozetka Web";
+    src: url("../fonts/RozetkaWeb/RozetkaWeb-Medium.woff2") format("woff2");
     font-style: normal;
     font-weight: 500;
     font-display: swap;
 }
 
 @font-face {
-    font-family: "Fixel Text";
-    src: url("../fonts/FixelText/FixelText-SemiBold.woff2") format("woff2");
-    font-style: normal;
-    font-weight: 600;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: "Fixel Text";
-    src: url("../fonts/FixelText/FixelText-Bold.woff2") format("woff2");
-    font-style: normal;
-    font-weight: 700;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: "Fixel Display";
-    src: url("../fonts/FixelDisplay/FixelDisplay-Regular.woff2") format("woff2");
-    font-style: normal;
-    font-weight: 400;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: "Fixel Display";
-    src: url("../fonts/FixelDisplay/FixelDisplay-Medium.woff2") format("woff2");
-    font-style: normal;
-    font-weight: 500;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: "Fixel Display";
-    src: url("../fonts/FixelDisplay/FixelDisplay-SemiBold.woff2") format("woff2");
-    font-style: normal;
-    font-weight: 600;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: "Fixel Display";
-    src: url("../fonts/FixelDisplay/FixelDisplay-Bold.woff2") format("woff2");
+    font-family: "Rozetka Web";
+    src: url("../fonts/RozetkaWeb/RozetkaWeb-Bold.woff2") format("woff2");
     font-style: normal;
     font-weight: 700;
     font-display: swap;
@@ -120,24 +62,24 @@
 
 }
 :root, body .elementor-kit-6 {
-    --font-family-sans: "Fixel Text", "Segoe UI", sans-serif;
-    --font-family-display: "Montserrat", "Fixel Text", "Segoe UI", sans-serif;
+    --font-family-sans: "Rozetka Web", "Segoe UI", sans-serif;
+    --font-family-display: "Rozetka Web", "Segoe UI", sans-serif;
 
-    --e-global-typography-primary-font-family: "Montserrat";
-    --e-global-typography-primary-font-weight: 600;
+    --e-global-typography-primary-font-family: "Rozetka Web";
+    --e-global-typography-primary-font-weight: 700;
 
-    --e-global-typography-secondary-font-family: "Montserrat";
+    --e-global-typography-secondary-font-family: "Rozetka Web";
     --e-global-typography-secondary-font-weight: 500;
 
-    --e-global-typography-text-font-family: "Fixel Text";
+    --e-global-typography-text-font-family: "Rozetka Web";
     --e-global-typography-text-font-weight: 400;
 
-    --e-global-typography-accent-font-family: "Montserrat";
+    --e-global-typography-accent-font-family: "Rozetka Web";
     --e-global-typography-accent-font-weight: 500;
 }
 
 html {
-    font-family: var(--font-family-sans), serif;
+    font-family: var(--font-family-sans), sans-serif;
 }
 body {
     @apply text-base;
@@ -152,7 +94,7 @@ button,
 input,
 select,
 textarea {
-    font-family: var(--font-family-sans), serif;
+    font-family: var(--font-family-sans), sans-serif;
 }
 
 h1,
@@ -163,5 +105,5 @@ h5,
 h6,
 .main-menu a,
 .maruderm-button {
-    font-family: var(--font-family-display), serif;
+    font-family: var(--font-family-display), sans-serif;
 }

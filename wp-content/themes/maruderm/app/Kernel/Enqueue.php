@@ -15,14 +15,15 @@ final class Enqueue implements Registrable
     private const MANIFEST_FILE = 'manifest.json';
     private const DEV_SERVER_CLIENT = '@vite/client';
     private const CRITICAL_FONT_NAMES = [
-        'FixelText-Regular',
-        'FixelDisplay-Regular',
+        'RozetkaWeb-Regular',
+        'RozetkaWeb-Bold',
     ];
 
     private const ENTRYPOINTS = [
         'globals' => 'assets/globals/index.js',
         'frontend' => 'assets/frontend/index.js',
         'catalog' => 'assets/catalog/index.js',
+        'product' => 'assets/product/index.js',
         'cart' => 'assets/cart/index.js',
         'delivery' => 'assets/delivery/index.js',
         'payment' => 'assets/payment/index.js',
@@ -101,6 +102,10 @@ final class Enqueue implements Registrable
         if ($handle === 'catalog') {
             return function_exists('is_shop')
                 && (is_shop() || is_product_taxonomy() || (is_search() && get_query_var('post_type') === 'product'));
+        }
+
+        if ($handle === 'product') {
+            return function_exists('is_product') && is_product();
         }
 
         if ($handle === 'cart') {

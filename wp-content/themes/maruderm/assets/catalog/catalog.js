@@ -35,10 +35,20 @@ if (root) {
     ]),
   );
   const initialCategory = root.dataset.initialCategory || '';
+  const initialCategoryLabel = root.dataset.initialCategoryLabel || '';
+  const initialCategoryDescription = root.dataset.initialCategoryDescription || '';
+  const initialCategoryUrl = root.dataset.initialCategoryUrl || '';
   const search = (url.searchParams.get('search') || url.searchParams.get('s') || '').toLocaleLowerCase('uk');
   const labels = new Map();
   const categoryInputs = new Map();
   const categoryPaths = new Map();
+
+  if (initialCategory) {
+    labels.set(`category:${initialCategory}`, initialCategoryLabel || initialCategory);
+    if (initialCategoryUrl) {
+      categoryPaths.set(new URL(initialCategoryUrl, window.location.origin).pathname, initialCategory);
+    }
+  }
 
   if (state.category.size === 0 && initialCategory) {
     state.category.add(initialCategory);
@@ -67,8 +77,11 @@ if (root) {
       const [minimum, maximum] = range.split('-').map(Number);
       return price >= minimum && price <= maximum;
     });
+  const matchesStockContext = (card, selection) =>
+    card.dataset.inStock === 'yes' || selection.category.size > 0;
 
   const matches = (card, selection = state) =>
+    matchesStockContext(card, selection) &&
     matchesAny(values(card, 'category'), selection.category) &&
     matchesAny(values(card, 'skinTypes'), selection.skinTypes) &&
     matchesAny(values(card, 'concerns'), selection.concerns) &&
@@ -137,14 +150,19 @@ if (root) {
     window.history[mode === 'push' ? 'pushState' : 'replaceState'](historyState, '', next);
   };
 
-  const categoryUrl = (value) => categoryInputs.get(value)?.dataset.categoryUrl || catalogUrl;
+  const categoryUrl = (value) =>
+    categoryInputs.get(value)?.dataset.categoryUrl
+    || (value === initialCategory ? initialCategoryUrl : '')
+    || catalogUrl;
 
   const updateCategoryContext = () => {
     const selectedCategories = [...state.category];
     const value = selectedCategories.length === 1 ? selectedCategories[0] : '';
     const input = categoryInputs.get(value);
     const label = value ? labels.get(`category:${value}`) || value : catalogTitle;
-    const categoryDescription = input?.dataset.categoryDescription || catalogDescription;
+    const categoryDescription = input?.dataset.categoryDescription
+      || (value === initialCategory ? initialCategoryDescription : '')
+      || catalogDescription;
 
     heading.textContent = label;
     breadcrumbCurrent.textContent = label;
