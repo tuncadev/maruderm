@@ -12,6 +12,15 @@
 !.github/workflows/**
 !.githooks/
 !.githooks/**
+!AGENTS.md
+!.agents/
+.agents/*
+!.agents/AGENT.md
+!.agents/policy.toml
+!.agents/skills/
+.agents/skills/*
+!.agents/skills/implement-maruderm-html-reference/
+!.agents/skills/implement-maruderm-html-reference/**
 
 *~
 

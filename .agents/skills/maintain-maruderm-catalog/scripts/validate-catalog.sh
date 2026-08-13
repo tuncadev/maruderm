@@ -91,13 +91,14 @@ fi
 if [[ "$BUILD_ASSETS" == true ]]; then
     printf 'Building Vite assets...\n'
     npm --prefix "$THEME_ROOT" run build
+    npm --prefix "$THEME_ROOT" run reference:check
 fi
 
 printf 'Checking generated catalog manifest entries...\n'
 node --input-type=module -e '
 import fs from "node:fs";
 const manifest = JSON.parse(fs.readFileSync(process.argv[1], "utf8"));
-for (const entry of ["assets/catalog/index.js", "assets/globals/index.js"]) {
+for (const entry of ["assets/catalog/index.js", "assets/product/index.js", "assets/globals/index.js"]) {
   if (!manifest[entry]?.file) {
     throw new Error(`Missing Vite manifest entry: ${entry}`);
   }

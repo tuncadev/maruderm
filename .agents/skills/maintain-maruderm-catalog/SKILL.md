@@ -9,19 +9,20 @@ Preserve the verified catalog contract without researching it again. Work only i
 
 ## Workflow
 
-1. Read `references/catalog-contract.md` completely before changing catalog behavior.
-2. Inspect the current contents and diff of every target file. Preserve unrelated dirty work.
-3. Keep responsibilities separated:
+1. When catalog work derives from `/home/pardus/Hosting/maruderm.html`, first use `../implement-maruderm-html-reference/SKILL.md`, then apply this catalog-specific contract.
+2. Read `references/catalog-contract.md` completely before changing catalog behavior.
+3. Inspect the current contents and diff of every target file. Preserve unrelated dirty work.
+4. Keep responsibilities separated:
    - `CatalogRoutes` owns canonical redirects and removal of inherited archive UI.
    - `CatalogRepository` owns in-stock products and taxonomy metadata.
    - `CatalogRenderer` owns server-rendered catalog markup and product data attributes.
    - `assets/catalog/catalog.js` owns client filtering, sorting, History API state, chips, availability, and the mobile drawer.
    - component CSS owns presentation; `assets/catalog/index.js` remains the Vite entry.
-4. Implement the smallest change that preserves every invariant in the reference.
-5. Run `scripts/validate-catalog.sh`. Add `--build` when source CSS/JS or Vite entries changed.
-6. For interaction changes, additionally test one category, two categories, one cross-group filter, a disabled zero-result option, chip removal, and browser Back. Confirm the page instance does not reload.
-7. If WooCommerce coming-soon mode is temporarily changed for a browser test, capture its original value and restore it with a trap before reporting completion.
-8. Follow project activity logging and progress-log requirements. Leave changes uncommitted unless the user explicitly requests a commit.
+5. Implement the smallest change that preserves every invariant in the reference.
+6. Run `scripts/validate-catalog.sh`. Add `--build` when source CSS/JS or Vite entries changed.
+7. For interaction changes, additionally test one category, two categories, one cross-group filter, a disabled zero-result option, chip removal, and browser Back. Confirm the page instance does not reload.
+8. If WooCommerce coming-soon mode is temporarily changed for a browser test, capture its original value and restore it with a trap before reporting completion.
+9. Follow project activity logging and progress-log requirements. Leave changes uncommitted unless the user explicitly requests a commit.
 
 ## Guardrails
 

@@ -1,15 +1,7 @@
 .maruderm-catalog {
-  --ink: #202023;
-  --muted: #6d6d72;
-  --line: rgba(32, 32, 35, 0.13);
-  --paper: #fffdfb;
-  --purple: #7647e9;
-  --lilac: #e7d6ff;
-  --shell: 1320px;
-  --display: var(--font-family-display), sans-serif;
   color: var(--ink);
   background: var(--paper);
-  font-family: var(--font-family-sans), sans-serif;
+  font-family: var(--text);
   font-size: 16px;
   line-height: 1.6;
 }
@@ -80,63 +72,9 @@ body[class*='tax-pa_'] #content.site-content > .martfury-container > .row {
   cursor: pointer;
 }
 
-.maruderm-catalog .shell {
-  width: min(var(--shell), calc(100% - 48px));
-  margin-inline: auto;
-}
-
-.maruderm-catalog .kicker {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  color: #515158;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.13em;
-  text-transform: uppercase;
-}
-
-.maruderm-catalog .kicker::before {
-  width: 28px;
-  height: 2px;
-  content: '';
-  background: currentColor;
-}
-
-.maruderm-catalog .button {
-  display: inline-flex;
-  min-height: 52px;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  border: 1px solid var(--ink);
-  border-radius: 999px;
-  padding: 0 25px;
-  font-weight: 600;
-}
-
-.maruderm-catalog .button--dark {
-  color: #fff;
-  background: var(--ink);
-  box-shadow: 0 14px 34px rgba(32, 32, 35, 0.16);
-}
-
 .catalog-hero {
   padding: 34px 0 54px;
   background: linear-gradient(110deg, #f4fbf4, #f8f3ff 50%, #ffedf5);
-}
-
-.breadcrumbs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 9px;
-  margin-bottom: 42px;
-  color: var(--muted);
-  font-size: 11px;
-}
-
-.breadcrumbs a {
-  color: var(--purple);
 }
 
 .catalog-hero__content {

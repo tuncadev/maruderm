@@ -1,3 +1,5 @@
-import "../globals/components/catalog/product-card.css";
-import "./product.css";
+import "../reference/storefront-foundation.css";
+import "../reference/product-card.css";
+import "../reference/product.css";
+import "./product-integration.css";
 import "./product.js";

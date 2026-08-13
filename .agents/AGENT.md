@@ -65,6 +65,7 @@
 
 ## Project Skills
 
+- For any WordPress page, section, or component based on `/home/pardus/Hosting/maruderm.html`, first read the root `AGENTS.md`, then use `.agents/skills/implement-maruderm-html-reference/SKILL.md`. Preserve the canonical structure and hooks, consume only manifest-approved synchronized CSS, and adapt JavaScript and data behavior to WordPress/WooCommerce.
 - For any custom catalog, `/catalog/` route, product-category archive, catalog filter, product-card visibility, badge, or filter-panel task, use `.agents/skills/maintain-maruderm-catalog/SKILL.md` before making changes. Its local contract and validation script are authoritative; do not search the internet for the established Maruderm catalog workflow.
 
 ---

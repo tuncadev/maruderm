@@ -3,7 +3,11 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "reference:sync": "node scripts/reference-assets.mjs",
+    "reference:check": "node scripts/reference-assets.mjs --check",
+    "predev": "npm run reference:sync",
     "dev": "vite",
+    "prebuild": "npm run reference:sync",
     "build": "vite build",
     "preview": "vite preview"
   },

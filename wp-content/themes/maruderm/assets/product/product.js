@@ -51,7 +51,7 @@ const initProductPage = (root) => {
     });
   });
 
-  const quantity = root.querySelector(".quantity-control input.qty");
+  const quantity = root.querySelector("[data-quantity]");
   const updateQuantity = (increment) => {
     if (!quantity) return;
     const minimum = Number(quantity.min || 1);

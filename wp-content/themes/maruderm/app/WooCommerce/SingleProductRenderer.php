@@ -54,7 +54,7 @@ final class SingleProductRenderer
                             <?php endforeach; ?>
                         </div>
                         <div class="product-gallery__stage" data-gallery-stage data-view="clean">
-                            <?php if ($badge !== null) : ?><span class="product-gallery__badge maruderm-product-badge maruderm-product-badge--<?= esc_attr($badge['tone']); ?>"><?= esc_html($badge['label']); ?></span><?php endif; ?>
+                            <?php if ($badge !== null) : ?><span class="product-gallery__badge product-gallery__badge--<?= esc_attr($badge['tone']); ?> maruderm-product-badge maruderm-product-badge--<?= esc_attr($badge['tone']); ?>"><?= esc_html($badge['label']); ?></span><?php endif; ?>
                             <button class="product-gallery__wishlist" type="button" aria-label="Додати товар в обране" data-product-wishlist><?= $this->heartIcon(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></button>
                             <span class="product-gallery__orbit product-gallery__orbit--one"></span><span class="product-gallery__orbit product-gallery__orbit--two"></span>
                             <span class="product-gallery__main-image" role="img" aria-label="<?= esc_attr($product->get_name()); ?>" data-gallery-main style="background-image:url('<?= esc_url((string) wp_get_attachment_image_url($main_image, 'woocommerce_single')); ?>')"></span>
@@ -69,7 +69,7 @@ final class SingleProductRenderer
                         <div class="product-summary__price"><?= wp_kses_post($product->get_price_html()); ?></div>
                         <div class="product-summary__highlights"><?php foreach ($this->content->highlights($product) as $highlight) : ?><span><?= esc_html($highlight); ?></span><?php endforeach; ?></div>
                         <?php $this->renderPurchase($product); ?>
-                        <p class="product-summary__availability <?= $product->is_in_stock() ? 'is-in-stock' : 'is-out-of-stock'; ?>"><span></span><span><?= esc_html($product->is_in_stock() ? 'В наявності · відправимо протягом 1–2 днів' : 'Наразі немає в наявності'); ?></span></p>
+                        <p class="product-summary__availability" data-stock-status="<?= $product->is_in_stock() ? 'in-stock' : 'out-of-stock'; ?>"><span></span><span><?= esc_html($product->is_in_stock() ? 'В наявності · відправимо протягом 1–2 днів' : 'Наразі немає в наявності'); ?></span></p>
                         <div class="product-perks"><article><span class="product-perks__icon">01</span><div><strong>Оригінальна продукція</strong><small>Пряме постачання Maruderm</small></div></article><article><span class="product-perks__icon">02</span><div><strong>Безкоштовна доставка</strong><small>Для замовлень від 1500 ₴</small></div></article></div>
                         <?php $this->renderAccordions($product); ?>
                     </div>
@@ -103,8 +103,12 @@ final class SingleProductRenderer
     {
         echo '<div class="product-buy">';
         if ($product->is_in_stock() && $product->is_purchasable()) {
+            $minimum = max(1, (int) apply_filters('woocommerce_quantity_input_min', $product->get_min_purchase_quantity(), $product));
+            $maximum = (int) apply_filters('woocommerce_quantity_input_max', $product->get_max_purchase_quantity(), $product);
+            $step = (float) apply_filters('woocommerce_quantity_input_step', 1, $product);
+
             echo '<form class="cart product-buy__form" action="' . esc_url($product->get_permalink()) . '" method="post" enctype="multipart/form-data"><div class="quantity-control" aria-label="Кількість товару"><button type="button" data-quantity-minus aria-label="Зменшити кількість">−</button>';
-            woocommerce_quantity_input(['min_value' => 1, 'max_value' => $product->get_max_purchase_quantity(), 'input_value' => 1, 'classes' => ['input-text', 'qty', 'text']], $product, true);
+            echo '<input class="qty" type="number" name="quantity" value="' . esc_attr((string) $minimum) . '" min="' . esc_attr((string) $minimum) . '"' . ($maximum > 0 ? ' max="' . esc_attr((string) $maximum) . '"' : '') . ' step="' . esc_attr((string) $step) . '" inputmode="numeric" autocomplete="off" aria-label="Кількість товару" data-quantity>';
             echo '<button type="button" data-quantity-plus aria-label="Збільшити кількість">+</button></div><button type="submit" name="add-to-cart" value="' . esc_attr((string) $product->get_id()) . '" class="single_add_to_cart_button product-buy__button"><span>Додати до кошика</span>' . $this->bagIcon() . '</button></form>';
         } else {
             echo $this->stock_notifications->singleButton($product); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped

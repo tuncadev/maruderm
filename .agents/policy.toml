@@ -1,0 +1,51 @@
+[meta]
+name = "maruderm-project-policy"
+version = "1.0.0"
+owner = "pardus"
+description = "Strict project-local policies for integrating the canonical Maruderm HTML reference into WordPress."
+
+[policy.html_reference]
+enabled = true
+canonical_reference_root = "/home/pardus/Hosting/maruderm.html"
+wordpress_project_root = "/home/pardus/Hosting/maruderm.dev"
+theme_root = "/home/pardus/Hosting/maruderm.dev/wp-content/themes/maruderm"
+manifest = "/home/pardus/Hosting/maruderm.html/src/reference-assets.json"
+synchronized_snapshot = "/home/pardus/Hosting/maruderm.dev/wp-content/themes/maruderm/assets/reference"
+required_skill = ".agents/skills/implement-maruderm-html-reference/SKILL.md"
+reference_is_visual_source_of_truth = true
+must_preserve_html_structure = true
+must_preserve_class_names = true
+must_preserve_data_attributes = true
+must_preserve_accessibility_contract = true
+must_not_approximate_canonical_css = true
+must_not_edit_synchronized_snapshot_directly = true
+only_manifest_listed_css_may_sync = true
+every_synchronized_style_must_have_vite_consumer = true
+integration_css_must_load_after_reference_css = true
+integration_css_scope = "WordPress, WooCommerce, or parent-theme compatibility only"
+
+[policy.html_reference.javascript]
+automatic_sync = false
+must_adapt_to_wordpress = true
+must_preserve_interaction_contract = true
+must_preserve_hook_elements = true
+forbid_static_demo_state = true
+forbid_local_storage_as_commerce_source_of_truth = true
+
+[policy.html_reference.data]
+must_use_live_wordpress_or_woocommerce_data = true
+must_preserve_escaping = true
+must_preserve_nonce_and_authentication = true
+must_preserve_stock_and_cart_behavior = true
+forbid_reference_demo_data_copy = true
+
+[policy.html_reference.validation]
+sync_command = "npm run reference:sync"
+check_command = "npm run reference:check"
+build_command = "npm run build"
+dev_command = "npm run dev"
+catalog_command = ".agents/skills/maintain-maruderm-catalog/scripts/validate-catalog.sh --build"
+build_must_sync_before_vite = true
+dev_must_sync_and_watch = true
+snapshot_fallback_requires_sha256_lock = true
+browser_validation_required_for_visual_or_interaction_changes = true

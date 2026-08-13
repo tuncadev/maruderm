@@ -3,10 +3,15 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { defineConfig } from "vite";
 import tailwindcss from "@tailwindcss/vite";
+import {
+  referenceAssetWatchPaths,
+  syncReferenceAssets,
+} from "./scripts/reference-assets.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const devServerOrigin =
   process.env.MARUDERM_VITE_DEV_SERVER_URL ?? "http://localhost:5173";
+const devServerPort = Number(new URL(devServerOrigin).port || 5173);
 const hotFilePath = resolve(__dirname, "vite.hot");
 
 function marudermWordPress() {
@@ -36,12 +41,35 @@ function marudermWordPress() {
   };
 }
 
+function marudermReferenceAssets() {
+  return {
+    name: "maruderm-reference-assets",
+    buildStart() {
+      syncReferenceAssets({ quiet: true });
+    },
+    configureServer(server) {
+      const watch = () => server.watcher.add(referenceAssetWatchPaths());
+      watch();
+
+      server.watcher.on("change", (changedPath) => {
+        if (!referenceAssetWatchPaths().includes(resolve(changedPath))) {
+          return;
+        }
+
+        syncReferenceAssets();
+        watch();
+        server.ws.send({ type: "full-reload", path: "*" });
+      });
+    },
+  };
+}
+
 export default defineConfig({
   base: "",
-  plugins: [tailwindcss(), marudermWordPress()],
+  plugins: [tailwindcss(), marudermReferenceAssets(), marudermWordPress()],
   server: {
     host: true,
-    port: 5173,
+    port: devServerPort,
     strictPort: true,
     origin: devServerOrigin,
   },

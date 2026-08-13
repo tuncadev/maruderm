@@ -45,11 +45,11 @@ final class ProductCardRenderer
 
         ob_start();
         ?>
-        <article class="product-card" data-product-id="<?= esc_attr((string) $product->get_id()); ?>" data-product-name="<?= esc_attr(wp_strip_all_tags($product->get_name())); ?>" data-category="<?= esc_attr(implode(' ', $category_slugs)); ?>" data-skin-types="<?= esc_attr(implode(' ', $this->repository->termSlugs($product, 'pa_skin_type'))); ?>" data-concerns="<?= esc_attr(implode(' ', $this->repository->termSlugs($product, 'pa_skin_problem'))); ?>" data-hair-needs="<?= esc_attr(implode(' ', $this->repository->termSlugs($product, 'pa_hair_need'))); ?>" data-price="<?= esc_attr((string) (float) $product->get_price()); ?>" data-popularity="<?= esc_attr((string) $product->get_total_sales()); ?>" data-created="<?= esc_attr((string) $created_timestamp); ?>" data-in-stock="<?= $product->is_in_stock() ? 'yes' : 'no'; ?>">
+        <article class="product-card<?= $product->is_in_stock() ? '' : ' is-out-of-stock'; ?>" data-product-id="<?= esc_attr((string) $product->get_id()); ?>" data-product-name="<?= esc_attr(wp_strip_all_tags($product->get_name())); ?>" data-category="<?= esc_attr(implode(' ', $category_slugs)); ?>" data-skin-types="<?= esc_attr(implode(' ', $this->repository->termSlugs($product, 'pa_skin_type'))); ?>" data-concerns="<?= esc_attr(implode(' ', $this->repository->termSlugs($product, 'pa_skin_problem'))); ?>" data-hair-needs="<?= esc_attr(implode(' ', $this->repository->termSlugs($product, 'pa_hair_need'))); ?>" data-price="<?= esc_attr((string) (float) $product->get_price()); ?>" data-popularity="<?= esc_attr((string) $product->get_total_sales()); ?>" data-created="<?= esc_attr((string) $created_timestamp); ?>" data-in-stock="<?= $product->is_in_stock() ? 'yes' : 'no'; ?>">
             <a class="product-card__image" href="<?= esc_url($product->get_permalink()); ?>">
                 <?= wp_kses_post($product->get_image('woocommerce_thumbnail', ['loading' => 'lazy'])); ?>
                 <?php if ($badge !== null) : ?>
-                    <span class="product-card__badge maruderm-product-badge maruderm-product-badge--<?= esc_attr($badge['tone']); ?>"><?= esc_html($badge['label']); ?></span>
+                    <span class="product-card__badge product-card__badge--<?= esc_attr($badge['tone']); ?> maruderm-product-badge maruderm-product-badge--<?= esc_attr($badge['tone']); ?>"><?= esc_html($badge['label']); ?></span>
                 <?php endif; ?>
             </a>
             <button class="product-card__heart" type="button" aria-label="Додати в обране" data-wishlist-toggle><?= $this->heartIcon(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></button>

@@ -1,0 +1,117 @@
+body.single-product #content.site-content {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+body.single-product #content.site-content > .container,
+body.single-product #content.site-content > .martfury-container {
+  width: 100%;
+  max-width: none;
+  padding: 0;
+}
+
+body.single-product #content.site-content > .container > .row,
+body.single-product #content.site-content > .martfury-container > .row {
+  display: block;
+  margin: 0;
+}
+
+body.single-product .page-header-catalog,
+body.single-product .martfury-preloader {
+  display: none !important;
+}
+
+.maruderm-product-page {
+  --display: var(--font-family-display), sans-serif;
+  --text: var(--font-family-sans), sans-serif;
+  color: var(--ink);
+  background: var(--paper);
+  font-family: var(--text);
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.maruderm-product-page *,
+.maruderm-product-page *::before,
+.maruderm-product-page *::after {
+  box-sizing: border-box;
+}
+
+.maruderm-product-page [hidden] {
+  display: none !important;
+}
+
+.maruderm-product-page img,
+.maruderm-product-page svg {
+  display: block;
+}
+
+.maruderm-product-page a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.maruderm-product-page button,
+.maruderm-product-page input,
+.maruderm-product-page select {
+  font: inherit;
+}
+
+.maruderm-product-page button {
+  cursor: pointer;
+}
+
+.product-buy__form {
+  display: contents;
+}
+
+.product-summary__price ins {
+  text-decoration: none;
+}
+
+.product-summary__price del {
+  margin-right: 8px;
+  color: var(--muted);
+  font-size: 0.7em;
+}
+
+.product-gallery__main-image {
+  display: block !important;
+  height: min(580px, 78%);
+  aspect-ratio: 1;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.product-card__cart.button {
+  min-width: 42px;
+  min-height: 42px;
+  padding: 0;
+  border: 0;
+  box-shadow: none;
+}
+
+.product-card__price del {
+  margin-right: 5px;
+  color: #999;
+  font-size: 11px;
+  font-weight: 400;
+}
+
+.product-card__price ins {
+  text-decoration: none;
+}
+
+@media (max-width: 767px) {
+  .product-gallery__main-image {
+    height: min(360px, 76%);
+  }
+
+  .product-card__cart.button {
+    min-width: 38px;
+    min-height: 38px;
+  }
+}
