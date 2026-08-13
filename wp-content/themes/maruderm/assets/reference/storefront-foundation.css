@@ -11,6 +11,10 @@
   --lilac: #e7d6ff;
   --peach: #ffd9c9;
   --yellow: #f8ed87;
+  --soft-surface: #f0edf7;
+  --soft-surface-hover: #e4dcf2;
+  --soft-surface-border: rgba(91, 70, 120, 0.16);
+  --editorial-surface: #fff0e9;
   --shell: 1320px;
   --display: 'RozetkaWeb', sans-serif;
   --text: 'RozetkaWeb', sans-serif;
@@ -104,9 +108,13 @@
   transform: translateY(-2px);
 }
 .button--dark {
-  color: #fff;
-  background: var(--ink);
-  box-shadow: 0 14px 34px rgba(32, 32, 35, 0.16);
+  border-color: var(--soft-surface-border);
+  color: var(--ink);
+  background: var(--soft-surface);
+  box-shadow: 0 14px 34px rgba(91, 70, 120, 0.12);
+}
+.button--dark:hover {
+  background: var(--soft-surface-hover);
 }
 .button svg {
   width: 18px;

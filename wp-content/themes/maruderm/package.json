@@ -4,10 +4,11 @@
   "type": "module",
   "scripts": {
     "reference:sync": "node scripts/reference-assets.mjs",
-    "reference:check": "node scripts/reference-assets.mjs --check",
-    "predev": "npm run reference:sync",
+    "reference:status": "node scripts/reference-handoff-status.mjs",
+    "reference:check": "node scripts/reference-assets.mjs --check && node scripts/reference-handoff-status.mjs --check",
+    "predev": "npm run reference:sync && npm run reference:status -- --check",
     "dev": "vite",
-    "prebuild": "npm run reference:sync",
+    "prebuild": "npm run reference:sync && npm run reference:status -- --check",
     "build": "vite build",
     "preview": "vite preview"
   },

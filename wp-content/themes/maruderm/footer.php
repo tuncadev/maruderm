@@ -1,27 +1,28 @@
 <?php
 /**
- * The template for displaying the footer.
+ * Canonical storefront footer and document close.
  *
- * Contains the closing of the #content div and all content after
- *
- * @package Martfury
+ * @package Maruderm
  */
+
+declare(strict_types=1);
+
+if (!defined('ABSPATH')) {
+    exit();
+}
+
+do_action('martfury_before_site_content_close');
 ?>
-
-<?php do_action( 'martfury_before_site_content_close' ); ?>
 </div><!-- #content -->
-<?php do_action( 'martfury_before_footer' ) ?>
-<?php if ( ! function_exists( 'elementor_theme_do_location' ) || ! elementor_theme_do_location( 'footer' ) ) {
-    ?>
-    <footer id="colophon" class="site-footer">
-        <?php do_action( 'martfury_footer' ) ?>
-    </footer><!-- #colophon -->
-    <?php do_action( 'martfury_after_footer' ) ?>
-<?php } ?>
+<?php
+do_action('martfury_before_footer');
+
+if (!function_exists('elementor_theme_do_location') || !elementor_theme_do_location('footer')) {
+    (new \Maruderm\Layout\FooterRenderer())->render();
+    do_action('martfury_after_footer');
+}
+?>
 </div><!-- #page -->
-
 <?php wp_footer(); ?>
-
-
 </body>
 </html>

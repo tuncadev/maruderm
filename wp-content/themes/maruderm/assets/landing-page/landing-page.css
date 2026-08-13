@@ -621,7 +621,7 @@
   display: block;
   min-height: 680px;
   color: #fff;
-  background: #242426;
+  background: var(--editorial-surface);
 }
 
 .md-story:hover {
@@ -738,13 +738,13 @@
 }
 
 .md-routine {
-  color: #fff;
-  background: #202023;
+  color: var(--ink);
+  background: var(--soft-surface);
 }
 
 .md-routine .md-kicker,
 .md-routine h2 {
-  color: #fff;
+  color: var(--ink);
 }
 
 .md-routine__intro {
@@ -756,7 +756,7 @@
 
 .md-routine__intro > p {
   margin: 0;
-  color: rgba(255, 255, 255, 0.62);
+  color: #625d69;
 }
 
 .md-routine__steps {

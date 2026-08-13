@@ -6,6 +6,7 @@ Load the global rules from `/home/pardus/.codex/AGENTS.md` first. These rules ar
 
 - `/home/pardus/Hosting/maruderm.html` is the canonical visual reference repository.
 - For every WordPress page, section, or component derived from that repository, use `.agents/skills/implement-maruderm-html-reference/SKILL.md` before editing.
+- Start every HTML handoff by running `npm --prefix wp-content/themes/maruderm run reference:status`, then inspect the HTML repository's current status, latest task/progress entries, relevant diff, markup, CSS, JavaScript, and assets. The HTML working tree may contain the newest approved source before commit; record whether input is committed or uncommitted.
 - Preserve the canonical HTML hierarchy, class names, `data-*` attributes, accessibility attributes, and JavaScript hook elements exactly unless WordPress or WooCommerce requires a documented adapter.
 - Do not recreate, approximate, rename, or manually copy canonical CSS. Only CSS explicitly listed in `maruderm.html/src/reference-assets.json` may enter the theme through the reference synchronization system.
 - Do not edit `wp-content/themes/maruderm/assets/reference/` directly. It is a generated, checked-in snapshot.
@@ -14,7 +15,11 @@ Load the global rules from `/home/pardus/.codex/AGENTS.md` first. These rules ar
 - HTML-repository JavaScript is not synchronized. Reimplement or adapt its interaction contract in the appropriate WordPress source entry, preserving hooks and visible behavior while using real WordPress/WooCommerce state.
 - Never synchronize static demo product data, localStorage commerce state, hardcoded URLs, or reference-only content into WordPress. Render live CMS and WooCommerce data with escaping, nonce, authentication, stock, cart, and accessibility behavior intact.
 - `npm run dev` and `npm run build` synchronize approved CSS automatically. `npm run reference:check` must pass before handoff.
-- When adding a new canonical stylesheet, the HTML agent must add it to the upstream manifest and the WordPress agent must import it from a theme Vite entry. The reference check fails for unconsumed synchronized styles.
+- When adding a new canonical stylesheet, the HTML agent must add it to the upstream manifest. The WordPress agent must either import it from the matching theme Vite entry or declare it with a concrete implementation reason in `scripts/reference-assets.consumers.json`; pending styles must not be loaded through dummy imports, and the reference check fails if a pending style gains a consumer without being removed from that list.
+- `scripts/reference-implementations.json` is the authoritative map from approved HTML markup/CSS/JavaScript to WordPress renderers, Vite entries, live routes, legacy consumers, and completion status. Update it whenever a component is implemented, replaced, renamed, or gains a consumer.
+- A synchronized snapshot or a `pending` entry is not a completed WordPress implementation. If the user's requested page/component is pending, implement its canonical PHP structure and adapted JavaScript, remove it from the pending list, register the real consumers, and run `npm run reference:status -- --require <id-or-css-target>`. Do not report the requested live change as synced while that command fails.
+- For shared tokens, palette, typography, foundation, component API, or behavior changes, audit every active WordPress implementation and every registered legacy consumer. A successful file hash does not prove that a live route uses the changed asset.
+- Completion requires proof from the real WordPress route: expected canonical selectors/hooks, correct generated bundle and cascade order, adapted interaction behavior, absence of superseded legacy output, and representative desktop/mobile states.
 - If the sibling HTML repository is unavailable, builds may use only the verified checked-in snapshot and SHA-256 lock; do not bypass failed integrity checks.
 
 ## Catalog Work

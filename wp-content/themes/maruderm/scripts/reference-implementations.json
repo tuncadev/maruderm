@@ -1,0 +1,251 @@
+{
+  "version": 1,
+  "implementations": [
+    {
+      "id": "foundation",
+      "target": "storefront-foundation.css",
+      "kind": "foundation",
+      "reference": {
+        "markup": [],
+        "javascript": []
+      },
+      "wordpress": {
+        "status": "implemented",
+        "entries": [
+          "assets/account/index.js",
+          "assets/bank-transfer/index.js",
+          "assets/cart/index.js",
+          "assets/catalog/index.js",
+          "assets/delivery/index.js",
+          "assets/footer/index.js",
+          "assets/home/index.js",
+          "assets/hair-analysis/index.js",
+          "assets/landing-page/index.js",
+          "assets/login/index.js",
+          "assets/payment/index.js",
+          "assets/product/index.js"
+        ],
+        "renderers": [],
+        "routes": ["shared implemented storefront components"]
+      }
+    },
+    {
+      "id": "product-card",
+      "target": "product-card.css",
+      "kind": "component",
+      "reference": {
+        "markup": ["components/product-grid.html"],
+        "javascript": ["assets/js/components/product-card.js"]
+      },
+      "wordpress": {
+        "status": "implemented",
+        "entries": ["assets/account/index.js", "assets/catalog/index.js", "assets/home/index.js", "assets/product/index.js"],
+        "renderers": ["app/WooCommerce/ProductCardRenderer.php"],
+        "routes": ["/catalog/ and product-category routes", "single products"]
+      }
+    },
+    {
+      "id": "product",
+      "target": "product.css",
+      "kind": "page",
+      "reference": {
+        "markup": [
+          "components/product-detail.html",
+          "components/product-benefits.html",
+          "components/product-ingredients.html",
+          "components/product-related.html",
+          "components/product-reviews.html",
+          "components/product-routine.html"
+        ],
+        "javascript": ["assets/js/components/product.js"]
+      },
+      "wordpress": {
+        "status": "implemented",
+        "entries": ["assets/product/index.js"],
+        "renderers": [
+          "app/WooCommerce/SingleProductRenderer.php",
+          "woocommerce/single-product.php"
+        ],
+        "routes": ["single products"]
+      }
+    },
+    {
+      "id": "cart",
+      "target": "cart.css",
+      "kind": "page",
+      "reference": {
+        "markup": ["components/cart-content.html", "components/checkout-hero.html"],
+        "javascript": ["assets/js/components/cart.js"]
+      },
+      "wordpress": {
+        "status": "implemented",
+        "entries": [
+          "assets/cart/index.js",
+          "assets/delivery/index.js",
+          "assets/payment/index.js"
+        ],
+        "renderers": ["app/Cart/CartRenderer.php", "woocommerce/cart-page.php"],
+        "routes": ["WooCommerce cart"]
+      }
+    },
+    {
+      "id": "delivery",
+      "target": "delivery.css",
+      "kind": "page",
+      "reference": {
+        "markup": ["components/delivery-content.html", "components/checkout-hero.html"],
+        "javascript": ["assets/js/components/delivery.js"]
+      },
+      "wordpress": {
+        "status": "implemented",
+        "entries": ["assets/delivery/index.js", "assets/payment/index.js"],
+        "renderers": [
+          "app/Checkout/DeliveryRenderer.php",
+          "woocommerce/delivery-page.php"
+        ],
+        "routes": ["WooCommerce checkout delivery step"]
+      }
+    },
+    {
+      "id": "payment",
+      "target": "payment.css",
+      "kind": "page",
+      "reference": {
+        "markup": ["components/payment-content.html", "components/checkout-hero.html"],
+        "javascript": ["assets/js/components/payment.js"]
+      },
+      "wordpress": {
+        "status": "implemented",
+        "entries": ["assets/payment/index.js"],
+        "renderers": [
+          "app/Checkout/PaymentRenderer.php",
+          "woocommerce/payment-page.php"
+        ],
+        "routes": ["WooCommerce checkout payment step"]
+      }
+    },
+    {
+      "id": "bank-transfer",
+      "target": "bank-transfer.css",
+      "kind": "page",
+      "reference": {
+        "markup": ["components/bank-transfer-content.html", "components/checkout-result.html"],
+        "javascript": ["assets/js/components/bank-transfer.js"]
+      },
+      "wordpress": {
+        "status": "implemented",
+        "entries": ["assets/bank-transfer/index.js"],
+        "renderers": ["app/Checkout/CheckoutResultRenderer.php"],
+        "routes": ["WooCommerce BACS order-received view"]
+      }
+    },
+    {
+      "id": "account",
+      "target": "account.css",
+      "kind": "page",
+      "reference": {
+        "markup": ["components/account-dashboard.html"],
+        "javascript": [
+          "assets/js/components/account.js",
+          "assets/js/components/availability-notifications.js"
+        ]
+      },
+      "wordpress": {
+        "status": "implemented",
+        "entries": ["assets/account/index.js"],
+        "renderers": ["app/Account/AccountRenderer.php", "woocommerce/myaccount/my-account.php"],
+        "routes": ["WooCommerce My Account"],
+        "legacyFiles": [],
+        "blocker": ""
+      }
+    },
+    {
+      "id": "footer",
+      "target": "footer.css",
+      "kind": "component",
+      "reference": {
+        "markup": ["components/footer.html"],
+        "javascript": []
+      },
+      "wordpress": {
+        "status": "implemented",
+        "entries": ["assets/footer/index.js"],
+        "renderers": ["app/Layout/FooterRenderer.php", "footer.php"],
+        "routes": ["global storefront footer"],
+        "legacyFiles": [],
+        "blocker": ""
+      }
+    },
+    {
+      "id": "hair-analysis",
+      "target": "hair-analysis.css",
+      "kind": "page",
+      "reference": {
+        "markup": ["components/hair-analysis.html"],
+        "javascript": ["assets/js/components/hair-analysis.js"]
+      },
+      "wordpress": {
+        "status": "implemented",
+        "entries": ["assets/hair-analysis/index.js"],
+        "renderers": ["app/HairAnalysis/HairAnalysisRenderer.php", "page-hair-analysis.php", "templates/hair-analysis.php"],
+        "routes": ["/hair-analysis/"],
+        "legacyFiles": [],
+        "blocker": ""
+      }
+    },
+    {
+      "id": "home",
+      "target": "home.css",
+      "kind": "page",
+      "reference": {
+        "markup": [
+          "components/home-hero.html",
+          "components/home-products.html",
+          "components/home-editorial.html",
+          "components/routine.html",
+          "components/home-cta.html"
+        ],
+        "javascript": ["assets/js/components/home.js"]
+      },
+      "wordpress": {
+        "status": "implemented",
+        "entries": ["assets/home/index.js"],
+        "renderers": [
+          "app/Homepage/HomepagePage.php",
+          "app/Homepage/HomepageRenderer.php",
+          "front-page.php"
+        ],
+        "routes": ["front page"],
+        "legacyFiles": [],
+        "blocker": ""
+      }
+    },
+    {
+      "id": "login",
+      "target": "login.css",
+      "kind": "page",
+      "reference": {
+        "markup": [
+          "components/login-page.html",
+          "components/login-form.html",
+          "components/login-modal.html"
+        ],
+        "javascript": ["assets/js/components/login.js"]
+      },
+      "wordpress": {
+        "status": "implemented",
+        "entries": ["assets/login/index.js"],
+        "renderers": [
+          "app/Auth/LoginExperience.php",
+          "app/Auth/LoginRenderer.php",
+          "woocommerce/myaccount/form-login.php",
+          "page-login.php",
+          "template-login-register.php"
+        ],
+        "routes": ["global logged-out storefront login drawer", "WooCommerce login and registration"],
+        "legacyFiles": [],
+        "blocker": ""
+      }
+    }
+  ]
+}

@@ -30,6 +30,11 @@ final class Enqueue implements Registrable
         'bank-transfer' => 'assets/bank-transfer/index.js',
         'checkout-result' => 'assets/checkout-result/index.js',
         'landing-page' => 'assets/landing-page/index.js',
+        'home' => 'assets/home/index.js',
+        'footer' => 'assets/footer/index.js',
+        'hair-analysis' => 'assets/hair-analysis/index.js',
+        'login' => 'assets/login/index.js',
+        'account' => 'assets/account/index.js',
     ];
 
     private ?array $manifest = null;
@@ -92,6 +97,10 @@ final class Enqueue implements Registrable
             );
 
             wp_script_add_data($script_handle, 'type', 'module');
+
+            if ($handle === 'hair-analysis') {
+                wp_localize_script($script_handle, 'marudermHairAnalysisProducts', $this->hairAnalysisProducts());
+            }
         }
 
         return true;
@@ -140,9 +149,32 @@ final class Enqueue implements Registrable
         }
 
         if ($handle === 'landing-page') {
-            return is_front_page()
-                || is_page_template('page-landing-page.php')
+            return is_page_template('page-landing-page.php')
                 || is_page('landing-page');
+        }
+
+        if ($handle === 'home') {
+            return is_front_page();
+        }
+
+        if ($handle === 'footer') {
+            return true;
+        }
+
+        if ($handle === 'hair-analysis') {
+            return \Maruderm\HairAnalysis\HairAnalysisPage::isCurrent()
+                || is_page_template('page-hair-analysis.php')
+                || is_page('hair-analysis');
+        }
+
+        if ($handle === 'login') {
+            return !is_user_logged_in() && !is_page_template('template-coming-soon-page.php');
+        }
+
+        if ($handle === 'account') {
+            return is_user_logged_in()
+                && function_exists('is_account_page')
+                && is_account_page();
         }
 
         return true;
@@ -159,7 +191,7 @@ final class Enqueue implements Registrable
         $asset = $manifest[$entrypoint];
 
         if (!empty($asset['css']) && is_array($asset['css'])) {
-            foreach ($asset['css'] as $index => $css_file) {
+            foreach ($this->cssFilesInCascadeOrder($asset['css'], $manifest) as $index => $css_file) {
                 wp_enqueue_style(
                     sprintf('maruderm-%s-%d', $handle, $index),
                     Helpers::dist_uri($css_file),
@@ -184,6 +216,85 @@ final class Enqueue implements Registrable
         );
 
         wp_script_add_data($script_handle, 'type', 'module');
+
+        if ($handle === 'hair-analysis') {
+            wp_localize_script($script_handle, 'marudermHairAnalysisProducts', $this->hairAnalysisProducts());
+        }
+    }
+
+    /** @return array<int, array<string, int|string>> */
+    private function hairAnalysisProducts(): array
+    {
+        if (!function_exists('wc_get_product')) {
+            return [];
+        }
+
+        $subcategories = [
+            6007 => 'conditioner',
+            6009 => 'styling',
+            6011 => 'scalp-tonic',
+            6013 => 'shampoo',
+            6034 => 'scalp-tonic',
+        ];
+        $products = [];
+
+        foreach ($subcategories as $productId => $subcategory) {
+            $product = wc_get_product($productId);
+
+            if (!$product instanceof \WC_Product || $product->get_status() !== 'publish') {
+                continue;
+            }
+
+            $categoryNames = wp_get_post_terms($productId, 'product_cat', ['fields' => 'names']);
+            $products[] = [
+                'id' => $productId,
+                'name' => $product->get_name(),
+                'price' => (int) round((float) $product->get_price()),
+                'image' => wp_get_attachment_image_url($product->get_image_id(), 'woocommerce_thumbnail') ?: wc_placeholder_img_src(),
+                'url' => $product->get_permalink(),
+                'categoryLabel' => !is_wp_error($categoryNames) && $categoryNames !== [] ? $categoryNames[0] : 'Догляд за волоссям',
+                'subcategory' => $subcategory,
+            ];
+        }
+
+        return $products;
+    }
+
+    /**
+     * @param array<int, string> $css_files
+     * @param array<string, array<string, mixed>> $manifest
+     * @return array<int, string>
+     */
+    private function cssFilesInCascadeOrder(array $css_files, array $manifest): array
+    {
+        $shared_files = [];
+
+        foreach ($manifest as $key => $entry) {
+            if (!str_starts_with((string) $key, '_') || empty($entry['file'])) {
+                continue;
+            }
+
+            $shared_files[(string) $entry['file']] = true;
+        }
+
+        $indexed_files = [];
+
+        foreach ($css_files as $index => $css_file) {
+            $priority = str_contains($css_file, 'storefront-foundation-')
+                ? 0
+                : (isset($shared_files[$css_file]) ? 1 : 2);
+            $indexed_files[] = [
+                'file' => $css_file,
+                'index' => $index,
+                'priority' => $priority,
+            ];
+        }
+
+        usort($indexed_files, static function (array $left, array $right): int {
+            return [$left['priority'], $left['index']] <=> [$right['priority'], $right['index']];
+        });
+
+        return array_values(array_column($indexed_files, 'file'));
     }
 
     public function preload_resources(array $preloads): array

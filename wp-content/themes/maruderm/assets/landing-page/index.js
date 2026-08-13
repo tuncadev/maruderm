@@ -1,3 +1,4 @@
+import "../reference/storefront-foundation.css";
 import "./landing-page.css";
 
 const revealLandingSections = () => {

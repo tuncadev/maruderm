@@ -38,7 +38,6 @@ final class ProductCardRenderer
         $button_label = $product->is_type('simple') ? 'Додати до кошика' : 'Обрати варіант';
         $button_classes = implode(' ', array_filter([
             'product-card__cart',
-            'button',
             'product_type_' . $product->get_type(),
             $product->supports('ajax_add_to_cart') ? 'add_to_cart_button ajax_add_to_cart' : '',
         ]));

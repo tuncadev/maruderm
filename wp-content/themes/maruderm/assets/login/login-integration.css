@@ -1,0 +1,23 @@
+body.is-locked {
+  overflow: hidden;
+}
+
+.login-modal__brand img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.login-modal .woocommerce-error,
+.login-modal .woocommerce-message,
+.login-modal .woocommerce-info {
+  margin: 0 0 18px;
+}
+
+.login-modal .login-form__status--error {
+  color: #b42318;
+}
+
+.login-modal .login-field__control input {
+  margin: 0;
+}

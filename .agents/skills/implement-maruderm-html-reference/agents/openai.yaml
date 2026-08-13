@@ -1,0 +1,4 @@
+interface:
+  display_name: "Implement Maruderm HTML Reference"
+  short_description: "Convert canonical HTML into live WordPress"
+  default_prompt: "Use $implement-maruderm-html-reference to implement the latest canonical HTML page or component in WordPress and prove it is live."

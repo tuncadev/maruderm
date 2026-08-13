@@ -1,67 +1,66 @@
 ---
 name: implement-maruderm-html-reference
-description: Convert or update any Maruderm WordPress page, section, or component from the canonical sibling maruderm.html reference while preserving exact markup and class contracts, synchronizing approved CSS, adapting JavaScript to live WordPress/WooCommerce behavior, and validating the integration. Use whenever work is based on maruderm.html or an HTML-agent handoff.
+description: Convert, update, or synchronize any Maruderm WordPress page, section, component, shared style/token, asset, or interaction from the canonical sibling maruderm.html repository while preserving exact markup contracts, consuming approved CSS, adapting JavaScript to live WordPress/WooCommerce behavior, removing legacy consumers, and proving the requested route is implemented. Use for every HTML-agent handoff or request to get, pull, sync, match, or apply changes from maruderm.html.
 ---
 
 # Implement Maruderm HTML Reference
 
-Use `/home/pardus/Hosting/maruderm.html` as the visual source of truth and `/home/pardus/Hosting/maruderm.dev/wp-content/themes/maruderm` as the implementation target.
+Use `/home/pardus/Hosting/maruderm.html` as the canonical visual and interaction source and `/home/pardus/Hosting/maruderm.dev/wp-content/themes/maruderm` as the platform implementation.
 
-## Before editing
+## Intake
 
 1. Read the root `AGENTS.md`, `.agents/policy.toml`, and `wp-content/themes/maruderm/docs/reference-assets.md` completely.
-2. Inspect the HTML component markup, its CSS, its JavaScript, and `maruderm.html/src/reference-assets.json`.
-3. Inspect the current WordPress template/renderer, Vite entry, integration stylesheet, JavaScript entry, enqueue path, and relevant parent-theme overrides.
-4. Check git status and diffs in both repositories. Treat HTML changes as reference input; do not edit the HTML repository unless the user explicitly places it in scope.
-5. If the change affects catalog routes, cards, badges, filtering, or visibility, also use `.agents/skills/maintain-maruderm-catalog/SKILL.md`.
+2. From the theme, run `npm run reference:status` before editing.
+3. Inspect the HTML repository's `git status`, recent log, latest relevant `.agents/progress.md` and activity events, and the relevant diff. Record whether the handoff source is committed or uncommitted.
+4. Read all relevant HTML page/component markup, canonical CSS, JavaScript, assets, and `src/reference-assets.json`. Do not infer behavior from CSS alone.
+5. Inspect the mapped WordPress status, renderers, Vite entries, routes, and legacy consumers in `scripts/reference-implementations.json`.
+6. Inspect current WordPress diffs before editing and preserve other agents' work. Do not edit the HTML repository unless the user explicitly puts it in scope.
+7. Also use `maintain-maruderm-catalog` for catalog routes, filters, cards, badges, or visibility.
 
-## Implementation contract
+## Classify the handoff
 
-1. Reproduce the canonical semantic hierarchy, class names, `data-*` hooks, control elements, and accessibility attributes in PHP.
-2. Replace demo content with live WordPress/WooCommerce data. Preserve escaping, URLs, product identity, stock, price, cart, authentication, nonce, and accessibility behavior.
-3. Do not manually recreate or paste canonical styles into WordPress source files.
-4. Confirm every required canonical stylesheet is listed in the upstream `src/reference-assets.json` manifest. If it is not, stop and request an updated HTML-agent handoff; do not silently bypass the manifest.
-5. Import synchronized styles from `assets/reference/` in the relevant Vite entry. Load them before a small component integration stylesheet.
-6. Use integration CSS only for WordPress markup boundaries, WooCommerce selectors, live-content variability, or parent-theme isolation. Never use it to approximate or override the canonical visual design.
-7. Do not copy reference demo state, hardcoded product data, or localStorage commerce state.
-8. JavaScript is not synchronized. Adapt its interaction contract in WordPress source JavaScript, preserving canonical hooks and visible states while using the platform's real APIs and state.
-9. Remove or isolate parent-theme output only at the narrowest registered hook or scoped selector needed for the custom page.
-10. Keep rendering, data access, platform behavior, and presentation responsibilities separated according to the existing theme architecture.
+- Markup changes require matching PHP hierarchy, elements, classes, `data-*` hooks, ARIA, and control semantics.
+- CSS changes require a manifest-approved synchronized target and a real Vite consumer for implemented scope.
+- JavaScript changes require a WordPress adapter preserving the visible state machine and hooks while using platform APIs.
+- Asset changes require local theme ownership and correct enqueue/build handling; never hotlink the reference repository.
+- Demo data/state changes are design examples only. Use live WordPress/WooCommerce data, authentication, nonces, stock, cart, URLs, and persistence.
+- Shared token, typography, palette, foundation, or component API changes require auditing every active and registered legacy WordPress consumer. Hash equality alone is insufficient.
 
-## Asset flow
+## Implement
 
-```text
-HTML markup + approved CSS manifest
-  -> reference-assets.mjs validates and copies CSS
-  -> assets/reference checked-in snapshot + SHA-256 lock
-  -> WordPress Vite entry imports canonical CSS
-  -> integration CSS loads afterward
-  -> PHP supplies live content and adapted JavaScript supplies behavior
-  -> Vite emits WordPress dist assets
+1. Reproduce canonical semantic structure and hook attributes exactly in the appropriate renderer/template.
+2. Replace only demo content/state with live platform data and behavior. Preserve escaping, identity, stock, price, cart, authentication, nonces, and accessibility.
+3. Synchronize canonical CSS through the manifest. Never recreate it, paste it into integration CSS, rename selectors, or edit `assets/reference/` directly.
+4. Import synchronized CSS in the matching Vite entry before a narrowly scoped WordPress/WooCommerce/parent-theme adapter.
+5. Adapt canonical JavaScript in WordPress source; do not synchronize static localStorage commerce state or hardcoded data.
+6. Remove superseded legacy output at the narrowest hook/template boundary. Do not leave old and canonical implementations competing on the live route.
+7. Update `scripts/reference-implementations.json` with the real status, reference files, WordPress renderers, entries, routes, and legacy consumers.
+8. Remove an implemented target from `scripts/reference-assets.consumers.json`. Pending is allowed only for work outside the user's requested scope and requires a concrete blocker.
+
+## Completion gate
+
+A copied snapshot, passing hash, rebuilt bundle, or pending record does not mean a requested live change is complete.
+
+For every requested component/page, run:
+
+```bash
+npm run reference:status -- --require <implementation-id-or-css-target>
 ```
 
-`npm run dev` synchronizes before startup, watches the upstream manifest and listed styles, then reloads when they change. `npm run build` synchronizes before producing `dist`. If the sibling repository is absent, only the verified checked-in snapshot may be used.
+Do not report success while this fails. If it is pending, implement the matching PHP and behavior rather than adding a dummy import. The status command validates that the manifest, pending configuration, implementation registry, real Vite imports, reference files, renderers, and routes agree.
 
-## Validation
+## Runtime validation
 
-From `wp-content/themes/maruderm`:
+1. Run `npm run reference:check` and `npm run build`.
+2. Run syntax checks for changed PHP and JavaScript.
+3. Confirm the real route loads the expected generated entry and reference CSS before integration CSS.
+4. Confirm canonical selectors, hooks, controls, and accessibility attributes appear in rendered HTML.
+5. Exercise changed behavior against live WordPress/WooCommerce state, including applicable loading, empty, error, unavailable, and authenticated states.
+6. Confirm superseded legacy markup/styles/output are absent.
+7. Compare representative desktop and mobile states with the HTML reference.
+8. For shared style changes, scan source and generated bundles for stale legacy declarations and explain any intentional remaining occurrences.
+9. Run `git diff --check`; run the catalog validator when applicable.
 
-1. Run `npm run reference:check`.
-2. Run `npm run build`.
-3. Run syntax checks for every changed PHP and JavaScript source.
-4. Verify the relevant Vite manifest entry exists.
-5. Render the real WordPress route and check that canonical structure/classes/hooks are present and legacy parent-theme output is absent.
-6. Exercise every changed interaction with live WooCommerce/WordPress state.
-7. Visually compare representative desktop and mobile states, including empty, unavailable, error, or authenticated states when applicable.
-8. Run `git diff --check`.
-9. For catalog-related changes, run `.agents/skills/maintain-maruderm-catalog/scripts/validate-catalog.sh --build`.
+## Handoff report
 
-## Handoff requirements
-
-Report:
-
-- HTML source component and styles used.
-- Synchronized stylesheet targets and Vite consumers.
-- WordPress renderer/template, data source, JavaScript adapter, and integration CSS changed.
-- Commands and routes validated.
-- Any intentional divergence from the canonical HTML contract, with its platform reason.
+Report the upstream task/commit or dirty diff, requested implementation IDs, reference markup/CSS/JS used, WordPress renderers/entries/routes changed, real route and interaction checks, any out-of-scope pending targets, validation commands, and justified divergences. Never summarize a requested pending target as synchronized or complete.

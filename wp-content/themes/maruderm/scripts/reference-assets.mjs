@@ -26,6 +26,10 @@ export const synchronizedLockPath = resolve(
   synchronizedAssetRoot,
   "reference-assets.lock.json",
 );
+export const consumerConfigPath = resolve(
+  scriptDirectory,
+  "reference-assets.consumers.json",
+);
 
 const digest = (content) =>
   createHash("sha256").update(content).digest("hex");
@@ -41,17 +45,70 @@ const javascriptFiles = (directory) =>
     return entry.isFile() && entry.name.endsWith(".js") ? [path] : [];
   });
 
+const pendingStyleTargets = (styles) => {
+  if (!existsSync(consumerConfigPath)) {
+    return new Set();
+  }
+
+  const config = JSON.parse(readFileSync(consumerConfigPath, "utf8"));
+
+  if (config.version !== 1 || !Array.isArray(config.pending)) {
+    throw new Error("Invalid reference asset consumer configuration.");
+  }
+
+  const manifestTargets = new Set(styles.map(({ target }) => target));
+  const pendingTargets = new Set();
+
+  for (const entry of config.pending) {
+    if (
+      typeof entry?.target !== "string" ||
+      entry.target === "" ||
+      typeof entry?.reason !== "string" ||
+      entry.reason.trim() === ""
+    ) {
+      throw new Error(
+        "Every pending reference style requires a target and reason.",
+      );
+    }
+
+    if (!manifestTargets.has(entry.target)) {
+      throw new Error(
+        `Pending reference style is not present in the HTML manifest: ${entry.target}`,
+      );
+    }
+
+    if (pendingTargets.has(entry.target)) {
+      throw new Error(`Duplicate pending reference style: ${entry.target}`);
+    }
+
+    pendingTargets.add(entry.target);
+  }
+
+  return pendingTargets;
+};
+
 const verifyStyleConsumers = (styles) => {
   const sources = javascriptFiles(resolve(themeRoot, "assets")).map((path) => ({
     path,
     content: readFileSync(path, "utf8"),
   }));
+  const pendingTargets = pendingStyleTargets(styles);
 
   for (const style of styles) {
     const importFragment = `reference/${style.target.replaceAll("\\", "/")}`;
     const consumers = sources.filter(({ content }) =>
       content.includes(importFragment),
     );
+
+    if (pendingTargets.has(style.target)) {
+      if (consumers.length > 0) {
+        throw new Error(
+          `Pending reference style has a WordPress Vite consumer and must be removed from the pending list: ${style.target}`,
+        );
+      }
+
+      continue;
+    }
 
     if (consumers.length === 0) {
       throw new Error(

@@ -1,23 +1,68 @@
 {
   "version": 1,
   "manifest": "src/reference-assets.json",
-  "manifestSha256": "36d75274e547c5303b8de1a4a7a030816e9ec25d9fd2f408a6179093a5f50322",
+  "manifestSha256": "3689ca41d40446d364726033874f5bf231a71a04be9d6ab53d9183c760a2eb61",
   "sourceRepository": "maruderm.html",
   "styles": [
     {
       "source": "assets/styles/base/storefront-foundation.css",
       "target": "storefront-foundation.css",
-      "sha256": "fc137da945be75073521b708aef140fa65dfe889b10655ec85e2129d4c403b32"
+      "sha256": "32abfda4c661169af2a7edece00ad14f7ab564f788f82210e1965928f34868e1"
     },
     {
       "source": "assets/styles/components/product.css",
       "target": "product.css",
-      "sha256": "b8c81824cf913e13f9d0ad31a95d064c9eecf06a46ccea7934fb6d50fa8c08a2"
+      "sha256": "570670f529b4087eef2bbdb3d29936a301b98f0faffcf74d58824aceaf72a194"
     },
     {
       "source": "assets/styles/components/product-card.css",
       "target": "product-card.css",
-      "sha256": "1b387c7e42afb23f2c0fa991840211390fdc74b4d3c42fec0f50b103c9c0d430"
+      "sha256": "e6bc82d4c84a2da1b2c7358c72a198c0ad295fb7d8d5f48e26a8eb0da4f0536a"
+    },
+    {
+      "source": "assets/styles/components/account.css",
+      "target": "account.css",
+      "sha256": "56782439a07d1cc35cac7484d80885746f770e5bda151428671402f3daefd418"
+    },
+    {
+      "source": "assets/styles/components/bank-transfer.css",
+      "target": "bank-transfer.css",
+      "sha256": "a5148baafc865128a08e79600b8eddee2cdef5c30f78bb7dc5d9853ffa78d205"
+    },
+    {
+      "source": "assets/styles/components/cart.css",
+      "target": "cart.css",
+      "sha256": "2fc88aded2d48686f922bd215f5c7134c85a3ef9016a0b553283d3cf028591fb"
+    },
+    {
+      "source": "assets/styles/components/delivery.css",
+      "target": "delivery.css",
+      "sha256": "95bef75e6a2d793b009c6b9e62a356fe7f63f0e642c1e778853fa39a00a4619d"
+    },
+    {
+      "source": "assets/styles/components/footer.css",
+      "target": "footer.css",
+      "sha256": "52c29af3a57674944e388f9133541f956a4f84b1c37f917e6c31ca35811f4e9e"
+    },
+    {
+      "source": "assets/styles/components/hair-analysis.css",
+      "target": "hair-analysis.css",
+      "sha256": "6dbbdcc4957566f921e5628c225d883e35cdf40c8e1838d562708da1005aef28"
+    },
+    {
+      "source": "assets/styles/components/home.css",
+      "target": "home.css",
+      "sha256": "1499049da2c65b4f29d621f0b1cae381177a6ba7af4589da72fc2389adfa270e"
+    },
+    {
+      "source": "assets/styles/components/login.css",
+      "target": "login.css",
+      "sha256": "c2afb7a9529cfde60ceca739bdf4d20ddf131198b69d979e553900c6d8108365"
+    },
+    {
+      "source": "assets/styles/components/payment.css",
+      "target": "payment.css",
+      "sha256": "fd77b11bdc57ef1f894a5bede5fdc5d0c9cc2eb34dd62e47668cfa1045c6c691"
     }
   ]
 }

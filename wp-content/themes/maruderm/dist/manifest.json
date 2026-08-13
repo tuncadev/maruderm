@@ -1,38 +1,66 @@
 {
-  "_delivery-080NXxuv.css": {
-    "file": "assets/delivery-080NXxuv.css",
-    "src": "_delivery-080NXxuv.css"
+  "_cart-BemEHzBx.css": {
+    "file": "assets/cart-BemEHzBx.css",
+    "src": "_cart-BemEHzBx.css"
   },
-  "_product-card-BqhqDEO8.css": {
-    "file": "assets/product-card-BqhqDEO8.css",
-    "src": "_product-card-BqhqDEO8.css"
+  "_catalog-integration-DSZAziGK.css": {
+    "file": "assets/catalog-integration-DSZAziGK.css",
+    "src": "_catalog-integration-DSZAziGK.css"
+  },
+  "_delivery-DqznaNss.css": {
+    "file": "assets/delivery-DqznaNss.css",
+    "src": "_delivery-DqznaNss.css"
+  },
+  "_product-card-ChpXSw1m.css": {
+    "file": "assets/product-card-ChpXSw1m.css",
+    "src": "_product-card-ChpXSw1m.css"
+  },
+  "_storefront-foundation-BSY9g9DU.css": {
+    "file": "assets/storefront-foundation-BSY9g9DU.css",
+    "src": "_storefront-foundation-BSY9g9DU.css"
+  },
+  "assets/account/index.js": {
+    "file": "assets/account-CG8q62YI.js",
+    "name": "account",
+    "src": "assets/account/index.js",
+    "isEntry": true,
+    "css": [
+      "assets/account-CIpx2eDR.css",
+      "assets/product-card-ChpXSw1m.css",
+      "assets/storefront-foundation-BSY9g9DU.css"
+    ]
   },
   "assets/bank-transfer/index.js": {
-    "file": "assets/bank-transfer-D_w8JEbT.js",
+    "file": "assets/bank-transfer-CWk4Mh5z.js",
     "name": "bank-transfer",
     "src": "assets/bank-transfer/index.js",
     "isEntry": true,
     "css": [
-      "assets/bank-transfer-D2ULZN3T.css"
+      "assets/bank-transfer-Do9Y7wT4.css",
+      "assets/storefront-foundation-BSY9g9DU.css"
     ]
   },
   "assets/cart/index.js": {
-    "file": "assets/cart-DBSW1mBv.js",
+    "file": "assets/cart-DfZSrhhs.js",
     "name": "cart",
     "src": "assets/cart/index.js",
     "isEntry": true,
     "css": [
-      "assets/cart-Dl0VBz1q.css"
+      "assets/cart-D587KwQe.css",
+      "assets/cart-BemEHzBx.css",
+      "assets/storefront-foundation-BSY9g9DU.css"
     ]
   },
   "assets/catalog/index.js": {
-    "file": "assets/catalog-CnE9bNd0.js",
+    "file": "assets/catalog-DWCuT9JS.js",
     "name": "catalog",
     "src": "assets/catalog/index.js",
     "isEntry": true,
     "css": [
-      "assets/catalog-BCr_xFAN.css",
-      "assets/product-card-BqhqDEO8.css"
+      "assets/catalog-CBZdfw6b.css",
+      "assets/catalog-integration-DSZAziGK.css",
+      "assets/product-card-ChpXSw1m.css",
+      "assets/storefront-foundation-BSY9g9DU.css"
     ]
   },
   "assets/checkout-result/index.js": {
@@ -45,12 +73,15 @@
     ]
   },
   "assets/delivery/index.js": {
-    "file": "assets/delivery-dubalOtY.js",
+    "file": "assets/delivery-DPzBBnkf.js",
     "name": "delivery",
     "src": "assets/delivery/index.js",
     "isEntry": true,
     "css": [
-      "assets/delivery-080NXxuv.css"
+      "assets/delivery-z_GAPdyZ.css",
+      "assets/cart-BemEHzBx.css",
+      "assets/delivery-DqznaNss.css",
+      "assets/storefront-foundation-BSY9g9DU.css"
     ]
   },
   "assets/fonts/RozetkaWeb/RozetkaWeb-Bold.woff2": {
@@ -65,6 +96,16 @@
     "file": "assets/RozetkaWeb-Regular-D9f3z7ky.woff2",
     "src": "assets/fonts/RozetkaWeb/RozetkaWeb-Regular.woff2"
   },
+  "assets/footer/index.js": {
+    "file": "assets/footer--evNzoiK.js",
+    "name": "footer",
+    "src": "assets/footer/index.js",
+    "isEntry": true,
+    "css": [
+      "assets/footer-Du13l66L.css",
+      "assets/storefront-foundation-BSY9g9DU.css"
+    ]
+  },
   "assets/frontend/index.js": {
     "file": "assets/frontend-BQ4_qGBN.js",
     "name": "frontend",
@@ -75,12 +116,12 @@
     ]
   },
   "assets/globals/index.js": {
-    "file": "assets/globals-BZh8_BCo.js",
+    "file": "assets/globals-u-zfn8cP.js",
     "name": "globals",
     "src": "assets/globals/index.js",
     "isEntry": true,
     "css": [
-      "assets/globals-HQkmUBoz.css"
+      "assets/globals-CxEnP20I.css"
     ],
     "assets": [
       "assets/RozetkaWeb-Regular-D9f3z7ky.woff2",
@@ -88,33 +129,69 @@
       "assets/RozetkaWeb-Bold-02T3Aq_L.woff2"
     ]
   },
+  "assets/hair-analysis/index.js": {
+    "file": "assets/hair-analysis-Db4PARMr.js",
+    "name": "hair-analysis",
+    "src": "assets/hair-analysis/index.js",
+    "isEntry": true,
+    "css": [
+      "assets/hair-analysis-CGFiQa7c.css",
+      "assets/storefront-foundation-BSY9g9DU.css"
+    ]
+  },
+  "assets/home/index.js": {
+    "file": "assets/home-DYLRrgeW.js",
+    "name": "home",
+    "src": "assets/home/index.js",
+    "isEntry": true,
+    "css": [
+      "assets/home-DEOC_YrA.css",
+      "assets/catalog-integration-DSZAziGK.css",
+      "assets/product-card-ChpXSw1m.css",
+      "assets/storefront-foundation-BSY9g9DU.css"
+    ]
+  },
   "assets/landing-page/index.js": {
-    "file": "assets/landing-page-CYjOVvsB.js",
+    "file": "assets/landing-page-DKclGHOL.js",
     "name": "landing-page",
     "src": "assets/landing-page/index.js",
     "isEntry": true,
     "css": [
-      "assets/landing-page-CY3ipvi1.css"
+      "assets/landing-page-DR5QRyef.css",
+      "assets/storefront-foundation-BSY9g9DU.css"
+    ]
+  },
+  "assets/login/index.js": {
+    "file": "assets/login-Ye9YMBgT.js",
+    "name": "login",
+    "src": "assets/login/index.js",
+    "isEntry": true,
+    "css": [
+      "assets/login-DfKi9F1j.css",
+      "assets/storefront-foundation-BSY9g9DU.css"
     ]
   },
   "assets/payment/index.js": {
-    "file": "assets/payment-CDyg4T6R.js",
+    "file": "assets/payment-CSBZFujP.js",
     "name": "payment",
     "src": "assets/payment/index.js",
     "isEntry": true,
     "css": [
-      "assets/payment-CS9m14yU.css",
-      "assets/delivery-080NXxuv.css"
+      "assets/payment-1LTq4DT2.css",
+      "assets/cart-BemEHzBx.css",
+      "assets/delivery-DqznaNss.css",
+      "assets/storefront-foundation-BSY9g9DU.css"
     ]
   },
   "assets/product/index.js": {
-    "file": "assets/product-afS4nm56.js",
+    "file": "assets/product-BftsVPaK.js",
     "name": "product",
     "src": "assets/product/index.js",
     "isEntry": true,
     "css": [
-      "assets/product-CXiMpB21.css",
-      "assets/product-card-BqhqDEO8.css"
+      "assets/product-D8tMzi--.css",
+      "assets/product-card-ChpXSw1m.css",
+      "assets/storefront-foundation-BSY9g9DU.css"
     ]
   }
 }

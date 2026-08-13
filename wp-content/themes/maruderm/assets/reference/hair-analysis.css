@@ -1,0 +1,1236 @@
+.hair-diagnostic {
+  --hair-ink: #242126;
+  --hair-purple: #8254e8;
+  --hair-pink: #f1b9dc;
+  --hair-green: #bce8b4;
+  --hair-blue: #bdebf2;
+  background: #fffdfb;
+}
+.hair-diagnostic__hero {
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid var(--line);
+  background:
+    radial-gradient(circle at 9% 15%, rgba(255, 255, 255, 0.85) 0 7%, transparent 7.2%),
+    linear-gradient(116deg, #f8f2ff 0%, #fcecf6 54%, #eff9ef 100%);
+}
+.hair-diagnostic__hero:after {
+  position: absolute;
+  right: -8vw;
+  bottom: -24vw;
+  width: 52vw;
+  height: 52vw;
+  border: 1px solid rgba(118, 71, 233, 0.13);
+  border-radius: 50%;
+  content: '';
+}
+.hair-diagnostic__hero-grid {
+  display: grid;
+  min-height: 610px;
+  grid-template-columns: minmax(0, 1.04fr) minmax(430px, 0.96fr);
+  align-items: center;
+  gap: 50px;
+}
+.hair-diagnostic__hero-copy {
+  position: relative;
+  z-index: 2;
+  padding: 84px 0;
+}
+.hair-diagnostic__hero h1 {
+  max-width: 760px;
+  margin: 21px 0 24px;
+  font-family: var(--display);
+  font-size: clamp(46px, 5vw, 76px);
+  font-weight: 600;
+  letter-spacing: -0.055em;
+  line-height: 1.01;
+}
+.hair-diagnostic__hero h1 em {
+  color: var(--hair-purple);
+  font-style: normal;
+}
+.hair-diagnostic__hero-copy > p {
+  max-width: 650px;
+  margin: 0;
+  color: #666169;
+  font-size: 17px;
+}
+.hair-diagnostic__hero-meta {
+  display: flex;
+  margin-top: 42px;
+  gap: 36px;
+}
+.hair-diagnostic__hero-meta span {
+  display: grid;
+  color: #716c74;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.hair-diagnostic__hero-meta strong {
+  color: var(--hair-ink);
+  font-family: var(--display);
+  font-size: 24px;
+  letter-spacing: -0.04em;
+}
+.hair-diagnostic__visual {
+  position: relative;
+  z-index: 1;
+  min-height: 520px;
+}
+.hair-diagnostic__halo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 410px;
+  height: 410px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.74);
+  box-shadow: 0 40px 90px rgba(75, 46, 103, 0.12);
+  transform: translate(-50%, -50%);
+}
+.hair-diagnostic__product-stage {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  width: 390px;
+  height: 430px;
+  align-items: end;
+  justify-content: center;
+  transform: translate(-50%, -50%);
+}
+.hair-diagnostic__product-stage img {
+  position: relative;
+  z-index: 2;
+  width: 170px;
+  height: 340px;
+  object-fit: contain;
+  filter: drop-shadow(0 25px 22px rgba(37, 27, 45, 0.14));
+}
+.hair-diagnostic__product-stage img:first-of-type {
+  margin-right: -36px;
+  transform: rotate(-7deg) translateY(7px);
+}
+.hair-diagnostic__product-stage img:nth-of-type(2) {
+  transform: rotate(5deg) translateY(-12px);
+}
+.hair-diagnostic__product-stage > span {
+  position: absolute;
+  z-index: 4;
+  right: -20px;
+  bottom: 16px;
+  width: 205px;
+  border: 1px solid rgba(32, 32, 35, 0.08);
+  border-radius: 18px;
+  padding: 15px 18px;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 15px 35px rgba(62, 45, 74, 0.11);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.45;
+}
+.hair-diagnostic__strand {
+  position: absolute;
+  z-index: 1;
+  display: block;
+  width: 420px;
+  height: 220px;
+  border: 2px solid rgba(118, 71, 233, 0.2);
+  border-color: rgba(118, 71, 233, 0.2) transparent transparent;
+  border-radius: 50%;
+}
+.hair-diagnostic__strand--one {
+  top: 95px;
+  left: 20px;
+  transform: rotate(-24deg);
+}
+.hair-diagnostic__strand--two {
+  right: -55px;
+  bottom: 50px;
+  border-color: rgba(238, 117, 185, 0.24) transparent transparent;
+  transform: rotate(152deg);
+}
+.hair-diagnostic__visual-note {
+  position: absolute;
+  z-index: 5;
+  border: 1px solid rgba(32, 32, 35, 0.08);
+  border-radius: 999px;
+  padding: 9px 15px;
+  background: #fff;
+  box-shadow: 0 10px 30px rgba(48, 38, 55, 0.09);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.hair-diagnostic__visual-note--scalp {
+  top: 15%;
+  left: 0;
+  background: var(--yellow);
+  transform: rotate(-5deg);
+}
+.hair-diagnostic__visual-note--structure {
+  top: 27%;
+  right: 0;
+  background: var(--hair-blue);
+  transform: rotate(4deg);
+}
+.hair-diagnostic__visual-note--routine {
+  bottom: 26%;
+  left: 2%;
+  background: var(--hair-green);
+  transform: rotate(3deg);
+}
+.hair-diagnostic__workspace {
+  scroll-margin-top: 125px;
+  padding-top: 64px;
+  padding-bottom: 100px;
+}
+.hair-diagnostic__workspace [hidden] {
+  display: none !important;
+}
+.hair-diagnostic__start {
+  display: grid;
+  overflow: hidden;
+  min-height: 430px;
+  grid-template-columns: minmax(0, 0.9fr) minmax(500px, 1.1fr);
+  border: 1px solid rgba(32, 32, 35, 0.1);
+  border-radius: 34px;
+  background: #fff;
+  box-shadow: 0 28px 80px rgba(43, 34, 50, 0.08);
+}
+.hair-diagnostic__start-copy {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(38px, 5vw, 70px);
+}
+.hair-diagnostic__eyebrow {
+  color: var(--hair-purple);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.hair-diagnostic__start h2 {
+  max-width: 540px;
+  margin: 14px 0 18px;
+  font-family: var(--display);
+  font-size: clamp(31px, 3.3vw, 48px);
+  letter-spacing: -0.045em;
+  line-height: 1.08;
+}
+.hair-diagnostic__start-copy > p {
+  max-width: 560px;
+  margin: 0 0 28px;
+  color: var(--muted);
+  font-size: 14px;
+}
+.hair-diagnostic__resume {
+  margin: 16px 0 0 15px;
+  border: 0;
+  padding: 0;
+  color: var(--hair-purple);
+  background: transparent;
+  font-size: 12px;
+  font-weight: 600;
+}
+.hair-diagnostic__start-points {
+  display: grid;
+  padding: 20px;
+  gap: 10px;
+  background: #f7f2fb;
+}
+.hair-diagnostic__start-points article {
+  display: grid;
+  grid-template-columns: 55px 1fr;
+  align-content: center;
+  border: 1px solid rgba(32, 32, 35, 0.08);
+  border-radius: 22px;
+  padding: 20px 24px;
+  background: rgba(255, 255, 255, 0.78);
+}
+.hair-diagnostic__start-points article:nth-child(2) {
+  background: rgba(238, 250, 238, 0.9);
+}
+.hair-diagnostic__start-points article:nth-child(3) {
+  background: rgba(238, 249, 252, 0.9);
+}
+.hair-diagnostic__start-points span {
+  grid-row: 1 / 3;
+  color: var(--hair-purple);
+  font-family: var(--display);
+  font-size: 24px;
+}
+.hair-diagnostic__start-points strong {
+  font-size: 14px;
+}
+.hair-diagnostic__start-points p {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 11px;
+}
+.hair-diagnostic__quiz {
+  border: 1px solid rgba(32, 32, 35, 0.1);
+  border-radius: 34px;
+  padding: clamp(25px, 4vw, 52px);
+  background: #fff;
+  box-shadow: 0 28px 80px rgba(43, 34, 50, 0.08);
+}
+.hair-diagnostic__progress-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+.hair-diagnostic__progress-head > div {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.hair-diagnostic__progress-head span,
+.hair-diagnostic__progress-head button {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.hair-diagnostic__progress-head strong {
+  font-family: var(--display);
+  font-size: 13px;
+}
+.hair-diagnostic__progress-head button {
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  padding: 5px 0;
+  background: transparent;
+}
+.hair-diagnostic__progress {
+  height: 5px;
+  overflow: hidden;
+  margin-top: 16px;
+  border-radius: 99px;
+  background: #eeeaf0;
+}
+.hair-diagnostic__progress span {
+  display: block;
+  width: 10%;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--hair-purple), #ef79bd);
+  transition: width 0.35s ease;
+}
+.hair-diagnostic__question-layout {
+  display: grid;
+  min-height: 580px;
+  grid-template-columns: minmax(0, 1fr) 275px;
+  gap: 44px;
+  padding: 52px 0 36px;
+}
+.hair-diagnostic__question {
+  position: relative;
+  min-width: 0;
+}
+.hair-question__number {
+  position: absolute;
+  top: -33px;
+  right: 0;
+  color: #f1edf2;
+  font-family: var(--display);
+  font-size: 106px;
+  font-weight: 600;
+  letter-spacing: -0.08em;
+  line-height: 1;
+  pointer-events: none;
+}
+.hair-question__heading {
+  position: relative;
+  z-index: 1;
+  max-width: 760px;
+}
+.hair-question__heading > span {
+  color: var(--hair-purple);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+.hair-question__heading h2 {
+  margin: 12px 0 12px;
+  font-family: var(--display);
+  font-size: clamp(29px, 3.2vw, 45px);
+  letter-spacing: -0.045em;
+  line-height: 1.08;
+}
+.hair-question__heading p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+.hair-question__options {
+  display: grid;
+  margin: 34px 0 0;
+  border: 0;
+  padding: 0;
+  gap: 10px;
+}
+.hair-question__options--multiple {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.hair-option {
+  position: relative;
+  display: grid;
+  min-height: 79px;
+  grid-template-columns: 48px minmax(0, 1fr) 26px;
+  align-items: center;
+  gap: 14px;
+  border: 1px solid rgba(32, 32, 35, 0.13);
+  border-radius: 17px;
+  padding: 13px 16px;
+  background: #fff;
+  cursor: pointer;
+  transition:
+    border-color 0.18s,
+    background 0.18s,
+    transform 0.18s,
+    box-shadow 0.18s;
+}
+.hair-option:hover {
+  border-color: rgba(118, 71, 233, 0.42);
+  transform: translateY(-1px);
+}
+.hair-option.is-selected {
+  border-color: var(--hair-purple);
+  background: #f8f4ff;
+  box-shadow: 0 8px 24px rgba(118, 71, 233, 0.08);
+}
+.hair-option input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+.hair-option:has(input:focus-visible) {
+  outline: 3px solid rgba(118, 71, 233, 0.26);
+  outline-offset: 2px;
+}
+.hair-option__marker {
+  display: grid;
+  width: 46px;
+  height: 46px;
+  place-items: center;
+  border-radius: 14px;
+  color: #5b455f;
+  background: #f3eaf2;
+  font-family: var(--display);
+  font-size: 15px;
+  font-weight: 600;
+}
+.hair-option:nth-child(3n + 2) .hair-option__marker {
+  background: #edf7e9;
+}
+.hair-option:nth-child(3n) .hair-option__marker {
+  background: #e9f5f8;
+}
+.hair-option__copy {
+  display: grid;
+  gap: 3px;
+}
+.hair-option__copy strong {
+  font-size: 13px;
+  line-height: 1.35;
+}
+.hair-option__copy small {
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.45;
+}
+.hair-option__control {
+  display: grid;
+  width: 22px;
+  height: 22px;
+  place-items: center;
+  border: 1px solid rgba(32, 32, 35, 0.25);
+  border-radius: 50%;
+}
+.hair-question__options--multiple .hair-option__control {
+  border-radius: 6px;
+}
+.hair-option__control svg {
+  width: 13px;
+  height: 13px;
+  fill: none;
+  stroke: #fff;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2.3;
+  opacity: 0;
+}
+.hair-option.is-selected .hair-option__control {
+  border-color: var(--hair-purple);
+  background: var(--hair-purple);
+}
+.hair-option.is-selected .hair-option__control svg {
+  opacity: 1;
+}
+.hair-diagnostic__context {
+  align-self: start;
+  border-radius: 24px;
+  padding: 28px;
+  background: #252326;
+  color: #fff;
+}
+.hair-diagnostic__context > span {
+  color: #d8bdf8;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+.hair-diagnostic__context > p {
+  margin: 18px 0 30px;
+  color: rgba(255, 255, 255, 0.73);
+  font-size: 12px;
+  line-height: 1.7;
+}
+.hair-diagnostic__context-signal {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 5px;
+}
+.hair-diagnostic__context-signal i {
+  height: 4px;
+  border-radius: 99px;
+  background: var(--hair-purple);
+}
+.hair-diagnostic__context-signal i:nth-child(2) {
+  background: var(--hair-pink);
+}
+.hair-diagnostic__context-signal i:nth-child(3) {
+  background: var(--hair-blue);
+}
+.hair-diagnostic__context-signal i:nth-child(4) {
+  background: var(--hair-green);
+}
+.hair-diagnostic__context-signal i:nth-child(5) {
+  background: var(--yellow);
+}
+.hair-diagnostic__context-signal small {
+  grid-column: 1 / -1;
+  margin-top: 10px;
+  color: rgba(255, 255, 255, 0.48);
+  font-size: 9px;
+  line-height: 1.5;
+}
+.hair-diagnostic__navigation {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  border-top: 1px solid var(--line);
+  padding-top: 25px;
+  gap: 20px;
+}
+.hair-diagnostic__navigation > span {
+  color: var(--muted);
+  font-size: 10px;
+}
+.hair-diagnostic__back {
+  justify-self: start;
+  border: 0;
+  padding: 10px 0;
+  background: transparent;
+  font-size: 12px;
+  font-weight: 600;
+}
+.hair-diagnostic__back:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+.hair-diagnostic__navigation .button {
+  min-width: 150px;
+  justify-self: end;
+}
+.hair-diagnostic__navigation .button:disabled {
+  border-color: transparent;
+  color: #99969b;
+  background: #ebe9ec;
+  box-shadow: none;
+  cursor: not-allowed;
+  transform: none;
+}
+.hair-diagnostic__processing {
+  display: grid;
+  min-height: 500px;
+  place-items: center;
+  align-content: center;
+  border: 1px solid var(--line);
+  border-radius: 34px;
+  padding: 50px;
+  text-align: center;
+  background: linear-gradient(135deg, #f8f2ff, #fff6fa, #eff9ef);
+}
+.hair-diagnostic__processing-orbit {
+  position: relative;
+  width: 124px;
+  height: 124px;
+  margin-bottom: 25px;
+  border: 1px solid rgba(118, 71, 233, 0.18);
+  border-radius: 50%;
+  animation: hair-orbit 3s linear infinite;
+}
+.hair-diagnostic__processing-orbit:before,
+.hair-diagnostic__processing-orbit:after,
+.hair-diagnostic__processing-orbit i {
+  position: absolute;
+  border-radius: 50%;
+  content: '';
+}
+.hair-diagnostic__processing-orbit:before {
+  inset: 22px;
+  background: rgba(255, 255, 255, 0.75);
+  box-shadow: 0 15px 45px rgba(80, 52, 100, 0.13);
+}
+.hair-diagnostic__processing-orbit:after {
+  top: -6px;
+  left: 56px;
+  width: 12px;
+  height: 12px;
+  background: var(--hair-purple);
+}
+.hair-diagnostic__processing-orbit i:first-child {
+  top: 26px;
+  right: -2px;
+  width: 9px;
+  height: 9px;
+  background: #ed84bf;
+}
+.hair-diagnostic__processing-orbit i:nth-child(2) {
+  bottom: 4px;
+  left: 17px;
+  width: 10px;
+  height: 10px;
+  background: #72d0be;
+}
+.hair-diagnostic__processing > span {
+  color: var(--hair-purple);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+.hair-diagnostic__processing h2 {
+  margin: 12px 0;
+  font-family: var(--display);
+  font-size: clamp(32px, 4vw, 48px);
+  letter-spacing: -0.045em;
+}
+.hair-diagnostic__processing p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+@keyframes hair-orbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.hair-diagnostic__result {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 34px;
+  background: #fff;
+  box-shadow: 0 28px 80px rgba(43, 34, 50, 0.08);
+}
+.hair-result__header {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 230px;
+  align-items: center;
+  gap: 60px;
+  padding: clamp(42px, 6vw, 80px);
+  background: linear-gradient(120deg, #f8f2ff, #fdf1f8 58%, #f1faef);
+}
+.hair-result__header:after {
+  position: absolute;
+  top: -150px;
+  right: -120px;
+  width: 350px;
+  height: 350px;
+  border: 55px solid rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  content: '';
+}
+.hair-result__intro {
+  position: relative;
+  z-index: 1;
+}
+.hair-result__intro h2 {
+  max-width: 790px;
+  margin: 14px 0 17px;
+  font-family: var(--display);
+  font-size: clamp(37px, 4.6vw, 63px);
+  letter-spacing: -0.052em;
+  line-height: 1.02;
+}
+.hair-result__intro > p {
+  max-width: 720px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+.hair-result__tags {
+  display: flex;
+  margin-top: 27px;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.hair-result__tags span {
+  border: 1px solid rgba(32, 32, 35, 0.12);
+  border-radius: 999px;
+  padding: 8px 13px;
+  background: rgba(255, 255, 255, 0.7);
+  font-size: 10px;
+}
+.hair-result__match {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  justify-items: center;
+  gap: 13px;
+}
+.hair-result__match > div {
+  display: grid;
+  width: 184px;
+  height: 184px;
+  place-items: center;
+  align-content: center;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, #fff 0 62%, transparent 63%),
+    conic-gradient(var(--hair-purple) calc(var(--match) * 1%), rgba(118, 71, 233, 0.13) 0);
+  box-shadow: 0 18px 50px rgba(73, 47, 91, 0.11);
+}
+.hair-result__match strong {
+  font-family: var(--display);
+  font-size: 39px;
+  letter-spacing: -0.05em;
+}
+.hair-result__match span {
+  color: var(--muted);
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.hair-result__match small {
+  max-width: 170px;
+  color: var(--muted);
+  font-size: 9px;
+  text-align: center;
+}
+.hair-result__section-head {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 30px;
+  margin-bottom: 28px;
+}
+.hair-result__section-head h3 {
+  margin: 8px 0 0;
+  font-family: var(--display);
+  font-size: clamp(29px, 3.2vw, 42px);
+  letter-spacing: -0.045em;
+  line-height: 1.08;
+}
+.hair-result__section-head > p {
+  max-width: 360px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 11px;
+}
+.hair-diagnostic__result > .hair-result__section-head,
+.hair-result__routine,
+.hair-result__guidance,
+.hair-result__footer {
+  margin-right: clamp(28px, 5vw, 68px);
+  margin-left: clamp(28px, 5vw, 68px);
+}
+.hair-diagnostic__result > .hair-result__section-head {
+  margin-top: 62px;
+}
+.hair-result__priorities {
+  display: grid;
+  margin: 0 clamp(28px, 5vw, 68px) 70px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 13px;
+}
+.hair-priority {
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  padding: 24px;
+  background: #fff;
+}
+.hair-priority__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.hair-priority__top span {
+  color: var(--muted);
+  font-size: 10px;
+}
+.hair-priority__top strong {
+  font-family: var(--display);
+  font-size: 24px;
+}
+.hair-priority__bar {
+  height: 5px;
+  margin: 16px 0 22px;
+  overflow: hidden;
+  border-radius: 99px;
+  background: #eceaec;
+}
+.hair-priority__bar i {
+  display: block;
+  width: calc(var(--priority-value) * 1%);
+  height: 100%;
+  border-radius: inherit;
+  background: var(--priority-color);
+}
+.hair-priority h4 {
+  margin: 0 0 5px;
+  font-family: var(--display);
+  font-size: 18px;
+}
+.hair-priority p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 10px;
+}
+.hair-result__routine {
+  border-top: 1px solid var(--line);
+  padding: 65px 0 70px;
+}
+.hair-result__products {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+.hair-result-product {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  background: #fff;
+}
+.hair-result-product__image {
+  position: relative;
+  display: grid;
+  height: 300px;
+  place-items: center;
+  background: #f5f3f5;
+}
+.hair-result-product:nth-child(2) .hair-result-product__image {
+  background: #f0f8ee;
+}
+.hair-result-product:nth-child(3) .hair-result-product__image {
+  background: #eef8fa;
+}
+.hair-result-product__image > span {
+  position: absolute;
+  top: 17px;
+  left: 17px;
+  z-index: 1;
+  border-radius: 999px;
+  padding: 7px 10px;
+  background: rgba(255, 255, 255, 0.82);
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+.hair-result-product__image img {
+  width: 72%;
+  height: 250px;
+  object-fit: contain;
+  filter: drop-shadow(0 15px 16px rgba(32, 32, 35, 0.1));
+  transition: transform 0.25s;
+}
+.hair-result-product:hover .hair-result-product__image img {
+  transform: translateY(-4px) rotate(-1deg);
+}
+.hair-result-product__body {
+  padding: 20px;
+}
+.hair-result-product__body small {
+  color: var(--muted);
+  font-size: 8px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+.hair-result-product__body h4 {
+  min-height: 62px;
+  margin: 7px 0 16px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.55;
+}
+.hair-result-product__body > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid var(--line);
+  padding-top: 15px;
+}
+.hair-result-product__body strong {
+  font-family: var(--display);
+  font-size: 14px;
+}
+.hair-result-product__body > div a {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid var(--soft-surface-border);
+  color: var(--ink);
+  background: var(--soft-surface);
+}
+.hair-result-product__body svg {
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+}
+.hair-result__guidance {
+  display: grid;
+  grid-template-columns: 0.8fr 1.2fr;
+  align-items: start;
+  gap: 60px;
+  border-radius: 28px;
+  padding: clamp(30px, 4vw, 50px);
+  color: #fff;
+  background: #252326;
+}
+.hair-result__guidance h3 {
+  margin: 13px 0 0;
+  font-family: var(--display);
+  font-size: clamp(27px, 3vw, 39px);
+  letter-spacing: -0.04em;
+  line-height: 1.08;
+}
+.hair-result__guidance ol {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  gap: 0;
+}
+.hair-result__guidance li {
+  display: grid;
+  grid-template-columns: 38px 1fr;
+  align-items: start;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 14px 0;
+  gap: 12px;
+}
+.hair-result__guidance li:first-child {
+  padding-top: 0;
+}
+.hair-result__guidance li:last-child {
+  border: 0;
+  padding-bottom: 0;
+}
+.hair-result__guidance li span {
+  color: #d7b7fb;
+  font-family: var(--display);
+  font-size: 14px;
+}
+.hair-result__guidance li p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 11px;
+  line-height: 1.65;
+}
+.hair-result__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  padding: 32px 0 45px;
+}
+.hair-result__footer p {
+  max-width: 760px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 9px;
+}
+.hair-diagnostic__restart {
+  flex: 0 0 auto;
+  border: 0;
+  border-bottom: 1px solid;
+  padding: 5px 0;
+  background: transparent;
+  font-size: 11px;
+  font-weight: 600;
+}
+@media (max-width: 1023px) {
+  .hair-diagnostic__hero-grid {
+    min-height: 560px;
+    grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+    gap: 20px;
+  }
+  .hair-diagnostic__halo {
+    width: 330px;
+    height: 330px;
+  }
+  .hair-diagnostic__product-stage {
+    width: 315px;
+  }
+  .hair-diagnostic__product-stage img {
+    width: 140px;
+    height: 300px;
+  }
+  .hair-diagnostic__start {
+    grid-template-columns: 1fr;
+  }
+  .hair-diagnostic__start-points {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .hair-diagnostic__start-points article {
+    grid-template-columns: 1fr;
+  }
+  .hair-diagnostic__start-points span {
+    grid-row: auto;
+    margin-bottom: 15px;
+  }
+  .hair-diagnostic__question-layout {
+    grid-template-columns: 1fr;
+  }
+  .hair-diagnostic__context {
+    display: grid;
+    grid-template-columns: 150px 1fr 180px;
+    align-items: center;
+    gap: 20px;
+  }
+  .hair-diagnostic__context > p {
+    margin: 0;
+  }
+  .hair-result__header {
+    gap: 25px;
+  }
+  .hair-result-product__image {
+    height: 250px;
+  }
+  .hair-result-product__image img {
+    height: 205px;
+  }
+}
+@media (max-width: 767px) {
+  .hair-diagnostic__hero-grid {
+    min-height: auto;
+    grid-template-columns: 1fr;
+  }
+  .hair-diagnostic__hero-copy {
+    padding: 58px 0 15px;
+  }
+  .hair-diagnostic__hero h1 {
+    font-size: clamp(39px, 12vw, 56px);
+  }
+  .hair-diagnostic__hero-copy > p {
+    font-size: 14px;
+  }
+  .hair-diagnostic__hero-meta {
+    margin-top: 30px;
+    gap: 22px;
+  }
+  .hair-diagnostic__hero-meta strong {
+    font-size: 19px;
+  }
+  .hair-diagnostic__visual {
+    min-height: 390px;
+  }
+  .hair-diagnostic__halo {
+    width: 290px;
+    height: 290px;
+  }
+  .hair-diagnostic__product-stage {
+    width: 280px;
+    height: 340px;
+  }
+  .hair-diagnostic__product-stage img {
+    width: 125px;
+    height: 260px;
+  }
+  .hair-diagnostic__product-stage > span {
+    right: -10px;
+    bottom: 0;
+    width: 175px;
+  }
+  .hair-diagnostic__visual-note--scalp {
+    left: 4%;
+  }
+  .hair-diagnostic__visual-note--structure {
+    right: 2%;
+  }
+  .hair-diagnostic__workspace {
+    scroll-margin-top: 95px;
+    padding-top: 35px;
+    padding-bottom: 60px;
+  }
+  .hair-diagnostic__start,
+  .hair-diagnostic__quiz,
+  .hair-diagnostic__processing,
+  .hair-diagnostic__result {
+    border-radius: 25px;
+  }
+  .hair-diagnostic__start-copy {
+    padding: 34px 25px;
+  }
+  .hair-diagnostic__start-points {
+    grid-template-columns: 1fr;
+    padding: 10px;
+  }
+  .hair-diagnostic__start-points article {
+    grid-template-columns: 44px 1fr;
+  }
+  .hair-diagnostic__start-points span {
+    grid-row: 1 / 3;
+    margin: 0;
+  }
+  .hair-diagnostic__quiz {
+    padding: 24px 18px;
+  }
+  .hair-diagnostic__progress-head button {
+    font-size: 8px;
+  }
+  .hair-diagnostic__question-layout {
+    min-height: auto;
+    gap: 28px;
+    padding: 38px 0 28px;
+  }
+  .hair-question__number {
+    top: -18px;
+    font-size: 76px;
+  }
+  .hair-question__heading h2 {
+    max-width: 90%;
+    font-size: 29px;
+  }
+  .hair-question__options--multiple {
+    grid-template-columns: 1fr;
+  }
+  .hair-option {
+    min-height: 74px;
+    grid-template-columns: 42px 1fr 22px;
+    padding: 12px;
+    gap: 11px;
+  }
+  .hair-option__marker {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    font-size: 13px;
+  }
+  .hair-diagnostic__context {
+    display: block;
+    padding: 22px;
+  }
+  .hair-diagnostic__context > p {
+    margin: 12px 0 20px;
+  }
+  .hair-diagnostic__navigation {
+    grid-template-columns: 1fr 1fr;
+  }
+  .hair-diagnostic__navigation > span {
+    display: none;
+  }
+  .hair-diagnostic__navigation .button {
+    min-width: 130px;
+  }
+  .hair-diagnostic__processing {
+    min-height: 430px;
+    padding: 30px 20px;
+  }
+  .hair-result__header {
+    grid-template-columns: 1fr;
+    padding: 38px 25px;
+  }
+  .hair-result__intro h2 {
+    font-size: 38px;
+  }
+  .hair-result__match {
+    justify-self: start;
+  }
+  .hair-result__match > div {
+    width: 145px;
+    height: 145px;
+  }
+  .hair-result__match strong {
+    font-size: 31px;
+  }
+  .hair-result__section-head {
+    align-items: start;
+    flex-direction: column;
+    gap: 13px;
+  }
+  .hair-result__priorities,
+  .hair-result__products {
+    grid-template-columns: 1fr;
+  }
+  .hair-priority {
+    padding: 20px;
+  }
+  .hair-result__routine {
+    padding: 48px 0;
+  }
+  .hair-result-product {
+    display: grid;
+    grid-template-columns: 145px 1fr;
+  }
+  .hair-result-product__image {
+    height: 220px;
+  }
+  .hair-result-product__image > span {
+    top: 10px;
+    left: 10px;
+    font-size: 6px;
+  }
+  .hair-result-product__image img {
+    width: 88%;
+    height: 180px;
+  }
+  .hair-result-product__body {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    justify-content: center;
+    padding: 16px;
+  }
+  .hair-result-product__body h4 {
+    min-height: 0;
+    font-size: 10px;
+  }
+  .hair-result__guidance {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    padding: 30px 24px;
+  }
+  .hair-result__footer {
+    align-items: start;
+    flex-direction: column;
+    gap: 20px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hair-diagnostic__processing-orbit {
+    animation: none;
+  }
+  .hair-diagnostic__progress span,
+  .hair-option,
+  .hair-result-product__image img {
+    transition: none;
+  }
+}

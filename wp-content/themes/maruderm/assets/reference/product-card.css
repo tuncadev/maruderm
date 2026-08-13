@@ -154,10 +154,10 @@
   display: grid;
   width: 42px;
   height: 42px;
-  border: 0;
+  border: 1px solid var(--soft-surface-border);
   border-radius: 50%;
-  color: #fff;
-  background: var(--ink);
+  color: var(--ink);
+  background: var(--soft-surface);
   place-items: center;
   transition:
     background 0.2s,
@@ -165,6 +165,8 @@
 }
 .product-card__cart:hover,
 .product-card__notify:hover {
+  border-color: var(--purple);
+  color: #fff;
   background: var(--purple);
   transform: scale(1.05);
 }

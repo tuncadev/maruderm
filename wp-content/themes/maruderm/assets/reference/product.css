@@ -327,10 +327,10 @@
   align-items: center;
   justify-content: center;
   gap: 12px;
-  border: 0;
+  border: 1px solid var(--soft-surface-border);
   border-radius: 999px;
-  color: #fff;
-  background: var(--ink);
+  color: var(--ink);
+  background: var(--soft-surface);
   font-weight: 600;
   transition:
     background 0.2s,
@@ -343,6 +343,8 @@
 }
 
 .product-buy__button:hover {
+  border-color: var(--purple);
+  color: #fff;
   background: var(--purple);
   transform: translateY(-2px);
 }
@@ -659,12 +661,12 @@
 }
 
 .product-ingredients {
-  color: #fff;
-  background: #202023;
+  color: var(--ink);
+  background: var(--soft-surface);
 }
 
 .product-ingredients .kicker {
-  color: #fff;
+  color: var(--ink);
 }
 
 .product-ingredients__grid {
@@ -697,7 +699,7 @@
   left: 8%;
   width: 140px;
   height: 140px;
-  border: 1px solid rgba(255, 255, 255, 0.4);
+  border: 1px solid rgba(32, 32, 35, 0.2);
 }
 
 .ingredient-visual__formula {
@@ -761,13 +763,13 @@
 .product-ingredients__copy > p {
   max-width: 580px;
   margin: 24px 0 34px;
-  color: rgba(255, 255, 255, 0.62);
+  color: #5d5864;
   font-size: 14px;
 }
 
 .product-ingredients dl {
   margin: 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.18);
+  border-top: 1px solid rgba(32, 32, 35, 0.14);
 }
 
 .product-ingredients dl > div {
@@ -775,7 +777,7 @@
   grid-template-columns: 0.7fr 1fr;
   gap: 30px;
   padding: 18px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+  border-bottom: 1px solid rgba(32, 32, 35, 0.14);
 }
 
 .product-ingredients dt {
@@ -785,7 +787,7 @@
 
 .product-ingredients dd {
   margin: 0;
-  color: rgba(255, 255, 255, 0.55);
+  color: #66606d;
   font-size: 10px;
 }
 
