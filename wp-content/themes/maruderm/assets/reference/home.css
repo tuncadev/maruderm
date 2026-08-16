@@ -157,11 +157,12 @@
 .category-card {
   position: relative;
   display: grid;
-  min-height: 315px;
+  height: 330px;
   overflow: hidden;
   grid-template-rows: 1fr auto;
   border: 1px solid rgba(32, 32, 35, 0.08);
-  border-radius: 28px;
+  padding: 6px 5px;
+  border-radius: 8px;
   transition:
     transform 0.22s,
     box-shadow 0.22s;
@@ -186,10 +187,13 @@
   box-shadow: 0 24px 50px rgba(32, 32, 35, 0.1);
 }
 .category-card img {
-  width: 88%;
+  display: block;
+  width: calc(100% - 16px);
   height: 210px;
-  margin: auto;
-  object-fit: contain;
+  margin: 8px 8px 0;
+  border-radius: 8px;
+  object-fit: cover;
+  object-position: center;
   mix-blend-mode: multiply;
   transition: transform 0.25s;
 }
@@ -493,7 +497,7 @@
     scroll-snap-type: x mandatory;
   }
   .category-card {
-    min-width: min(78vw, 290px);
+    flex: 0 0 min(78vw, 290px);
     scroll-snap-align: start;
   }
   .editorial-story {

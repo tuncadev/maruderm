@@ -52,7 +52,7 @@
     {
       "source": "assets/styles/components/home.css",
       "target": "home.css",
-      "sha256": "1499049da2c65b4f29d621f0b1cae381177a6ba7af4589da72fc2389adfa270e"
+      "sha256": "f136a65fb745d0513834e0e3d7d4b4a23a3c5d11ba25b309d8ffc2d5d3fbb06d"
     },
     {
       "source": "assets/styles/components/login.css",
