@@ -21,3 +21,9 @@ body.is-locked {
 .login-modal .login-field__control input {
   margin: 0;
 }
+
+.google-one-tap__continue {
+  display: grid;
+  place-items: center;
+  text-decoration: none;
+}

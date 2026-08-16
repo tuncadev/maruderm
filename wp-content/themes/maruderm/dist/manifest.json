@@ -20,12 +20,12 @@
     "src": "_storefront-foundation-BSY9g9DU.css"
   },
   "assets/account/index.js": {
-    "file": "assets/account-CG8q62YI.js",
+    "file": "assets/account-BzHdmaKX.js",
     "name": "account",
     "src": "assets/account/index.js",
     "isEntry": true,
     "css": [
-      "assets/account-CIpx2eDR.css",
+      "assets/account-BKk7aLTY.css",
       "assets/product-card-ChpXSw1m.css",
       "assets/storefront-foundation-BSY9g9DU.css"
     ]
@@ -116,12 +116,12 @@
     ]
   },
   "assets/globals/index.js": {
-    "file": "assets/globals-u-zfn8cP.js",
+    "file": "assets/globals-B-X2b78m.js",
     "name": "globals",
     "src": "assets/globals/index.js",
     "isEntry": true,
     "css": [
-      "assets/globals-CxEnP20I.css"
+      "assets/globals-CdX8ea8f.css"
     ],
     "assets": [
       "assets/RozetkaWeb-Regular-D9f3z7ky.woff2",
@@ -162,12 +162,12 @@
     ]
   },
   "assets/login/index.js": {
-    "file": "assets/login-Ye9YMBgT.js",
+    "file": "assets/login-DPhRPTre.js",
     "name": "login",
     "src": "assets/login/index.js",
     "isEntry": true,
     "css": [
-      "assets/login-DfKi9F1j.css",
+      "assets/login-DtLao782.css",
       "assets/storefront-foundation-BSY9g9DU.css"
     ]
   },

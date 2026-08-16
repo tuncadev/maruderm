@@ -22,7 +22,7 @@
     {
       "source": "assets/styles/components/account.css",
       "target": "account.css",
-      "sha256": "56782439a07d1cc35cac7484d80885746f770e5bda151428671402f3daefd418"
+      "sha256": "2b0b58297f475817364f5d222a5b928cf1b7893e3a08bea65c43d4f7cd508b8f"
     },
     {
       "source": "assets/styles/components/bank-transfer.css",
@@ -57,7 +57,7 @@
     {
       "source": "assets/styles/components/login.css",
       "target": "login.css",
-      "sha256": "c2afb7a9529cfde60ceca739bdf4d20ddf131198b69d979e553900c6d8108365"
+      "sha256": "1ee412e949c3962da60aca0db670ab7cd3c162d1070e661e53b52ffeec574929"
     },
     {
       "source": "assets/styles/components/payment.css",

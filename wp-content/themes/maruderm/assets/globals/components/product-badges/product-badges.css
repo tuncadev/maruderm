@@ -17,7 +17,6 @@
 .maruderm-product-badge {
   display: inline-flex;
   align-items: center;
-  min-height: 29px;
   padding: 7px 10px;
   border-radius: 999px;
   color: #6032ce;
@@ -25,7 +24,7 @@
   font-size: 9px;
   font-weight: 600;
   letter-spacing: 0.1em;
-  line-height: 1.35;
+  line-height: 1;
   text-transform: uppercase;
 }
 
@@ -42,6 +41,11 @@
 .maruderm-product-badge--sale {
   color: #7e1830;
   background: #ffcfda;
+}
+
+.maruderm-product-badge--sale-strong {
+  color: #fff;
+  background: #d7354f;
 }
 
 .maruderm-product-badge--limited {

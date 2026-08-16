@@ -1,0 +1,41 @@
+.woocommerce .account-order__details strong {
+  color: var(--ink);
+}
+
+/* The shared WooCommerce adapter supplies the canonical button shell. These
+ * component variables preserve the smaller account variants from account.css. */
+.account-order-highlight__bottom .button {
+  --maruderm-button-min-height: 46px;
+  --maruderm-button-border: 0;
+  --maruderm-button-padding: 0 20px;
+  --maruderm-button-font-size: 9px;
+}
+
+.account-empty .button {
+  --maruderm-button-border: 0;
+  --maruderm-button-font-size: 9px;
+}
+
+.account-profile-actions .button {
+  --maruderm-button-min-height: 46px;
+  --maruderm-button-border: 0;
+  --maruderm-button-padding: 0 22px;
+  --maruderm-button-font-size: 9px;
+}
+
+.account-address-editor__actions .button {
+  --maruderm-button-min-height: 42px;
+  --maruderm-button-border: 1px solid var(--soft-surface-border);
+  --maruderm-button-padding: 0 17px;
+  --maruderm-button-font-size: 9px;
+}
+
+.account-load-more .button {
+  --maruderm-button-border: 1px solid var(--line);
+  --maruderm-button-color: var(--ink);
+  --maruderm-button-background: #fff;
+  --maruderm-button-font-size: 9px;
+  --maruderm-button-shadow: none;
+  --maruderm-button-hover-color: var(--purple);
+  --maruderm-button-hover-background: #fff;
+}

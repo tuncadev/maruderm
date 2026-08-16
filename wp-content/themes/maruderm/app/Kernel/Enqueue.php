@@ -41,11 +41,14 @@ final class Enqueue implements Registrable
     private ?array $critical_font_urls = null;
     private ?string $dev_server_url = null;
     private bool $dev_server_url_resolved = false;
+    /** @var array<string, true> */
+    private array $module_script_handles = [];
 
     public function register(): void
     {
         add_action('wp_enqueue_scripts', [$this, 'enqueue_assets'], 20);
         add_filter('wp_preload_resources', [$this, 'preload_resources']);
+        add_filter('script_loader_tag', [$this, 'addModuleTypeAttribute'], 10, 2);
     }
 
     public function enqueue_assets(): void
@@ -79,7 +82,7 @@ final class Enqueue implements Registrable
             false
         );
 
-        wp_script_add_data('maruderm-vite-client', 'type', 'module');
+        $this->registerModuleScript('maruderm-vite-client');
 
         foreach (self::ENTRYPOINTS as $handle => $entrypoint) {
             if (!$this->should_enqueue_entrypoint($handle)) {
@@ -96,7 +99,7 @@ final class Enqueue implements Registrable
                 true
             );
 
-            wp_script_add_data($script_handle, 'type', 'module');
+            $this->registerModuleScript($script_handle);
 
             if ($handle === 'hair-analysis') {
                 wp_localize_script($script_handle, 'marudermHairAnalysisProducts', $this->hairAnalysisProducts());
@@ -215,11 +218,26 @@ final class Enqueue implements Registrable
             true
         );
 
-        wp_script_add_data($script_handle, 'type', 'module');
+        $this->registerModuleScript($script_handle);
 
         if ($handle === 'hair-analysis') {
             wp_localize_script($script_handle, 'marudermHairAnalysisProducts', $this->hairAnalysisProducts());
         }
+    }
+
+    public function addModuleTypeAttribute(string $tag, string $handle): string
+    {
+        if (!isset($this->module_script_handles[$handle]) || str_contains($tag, 'type="module"')) {
+            return $tag;
+        }
+
+        return str_replace('<script ', '<script type="module" ', $tag);
+    }
+
+    private function registerModuleScript(string $handle): void
+    {
+        $this->module_script_handles[$handle] = true;
+        wp_script_add_data($handle, 'type', 'module');
     }
 
     /** @return array<int, array<string, int|string>> */

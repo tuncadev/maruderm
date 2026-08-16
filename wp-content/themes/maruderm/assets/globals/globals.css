@@ -89,6 +89,7 @@ body {
     line-height: 1.7143;
     margin: 0;
 }
+body.page-template #content.site-content { padding: 0; }
 body,
 button,
 input,

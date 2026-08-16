@@ -198,6 +198,37 @@
   margin-inline: auto;
 }
 
+.login-auth-switcher {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  margin-bottom: 24px;
+  border: 1px solid var(--soft-surface-border);
+  border-radius: 99px;
+  padding: 4px;
+  background: var(--soft-surface);
+}
+
+.login-auth-switcher button {
+  min-height: 40px;
+  border: 0;
+  border-radius: 99px;
+  color: var(--muted);
+  background: transparent;
+  font-size: 9px;
+  font-weight: 600;
+  transition:
+    color 0.2s,
+    background 0.2s,
+    box-shadow 0.2s;
+}
+
+.login-auth-switcher button.is-active {
+  color: var(--ink);
+  background: #fff;
+  box-shadow: 0 5px 16px rgba(91, 70, 120, 0.1);
+}
+
 .login-form-block__heading {
   margin-bottom: 24px;
 }
@@ -509,9 +540,14 @@
   text-align: center;
 }
 
-.login-register a {
+.login-register button {
   border-bottom: 1px solid;
+  border-top: 0;
+  border-right: 0;
+  border-left: 0;
+  padding: 0;
   color: var(--purple);
+  background: transparent;
   font-weight: 600;
 }
 
@@ -529,13 +565,19 @@
 }
 
 .login-modal[hidden],
-.google-one-tap[hidden] {
+.google-one-tap[hidden],
+.login-form-block [hidden] {
   display: none;
+}
+
+.login-experience {
+  position: relative;
+  z-index: 1000;
 }
 
 .login-modal {
   position: fixed;
-  z-index: 240;
+  z-index: 20;
   inset: 0;
   display: grid;
   justify-items: end;
@@ -617,7 +659,7 @@
 
 .google-one-tap {
   position: fixed;
-  z-index: 230;
+  z-index: 10;
   top: 18px;
   right: 18px;
   width: min(360px, calc(100% - 30px));

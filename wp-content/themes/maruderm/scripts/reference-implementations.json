@@ -147,6 +147,8 @@
         "markup": ["components/account-dashboard.html"],
         "javascript": [
           "assets/js/components/account.js",
+          "assets/js/components/account-address.js",
+          "assets/js/components/account-avatar.js",
           "assets/js/components/availability-notifications.js"
         ]
       },
@@ -154,7 +156,7 @@
         "status": "implemented",
         "entries": ["assets/account/index.js"],
         "renderers": ["app/Account/AccountRenderer.php", "woocommerce/myaccount/my-account.php"],
-        "routes": ["WooCommerce My Account"],
+        "routes": ["WooCommerce My Account dashboard and canonical view-order deep links"],
         "legacyFiles": [],
         "blocker": ""
       }

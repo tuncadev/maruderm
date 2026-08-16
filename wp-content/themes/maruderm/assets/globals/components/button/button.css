@@ -14,3 +14,58 @@
 .maruderm-button:hover {
   background-color: var(--maruderm-color-brand-strong);
 }
+
+/* Keep Martfury's WooCommerce button defaults from overriding Maruderm's
+ * canonical pill-button contract. WooCommerce's .alt variant is included
+ * explicitly because the parent theme gives it an extra class of specificity. */
+.woocommerce :is(a.button, button.button, input.button),
+.woocommerce #respond input#submit,
+.woocommerce :is(a.button, button.button, input.button).alt,
+.woocommerce #respond input#submit.alt {
+  display: inline-flex;
+  width: auto;
+  height: auto;
+  min-height: var(--maruderm-button-min-height, 52px);
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  border: var(--maruderm-button-border, 1px solid var(--soft-surface-border, rgba(91, 70, 120, 0.16)));
+  border-radius: 999px;
+  padding: var(--maruderm-button-padding, 0 25px);
+  color: var(--maruderm-button-color, var(--ink, #202023));
+  background: var(--maruderm-button-background, var(--soft-surface, #f0edf7));
+  box-shadow: var(--maruderm-button-shadow, 0 14px 34px rgba(91, 70, 120, 0.12));
+  font-family: var(--text, "Rozetka Web", sans-serif);
+  font-size: var(--maruderm-button-font-size, inherit);
+  font-weight: 600;
+  line-height: var(--maruderm-button-line-height, inherit);
+  text-align: center;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s,
+    background 0.2s;
+}
+
+.woocommerce :is(a.button, button.button, input.button):is(:hover, :focus, :active),
+.woocommerce #respond input#submit:is(:hover, :focus, :active),
+.woocommerce :is(a.button, button.button, input.button).alt:is(:hover, :focus, :active),
+.woocommerce #respond input#submit.alt:is(:hover, :focus, :active) {
+  color: var(--maruderm-button-hover-color, var(--maruderm-button-color, var(--ink, #202023)));
+  background: var(--maruderm-button-hover-background, var(--soft-surface-hover, #e4dcf2));
+}
+
+.woocommerce :is(a.button, button.button, input.button):hover,
+.woocommerce #respond input#submit:hover {
+  transform: translateY(-2px);
+}
+
+.woocommerce :is(a.button, button.button, input.button):disabled,
+.woocommerce :is(a.button, button.button, input.button):disabled[disabled],
+.woocommerce #respond input#submit:disabled,
+.woocommerce #respond input#submit:disabled[disabled] {
+  padding: var(--maruderm-button-padding, 0 25px);
+  color: var(--maruderm-button-color, var(--ink, #202023));
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}

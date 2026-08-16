@@ -27,6 +27,13 @@ final class ProductBadges implements Registrable
         'featured' => 'Вибір Maruderm',
         'exclusive' => 'Онлайн-ексклюзив',
     ];
+    private const MANUAL_BADGE_TONES = [
+        'new',
+        'bestseller',
+        'limited',
+        'featured',
+        'exclusive',
+    ];
 
     public function register(): void
     {
@@ -44,29 +51,24 @@ final class ProductBadges implements Registrable
             return $this->badge('out', $product);
         }
 
-        $explicit_tone = sanitize_key((string) $product->get_meta(self::META_KEY, true));
-
-        if ($explicit_tone !== 'out' && isset(self::BADGES[$explicit_tone])) {
-            return $this->badge($explicit_tone, $product);
-        }
-
-        foreach (array_keys(self::BADGES) as $tone) {
-            if ($tone === 'out') {
-                continue;
-            }
-
-            if (has_term('maruderm-badge-' . $tone, 'product_tag', $product->get_id())) {
-                return $this->badge($tone, $product);
-            }
-        }
-
-        if ($product->is_on_sale()) {
+        if ($product->is_on_sale() && $this->salePercentage($product) > 0) {
             return $this->badge('sale', $product);
         }
 
-        $stock_quantity = $product->get_stock_quantity();
-        if ($product->managing_stock() && $stock_quantity !== null && $stock_quantity <= 5) {
+        if ($this->hasLowStock($product)) {
             return $this->badge('low', $product);
+        }
+
+        $explicit_tone = sanitize_key((string) $product->get_meta(self::META_KEY, true));
+
+        if (in_array($explicit_tone, self::MANUAL_BADGE_TONES, true)) {
+            return $this->badge($explicit_tone, $product);
+        }
+
+        foreach (self::MANUAL_BADGE_TONES as $tone) {
+            if (has_term('maruderm-badge-' . $tone, 'product_tag', $product->get_id())) {
+                return $this->badge($tone, $product);
+            }
         }
 
         if ($product->is_featured()) {
@@ -117,9 +119,9 @@ final class ProductBadges implements Registrable
         woocommerce_wp_select([
             'id' => self::META_KEY,
             'label' => 'Бейдж Maruderm',
-            'description' => 'Обране значення має пріоритет, крім статусу «Немає в наявності».',
+            'description' => 'Знижка, низький залишок і відсутність товару визначаються автоматично та мають пріоритет.',
             'desc_tip' => true,
-            'options' => ['' => 'Автоматично'] + self::BADGES,
+            'options' => ['' => 'Автоматично'] + $this->manualBadgeOptions(),
         ]);
     }
 
@@ -129,7 +131,7 @@ final class ProductBadges implements Registrable
             ? sanitize_key(wp_unslash((string) $_POST[self::META_KEY]))
             : '';
 
-        if (isset(self::BADGES[$tone])) {
+        if (in_array($tone, self::MANUAL_BADGE_TONES, true)) {
             $product->update_meta_data(self::META_KEY, $tone);
 
             return;
@@ -162,6 +164,7 @@ final class ProductBadges implements Registrable
         if ($tone === 'sale') {
             $percentage = $this->salePercentage($product);
             $label = $percentage > 0 ? '−' . $percentage . '%' : $label;
+            $tone = $percentage > 20 ? 'sale-strong' : 'sale';
         }
 
         return ['tone' => $tone, 'label' => $label];
@@ -198,6 +201,28 @@ final class ProductBadges implements Registrable
         }
 
         return (int) round((($regular_price - $sale_price) / $regular_price) * 100);
+    }
+
+    private function hasLowStock(\WC_Product $product): bool
+    {
+        $stock_quantity = $product->get_stock_quantity();
+
+        return $product->managing_stock()
+            && $stock_quantity !== null
+            && $stock_quantity > 0
+            && $stock_quantity < 5;
+    }
+
+    /** @return array<string, string> */
+    private function manualBadgeOptions(): array
+    {
+        $options = [];
+
+        foreach (self::MANUAL_BADGE_TONES as $tone) {
+            $options[$tone] = self::BADGES[$tone];
+        }
+
+        return $options;
     }
 
     private function removeCallbacksByMethod(string $hook_name, string $method_name): void
