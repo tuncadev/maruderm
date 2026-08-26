@@ -2,8 +2,8 @@
 Contributors: themeum
 Tags: page builder, website builder, drag and drop, form builder, freeform canvas
 Requires at least: 5.9
-Tested up to: 7.0
-Stable tag: 6.2.1
+Tested up to: 7.1
+Stable tag: 6.2.5
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -190,6 +190,40 @@ Nothing. All existing Customizer controls are fully preserved. Your current setu
 ---
 
 == Changelog ==
+
+= 6.2.5 =
+* Update: Redesigned the Island toolbar with updated icons, layout, and functionality.
+* Update: Moved the editor's dark/light mode controls to the Island.
+* Update: Updated SVG element settings.
+* Update: Improved responsive device resizing based on minimum and maximum device width ranges.
+* Update: Updated Form reCAPTCHA element settings and functionality.
+* Update: Refreshed the empty placeholder design for Image, Video, Lottie, and Lightbox elements.
+* Fix: Resolved an issue causing DynamicTextBox to glitch when focused.
+
+= 6.2.4 =
+* Update: Verify font files before parsing OpenType features.
+* Update: Show the text clamp value when a font-size clamp is configured.
+* Fix: Resolve an issue with the Dashboard page list API when deleting a page.
+* Fix: Address security vulnerabilities related to XSS through attacker-injected object keys.
+* Fix: Fully disable unauthorized POST API calls.
+
+= 6.2.3 =
+* New: Copy-and-paste interactions now also support the interaction library.
+* Update: Updated the default styles for headings, buttons, images, and tabs.
+* Fix: Fixed an issue with font family OpenType feature data parsing.
+* Fix: Prevented font upload issues when changing file extensions.
+* Fix: Reset typography-related CSS when applying a text style.
+* Fix: Removed ZIP file upload functionality from custom font uploads.
+
+= 6.2.2 =
+* New: Added Element Multiselect for selecting and editing multiple elements at once.
+* New: Added vertical resizing for the custom interaction timeline editor.
+* Update: Advanced typography panel functionality updated for open type feature text.
+* Update: Text animations now play only when the element enters the viewport.
+* Update: Improved the Layer Panel and Canvas drag preview opacity for better visibility.
+* Update: Removed the File element from the Form Builder.
+* Fix: Resolved specificity issues in text style and variable CSS generation.
+* Fix: Fixed custom animation timeline previews so transform animations replay chronologically instead of collapsing by property.
 
 = 6.2.1 =
 * New: Added a Flex Child option to the Sizing panel for finer control over flex layouts.

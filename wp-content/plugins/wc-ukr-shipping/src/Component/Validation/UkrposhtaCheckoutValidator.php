@@ -19,7 +19,7 @@ class UkrposhtaCheckoutValidator implements CheckoutValidatorInterface
             || empty($data['wcus_ukrposhta_' . $type . '_warehouse'])
         ) {
             wc_add_notice(
-                __('Select Ukrposhta warehouse', 'wc-ukr-shipping-i18n'),
+                __('Select Ukrposhta warehouse', 'wc-ukr-shipping'),
                 'error'
             );
         }

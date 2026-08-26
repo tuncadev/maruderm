@@ -28,7 +28,7 @@
                     <a href="#" class="wcus-svg-btn wcus-svg-btn--error j-wcus-label-delete"
                        style="font-size: 13px; color: #f00;"
                        data-label-id="<?php echo esc_attr($shipping_label['id']); ?>">
-                        <?php esc_html_e('Delete', 'wc-ukr-shipping-i18n'); ?>
+                        <?php esc_html_e('Delete', 'wc-ukr-shipping'); ?>
                     </a>
                 </div>
             </div>
@@ -45,11 +45,11 @@
             <div class="wcus-mb-1">
                 <a href="<?php echo esc_attr(admin_url('admin.php?page=wc_ukr_shipping_ttn&order_id=' . $order_id)); ?>"
                    class="wcus-btn wcus-btn--docs wcus-btn--sm">
-                    <?php esc_html_e('Create shipping label', 'wc-ukr-shipping-i18n'); ?>
+                    <?php esc_html_e('Create shipping label', 'wc-ukr-shipping'); ?>
                 </a>
             </div>
             <a class="wcus-btn wcus-btn--docs wcus-btn--sm j-wcus-label-attach" data-order-id="<?php echo esc_attr($order_id); ?>">
-                <?php esc_html_e('Attach shipping label', 'wc-ukr-shipping-i18n'); ?>
+                <?php esc_html_e('Add tracking number', 'wc-ukr-shipping'); ?>
             </a>
         </div>
     <?php } ?>

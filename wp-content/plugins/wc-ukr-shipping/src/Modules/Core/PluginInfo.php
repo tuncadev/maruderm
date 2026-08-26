@@ -36,7 +36,7 @@ class PluginInfo implements ModuleInterface
      */
     public function actionLinks($links)
     {
-        $settings_link = '<a href="' . home_url('wp-admin/admin.php?page=wc_ukr_shipping_options') . '">Настройки</a>';
+        $settings_link = '<a href="' . home_url('wp-admin/admin.php?page=wcus_settings') . '">' . esc_html__('Settings', 'wc-ukr-shipping') . '</a>';
         array_unshift($links, $settings_link);
 
         return $links;

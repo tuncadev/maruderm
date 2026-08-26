@@ -28,6 +28,7 @@ use Kirki\Framework\Console\Commands\MigrateCommand;
 use Kirki\Framework\Console\Commands\SeedCommand;
 use Kirki\Framework\Database\Connection\DatabaseManager;
 use Kirki\Framework\Database\Schema\SchemaManager;
+use Kirki\Framework\Managers\CookieManager;
 use Kirki\Framework\Managers\EventManager;
 use Kirki\Framework\Managers\LogManager;
 use Kirki\Framework\Managers\OptionManager;
@@ -146,6 +147,14 @@ class Application extends Container
      * @since 1.0.0
      */
     protected string $namespace = '';
+    /**
+     * The application version
+     *
+     * @var string
+     *
+     * @since 1.0.0
+     */
+    protected string $version = '1.0.0';
     /**
      * Cached namespaces resolved from composer PSR-4 paths.
      *
@@ -270,7 +279,7 @@ class Application extends Container
      */
     protected function register_base_aliases()
     {
-        foreach (['db' => DatabaseManager::class, 'schema' => SchemaManager::class, 'option' => OptionManager::class, 'policy' => PolicyManager::class, 'event' => EventManager::class, 'log' => LogManager::class, 'client-request' => ClientRequest::class, 'command' => CommandManager::class, RequestContract::class => Request::class, 'request' => Request::class] as $key => $abstract) {
+        foreach (['db' => DatabaseManager::class, 'schema' => SchemaManager::class, 'option' => OptionManager::class, 'policy' => PolicyManager::class, 'event' => EventManager::class, 'log' => LogManager::class, 'cookie' => CookieManager::class, 'client-request' => ClientRequest::class, 'command' => CommandManager::class, RequestContract::class => Request::class, 'request' => Request::class] as $key => $abstract) {
             $this->alias($key, $abstract);
         }
     }
@@ -412,6 +421,20 @@ class Application extends Container
     public function use_prefix(string $prefix)
     {
         $this->prefix = Str::snake($prefix);
+        return $this;
+    }
+    /**
+     * Use a version for the application.
+     *
+     * @param string $version The version to use.
+     *
+     * @return self
+     *
+     * @since 1.0.0
+     */
+    public function use_version(string $version)
+    {
+        $this->version = $version;
         return $this;
     }
     /**
@@ -907,5 +930,16 @@ class Application extends Container
     public function is_dev_mode()
     {
         return $this->mode === 'development';
+    }
+    /**
+     * Get the application version.
+     *
+     * @return string
+     *
+     * @since 1.0.0
+     */
+    public function version()
+    {
+        return $this->version;
     }
 }

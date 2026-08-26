@@ -158,7 +158,7 @@ class TemplateImport {
 				$json_data['variables']                = $styles_data['variables'];
 				$json_data['variables']['defaultMode'] = $selectedMode;
 
-				if ( empty( $json_data ) || ! isset( $json_data['pages'], $json_data['assetUrls'], $json_data['variables'], $json_data['globalStyleBlocks'], $json_data['customFonts'], $json_data['viewPorts'], $json_data['contentManager'], $json_data['templates'] ) ) {
+				if ( empty( $json_data ) || ! isset( $json_data['pages'], $json_data['assetUrls'], $json_data['variables'], $json_data['customFonts'], $json_data['viewPorts'], $json_data['contentManager'], $json_data['templates'] ) ) {
 					wp_send_json_error( 'Failed to import template, Upload Kirki Exported Zip file' );
 				}
 
@@ -692,6 +692,9 @@ class TemplateImport {
 		return true;
 	}
 	private function import_global_style_blocks( $new_blocks ) {
+		if(!$new_blocks){
+			return true;
+		}
 		$new_styles    = $this->add_prefix_to_style_blocks( $new_blocks );
 		$global_styles = HelperFunctions::get_global_data_using_key( KIRKI_GLOBAL_STYLE_BLOCK_META_KEY );
 		if ( ! $global_styles ) {
@@ -832,6 +835,11 @@ class TemplateImport {
 					$id                = $matches[1];
 					$new_variable_name = $this->add_prefix( $id );
 					$mode_value        = 'var(--' . $new_variable_name . ')';
+				} else if ( isset( $v['value'][ $mode ] ) ) {
+					// check all the nested nested object and replace the variable name
+					if ( is_array( $v['value'][ $mode ] ) ) {
+						$mode_value = $this->replace_variables_in_nested_array( $v['value'][ $mode ] );
+					}
 				}
 
 				$v['value'] = array( 'default' => $mode_value );
@@ -872,6 +880,36 @@ class TemplateImport {
 
 		HelperFunctions::update_global_data_using_key( KIRKI_USER_SAVED_DATA_META_KEY, $saved_data );
 		return true;
+	}
+
+
+	/**
+	 * Recursively replace variable references in nested arrays
+	 *
+	 * @param mixed $data The data to process (array, string, or other)
+	 * @return mixed The processed data with replaced variable names
+	 */
+	private function replace_variables_in_nested_array( $data ) {
+		if ( is_string( $data ) ) {
+			// Check if the string contains a variable reference like var(--variable-name)
+			if ( preg_match( '/var\(--([a-zA-Z0-9\-]+)\)/', $data, $matches ) ) {
+				$id                = $matches[1];
+				$new_variable_name = $this->add_prefix( $id );
+				return 'var(--' . $new_variable_name . ')';
+			}
+			return $data;
+		}
+
+		if ( is_array( $data ) ) {
+			// Recursively process each element in the array
+			foreach ( $data as $key => $value ) {
+				$data[ $key ] = $this->replace_variables_in_nested_array( $value );
+			}
+			return $data;
+		}
+
+		// Return unchanged for other types (int, bool, null, etc.)
+		return $data;
 	}
 
 	private function import_content_manager( $content_manager_posts ) {
@@ -1147,6 +1185,9 @@ class TemplateImport {
 				foreach ( $obj['styleIds'] as $key2 => $style_id ) {
 					$obj['styleIds'][ $key2 ] = $this->add_prefix( $style_id );
 				}
+			}
+			if ( isset( $obj['properties'], $obj['properties']['textStyleId'] ) ) {
+				$obj['properties']['textStyleId'] = $this->add_prefix( $obj['properties']['textStyleId'] );
 			}
 			// update assets url for kirki block
 			$obj = $this->update_asset_url_for_kirki_block( $obj );

@@ -28,7 +28,7 @@ class Account implements ModuleInterface
         foreach ($columns as $key => $column) {
             $newColumns[$key] = $column;
             if ($key === 'order-total') {
-                $newColumns['wcus_shipment'] = __('Shipping label', 'wc-ukr-shipping-i18n');
+                $newColumns['wcus_shipment'] = __('Shipping label', 'wc-ukr-shipping');
             }
         }
 

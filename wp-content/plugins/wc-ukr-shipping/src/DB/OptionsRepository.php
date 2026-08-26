@@ -20,11 +20,6 @@ class OptionsRepository
             'wc_ukr_shipping_np_method_title' => 'Нова Пошта',
             'wc_ukr_shipping_np_block_pos' => 'billing',
             'wc_ukr_shipping_np_save_warehouse' => 1,
-            'wc_ukr_shipping_np_translates_type' => WCUS_TRANSLATE_TYPE_PLUGIN,
-            'wc_ukr_shipping_np_new_ui' => 1,
-            'wcus_checkout_new_ui' => 1,
-            'wc_ukr_shipping_np_ttn_payer_default' => 'Sender',
-            'wcus_np_payment_method_default' => 'Cash',
             'wc_ukr_shipping_np_price_type' => 'fixed',
             'wc_ukr_shipping_np_price' => 0,
             'wc_ukr_shipping_np_cargo_type' => 'Cargo',
@@ -41,11 +36,6 @@ class OptionsRepository
                 CarrierSlug::NOVA_GLOBAL,
             ],
             'wcus_rates_convert_currency' => 0,
-            'wcus_cod_payment_id' => 'cod',
-            'wcus_ttn_weight_default' => 1,
-            'wcus_ttn_width_default' => 10,
-            'wcus_ttn_height_default' => 10,
-            'wcus_ttn_length_default' => 10,
 
             // Nova Poshta
             'wc_ukr_shipping_address_shipping' => 1,
@@ -59,11 +49,6 @@ class OptionsRepository
             'wcus_ukrposhta_cod_payment_active' => 0,
             'wcus_ukrposhta_price_type' => 'fixed',
             'wcus_ukrposhta_price' => 0,
-            'wcus_ukrposhta_ttn_default_payer' => 'recipient',
-            'wcus_ukrposhta_on_fail_receive' => 'return',
-            'wcus_ukrposhta_check_on_delivery' => 1,
-            'wcus_ukrposhta_sms_notification' => 0,
-            'wcus_ukrposhta_cod_payer' => 'recipient',
 
             // Nova Post
             'wcus_nova_post_cost_view_only' => 0,
@@ -72,7 +57,6 @@ class OptionsRepository
             // Rozetka delivery
             'wcus_rozetka_fixed_cost' => 0,
             'wcus_rozetka_cost_view_only' => 0,
-            'wcus_rozetka_ttn_default_payer' => 'recipient',
 
             // SmartyParcel
             'wcus_use_smartyparcel_locator' => 0,

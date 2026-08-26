@@ -9,6 +9,7 @@ use kirillbdev\WCUkrShipping\Enums\CarrierSlug;
 use kirillbdev\WCUkrShipping\Foundation\NovaPoshtaShipping;
 use kirillbdev\WCUkrShipping\Helpers\SmartyParcelHelper;
 use kirillbdev\WCUkrShipping\Helpers\WCUSHelper;
+use kirillbdev\WCUkrShipping\Services\Calculation\ProductDimensionService;
 use kirillbdev\WCUkrShipping\Services\CalculationService;
 use kirillbdev\WCUkrShipping\Services\OrderService;
 use kirillbdev\WCUSCore\Http\Contracts\ResponseInterface;
@@ -23,13 +24,16 @@ class OrdersController extends Controller
 {
     private OrderService $orderService;
     private CalculationService $calculationService;
+    private ProductDimensionService $productDimensionService;
 
     public function __construct(
         OrderService $orderService,
-        CalculationService $calculationService
+        CalculationService $calculationService,
+        ProductDimensionService $productDimensionService
     ) {
         $this->orderService = $orderService;
         $this->calculationService = $calculationService;
+        $this->productDimensionService = $productDimensionService;
     }
 
     public function getOrders(Request $request): ResponseInterface
@@ -89,7 +93,7 @@ class OrdersController extends Controller
                 CarrierSlug::NOVA_POSHTA,
                 'UA',
                 $order->get_subtotal(),
-                (float)wc_ukr_shipping_get_option('wcus_ttn_weight_default'),
+                $this->productDimensionService->getDefaultWeight(),
                 $order->get_payment_method(),
                 $request->get('address')['type'] === 'pudo' ? 'w2w' : 'w2d',
                 true,
@@ -105,15 +109,21 @@ class OrdersController extends Controller
             $shippingCost = $this->calculationService->calculateRates($dto, $shippingInstance);
 
             if ($shippingCost !== null) {
-                $shippingMethod->set_total($shippingCost);
+                if ($shippingInstance->isCostViewOnly()) {
+                    // Keep the cost out of the order totals, store it as a meta for display only
+                    $shippingMethod->set_total(0);
+                    $shippingMethod->set_taxes([]);
+                    $shippingMethod->update_meta_data(
+                        WCUS_SHIPPING_META_VIEW_COST,
+                        (string)wc_format_decimal($shippingCost)
+                    );
+                } else {
+                    $shippingMethod->set_total($shippingCost);
+                    $shippingMethod->delete_meta_data(WCUS_SHIPPING_META_VIEW_COST);
+                }
+
                 $shippingMethod->save();
                 $order->calculate_totals();
-
-                if ($shippingInstance->get_option('add_cost_to_order') === 'no') {
-                    $order->set_shipping_total(0);
-                    $order->set_total((float)$order->get_total() - $shippingCost);
-                    $order->save();
-                }
             }
         return $this->jsonResponse([
             'success' => true,

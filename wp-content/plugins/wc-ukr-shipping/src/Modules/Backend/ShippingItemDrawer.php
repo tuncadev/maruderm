@@ -17,6 +17,7 @@ class ShippingItemDrawer implements ModuleInterface
     {
         add_filter('woocommerce_hidden_order_itemmeta', [$this, 'hideShippingMeta']);
         add_filter( 'woocommerce_order_item_display_meta_key', [$this, 'getOrderItemMetaKey']);
+        add_filter( 'woocommerce_order_item_display_meta_value', [$this, 'getOrderItemMetaValue'], 10, 2);
     }
 
     public function hideShippingMeta(array $keys): array
@@ -42,19 +43,27 @@ class ShippingItemDrawer implements ModuleInterface
     public function getOrderItemMetaKey(string $key): string
     {
         $keyMap = [
-            'wcus_city_name' => __('City', 'wc-ukr-shipping-i18n'),
-            'wcus_warehouse_name' => __('Warehouse / Poshtomat', 'wc-ukr-shipping-i18n'),
-            'wcus_settlement_full' => __('Settlement', 'wc-ukr-shipping-i18n'),
-            'wcus_street_full' => __('Street', 'wc-ukr-shipping-i18n'),
-            'wcus_house' => __('House number', 'wc-ukr-shipping-i18n'),
-            'wcus_flat' => __('Flat', 'wc-ukr-shipping-i18n'),
-            'wcus_ukrposhta_city_name' => __('City', 'wc-ukr-shipping-i18n'),
-            'wcus_ukrposhta_warehouse_name' => __('Warehouse', 'wc-ukr-shipping-i18n'),
-            'wcus_ukrposhta_service_type' => __('Service type', 'wc-ukr-shipping-i18n'),
-            'wcus_rozetka_city_name' => __('City', 'wc-ukr-shipping-i18n'),
-            'wcus_rozetka_warehouse_name' => __('Warehouse', 'wc-ukr-shipping-i18n'),
+            'wcus_city_name' => __('City', 'wc-ukr-shipping'),
+            'wcus_warehouse_name' => __('Warehouse / Poshtomat', 'wc-ukr-shipping'),
+            'wcus_settlement_full' => __('Settlement', 'wc-ukr-shipping'),
+            'wcus_street_full' => __('Street', 'wc-ukr-shipping'),
+            'wcus_house' => __('House number', 'wc-ukr-shipping'),
+            'wcus_flat' => __('Flat', 'wc-ukr-shipping'),
+            'wcus_ukrposhta_city_name' => __('City', 'wc-ukr-shipping'),
+            'wcus_ukrposhta_warehouse_name' => __('Warehouse', 'wc-ukr-shipping'),
+            'wcus_ukrposhta_service_type' => __('Service type', 'wc-ukr-shipping'),
+            'wcus_rozetka_city_name' => __('City', 'wc-ukr-shipping'),
+            'wcus_rozetka_warehouse_name' => __('Warehouse', 'wc-ukr-shipping'),
+            WCUS_SHIPPING_META_VIEW_COST => __('Calculated shipping cost in checkout', 'wc-ukr-shipping'),
         ];
 
         return $keyMap[$key] ?? $key;
+    }
+
+    public function getOrderItemMetaValue($value, $meta): string
+    {
+        return isset($meta->key) && $meta->key === WCUS_SHIPPING_META_VIEW_COST
+            ? wp_strip_all_tags(wc_price((float)$value))
+            : $value;
     }
 }

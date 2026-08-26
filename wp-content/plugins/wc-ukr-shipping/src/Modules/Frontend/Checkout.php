@@ -29,8 +29,6 @@ class Checkout implements ModuleInterface
     {
         add_action($this->getInjectActionName(), [$this, 'injectBillingFields']);
         add_action('woocommerce_after_checkout_shipping_form', [$this, 'injectShippingFields']);
-        add_filter('woocommerce_cart_shipping_method_full_label', [$this, 'wrapShippingCost'], 10, 2);
-        add_filter('woocommerce_cart_totals_order_total_html', [$this, 'wrapOrderTotal']);
         add_action( 'woocommerce_after_shipping_rate', [ $this, 'injectShippingName' ], 10, 2);
         add_action('wcus_state_init', [ $this, 'initCheckoutState' ]);
         add_filter('woocommerce_checkout_fields', [ $this, 'injectAdditionalFields' ]);
@@ -45,20 +43,6 @@ class Checkout implements ModuleInterface
     public function injectShippingFields()
     {
         $this->injectFields('shipping');
-    }
-
-    public function wrapShippingCost($label, $method)
-    {
-        if ($method->get_method_id() === WC_UKR_SHIPPING_NP_SHIPPING_NAME) {
-            return '<span id="wcus-shipping-cost">' . $label . '</span>';
-        }
-
-        return $label;
-    }
-
-    public function wrapOrderTotal($value)
-    {
-        return '<span id="wcus-order-total">' . $value . '</span>';
     }
 
     public function injectShippingName($method, $index)
@@ -83,7 +67,7 @@ class Checkout implements ModuleInterface
 
         $middleName = [
             'type' => 'text',
-            'label' => __('Middle Name', 'wc-ukr-shipping-i18n'),
+            'label' => __('Middle Name', 'wc-ukr-shipping'),
             'class' => [
                 'form-row-wide'
             ],

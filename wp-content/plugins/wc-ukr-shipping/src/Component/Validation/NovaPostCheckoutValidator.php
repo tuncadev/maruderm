@@ -17,7 +17,7 @@ class NovaPostCheckoutValidator implements CheckoutValidatorInterface
     {
         if (empty($data['wcus_nova_post_' . $type . '_warehouse'])) {
             wc_add_notice(
-                __('Please provide shipping address', 'wc-ukr-shipping-i18n'),
+                __('Please provide shipping address', 'wc-ukr-shipping'),
                 'error'
             );
         }

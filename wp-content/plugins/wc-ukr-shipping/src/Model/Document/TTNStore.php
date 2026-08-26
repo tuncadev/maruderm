@@ -6,10 +6,7 @@ use kirillbdev\WCUkrShipping\Address\Provider\AddressProviderInterface;
 use kirillbdev\WCUkrShipping\Api\SmartyParcelWPApi;
 use kirillbdev\WCUkrShipping\Factories\ProductFactory;
 use kirillbdev\WCUkrShipping\Helpers\WCUSHelper;
-use kirillbdev\WCUkrShipping\Includes\Address\RepositoryCityFinder;
-use kirillbdev\WCUkrShipping\Includes\Address\RepositoryWarehouseFinder;
-use kirillbdev\WCUkrShipping\Includes\UI\CityUIValue;
-use kirillbdev\WCUkrShipping\Includes\UI\WarehouseUIValue;
+use kirillbdev\WCUkrShipping\Http\Resources\OrderResource;
 use kirillbdev\WCUkrShipping\Model\OrderProduct;
 use kirillbdev\WCUkrShipping\Services\Calculation\ProductDimensionService;
 use kirillbdev\WCUkrShipping\Services\SmartyParcelService;
@@ -19,9 +16,6 @@ if ( ! defined('ABSPATH')) {
     exit;
 }
 
-/**
- * Tiny version of WC Ukraine Shipping PRO
- */
 class TTNStore
 {
     /**
@@ -48,6 +42,8 @@ class TTNStore
      * @var array
      */
     private $data = [];
+
+    private array $defaults = [];
 
     private ProductDimensionService $productDimensionService;
     private SmartyParcelService $smartyParcelService;
@@ -78,6 +74,8 @@ class TTNStore
     public function collect()
     {
         $this->data['carrier'] = 'nova_poshta';
+
+        $this->collectDefaults();
         $this->collectCommonData();
         $this->collectSeatsData();
         $this->calculateCost();
@@ -90,34 +88,59 @@ class TTNStore
         return apply_filters('wcus_collect_ttn_form', $this->data, $this->order);
     }
 
-    private function collectCommonData()
+    private function collectDefaults(): void
     {
+        $response = $this->prepareLabelRequest();
+        $prepared = $response['result'];
+        $parcel = $prepared['shipment']['parcels'][0];
+
+        $this->defaults = [
+            'paid_by' => ucfirst($prepared['billing']['paid_by']),
+            'payment_method' => $prepared['billing']['payment_method'] === 'cash' ? 'Cash' : 'NonCash',
+            'ship_date' => new \DateTime($prepared['shipment']['ship_date']),
+            'description' => $parcel['description'] ?? 'Order #' . $this->order->get_id(),
+            'weight' => $parcel['weight']['value'] ?? 0.1,
+            'declared_value' => $parcel['declared_value']['amount'],
+            'dimensions' => [
+                'width' => $parcel['dimensions']['width'] ?? 10,
+                'height' => $parcel['dimensions']['height'] ?? 10,
+                'length' => $parcel['dimensions']['length'] ?? 10,
+            ],
+            'carrier_account_id' => $prepared['carrier_account_id'] ?? '',
+            'ship_from_address_id' => $prepared['shipment']['ship_from_address_id'] ?? '',
+            'cod' => $prepared['service_options']['cod'] ?? null,
+        ];
+    }
+
+    private function collectCommonData(): void
+    {
+        // Payer
         $payerType = apply_filters(
             'wcus_ttn_form_payer_type',
-            wc_ukr_shipping_get_option('wc_ukr_shipping_np_ttn_payer_default'),
+            $this->defaults['paid_by'],
             $this->order
         );
         if (!in_array($payerType, ['Sender', 'Recipient'], true)) {
             throw new \InvalidArgumentException("Invalid param `payerType`");
         }
 
+        // Payment method
+        $paymentMethodValue = $this->defaults['payment_method'];
         $paymentMethod = apply_filters(
             'wcus_ttn_form_payment_method',
-            wc_ukr_shipping_get_option('wcus_np_payment_method_default'),
+            $paymentMethodValue,
             $this->order
         );
         if (!in_array($paymentMethod, ['Cash', 'NonCash'], true)) {
             throw new \InvalidArgumentException("Invalid param 'paymentMethod'");
         }
 
-        $date = apply_filters('wcus_ttn_form_date', new \DateTime(), $this->order);
+        $date = apply_filters('wcus_ttn_form_date', $this->defaults['ship_date'], $this->order);
         if (!($date instanceof \DateTimeInterface)) {
             throw new \InvalidArgumentException("Parameter 'date' must be correct date");
         }
 
-        $description = wc_ukr_shipping_get_option('wcus_ttn_description') ?: 'Order #' . $this->order->get_id();
         $globalParams = (int)wc_ukr_shipping_get_option('wcus_ttn_global_params_default') === 1;
-
         $this->data['ttn'] = [
             'order_id' => $this->order->get_id(),
             'payer_type' => $payerType,
@@ -127,7 +150,7 @@ class TTNStore
             'weight' => $this->calculateWeight(),
             'volumetric_weight' => apply_filters('wcus_ttn_form_volumetric_weight', '', $this->order),
             'date' => $date->format('Y-m-d'),
-            'description' => apply_filters('wcus_ttn_form_description', $description, $this->order),
+            'description' => apply_filters('wcus_ttn_form_description', $this->defaults['description'], $this->order),
             'barcode' => apply_filters('wcus_ttn_form_barcode', $this->order->get_id(), $this->order),
             'additional' => apply_filters('wcus_ttn_form_additional', '', $this->order)
         ];
@@ -135,11 +158,11 @@ class TTNStore
 
     private function collectSeatsData(): void
     {
-        $dimensions = apply_filters(
-            'wcus_ttn_form_dimensions',
-            $this->productDimensionService->getTotalDimensions($this->orderProducts),
-            $this->order
-        );
+        $dimensions = $this->productDimensionService->getTotalDimensions($this->orderProducts, false);
+        if ($dimensions === null) {
+            $dimensions = $this->defaults['dimensions'];
+        }
+        $dimensions = apply_filters('wcus_ttn_form_dimensions', $dimensions, $this->order);
 
         $this->data['ttn']['seats'] = [
             [
@@ -155,7 +178,7 @@ class TTNStore
 
     private function calculateWeight(): float
     {
-        $defaultWeight = wc_ukr_shipping_get_option('wcus_ttn_weight_default') ?: 0.1;
+        $defaultWeight = $this->defaults['weight'];
         $weight = 0;
 
         foreach ($this->orderProducts as $product) {
@@ -167,62 +190,22 @@ class TTNStore
 
     private function calculateCost(): void
     {
-        $this->data['ttn']['cost'] = apply_filters('wcus_ttn_form_cost', $this->getShipmentCost(), $this->order);
+        $this->data['ttn']['cost'] = apply_filters(
+            'wcus_ttn_form_cost',
+            $this->defaults['declared_value'],
+            $this->order
+        );
     }
 
     private function collectSender(): void
     {
         $accounts = $this->smartyParcelService->getCarrierAccounts('nova_poshta');
-        $defaultAcc = $accounts[0]['id'] ?? '';
-        foreach ($accounts as $account) {
-            if ($account['is_default']) {
-                $defaultAcc = $account['id'];
-                break;
-            }
-        }
 
         $this->data['sender']['carrier_accounts'] = $accounts;
-        $this->data['sender']['carrier_account_id'] = $defaultAcc;
+        $this->data['sender']['carrier_account_id'] = $this->defaults['carrier_account_id'];
         $this->data['sender']['area_ref'] = '';
-
-        $cityFinder = new RepositoryCityFinder(
-            wc_ukr_shipping_get_option('wc_ukr_shipping_np_sender_city')
-        );
-        $warehouseFinder = new RepositoryWarehouseFinder(
-            wc_ukr_shipping_get_option('wc_ukr_shipping_np_sender_warehouse')
-        );
-
-        $this->data['sender']['default_city'] = CityUIValue::fromFinder($cityFinder);
-        $this->data['sender']['city_ref'] = $this->data['sender']['default_city']['value'];
-
-        $this->data['sender']['default_warehouse'] = WarehouseUIValue::fromFinder($warehouseFinder);
-        $this->data['sender']['warehouse_ref'] = $this->data['sender']['default_warehouse']['value'];
-        $this->data['sender']['service_type'] = 'Warehouse'; // todo: hardcoded
-
-        // Doors shipping
-        $this->data['sender']['settlement'] = [
-            'value' => '',
-            'name' => '',
-            'meta' => [
-                'name' => '',
-                'area' => '',
-                'region' => '',
-            ]
-        ];
-
-        $this->data['sender']['street'] = [
-            'value' => '',
-            'name' => '',
-            'meta' => [
-                'name' => '',
-            ]
-        ];
-
-        $this->data['sender']['house'] = '';
-        $this->data['sender']['flat'] = '';
-
-        // V2 address flow
         $this->data['sender']['ship_from_source'] = 'smarty_parcel';
+
         try {
             $this->data['sender']['addresses'] = $this->smartyParcelApi->sendRequest(
                 '/v1/addresses',
@@ -234,13 +217,7 @@ class TTNStore
         } catch (\Exception $e) {
             $this->data['sender']['addresses'] = [];
         }
-        $this->data['sender']['selected_address_id'] = '';
-        foreach ($this->data['sender']['addresses'] as $address) {
-            if ($address['is_default']) {
-                $this->data['sender']['selected_address_id'] = $address['id'];
-                break;
-            }
-        }
+        $this->data['sender']['selected_address_id'] = $this->defaults['ship_from_address_id'];
     }
 
     private function collectRecipient(): void
@@ -288,31 +265,29 @@ class TTNStore
         }, WCUSHelper::getDefaultCities());
     }
 
-    private function getShipmentCost(): float
+    private function collectBackwardDelivery(): void
     {
-        return $this->order->get_subtotal() + (float)$this->order->get_total_fees() + (float)$this->order->get_total_tax('') - $this->order->get_total_discount();
-    }
-
-    private function collectBackwardDelivery()
-    {
-        $codPaymentId = wc_ukr_shipping_get_option('wcus_cod_payment_id');
-        $this->data['ttn']['backward_delivery'] = $codPaymentId && $codPaymentId === $this->order->get_payment_method()
-            ? 1
-            : 0;
+        $this->data['ttn']['backward_delivery'] = $this->defaults['cod'] !== null;
         $this->data['ttn']['backward_delivery_type'] = 'Money';
-        $this->data['ttn']['backward_delivery_payer'] = 'Recipient'; // todo: add hook to override
+        $this->data['ttn']['backward_delivery_payer'] = ucfirst($this->defaults['cod']['paid_by'] ?? 'Recipient');
 
         /**
          * Enable third-party code to control cost of COD feature
          * @since 1.16.6
          */
-        $cost = apply_filters('wcus_ttn_form_cod_cost', $this->getShipmentCost(), $this->order);
+        $cost = apply_filters(
+            'wcus_ttn_form_cod_cost',
+            $this->defaults['cod']['value']['amount'] ?? 0,
+            $this->order
+        );
+
         $this->data['ttn']['backward_delivery_cost'] = $cost;
     }
 
-    private function collectPaymentControl()
+    private function collectPaymentControl(): void
     {
-        if ((int)wc_ukr_shipping_get_option('wcus_ttn_pay_control_default') && (int)$this->data['ttn']['backward_delivery']) {
+        $paymentControlActive = ($this->defaults['cod']['payment_method'] ?? 'cash') === 'cash_equivalent';
+        if ($paymentControlActive) {
             $this->data['ttn']['backward_delivery'] = 0;
             $this->data['ttn']['payment_control'] = 1;
         } else {
@@ -323,19 +298,24 @@ class TTNStore
          * Enable third-party code to control cost of Payment Control feature
          * @since 1.16.6
          */
-        $cost = apply_filters('wcus_ttn_form_payment_control_cost', $this->getShipmentCost(), $this->order);
+        $cost = apply_filters(
+            'wcus_ttn_form_payment_control_cost',
+            $this->defaults['cod']['value']['amount'] ?? 0,
+            $this->order
+        );
         $this->data['ttn']['payment_control_cost'] = $cost;
     }
 
-    private function checkPoshtomatDelivery(string $warehouseRef): void
+    private function prepareLabelRequest(): array
     {
-        /** @var AddressProviderInterface $addressProvider */
-        $addressProvider = wcus_container()->make(AddressProviderInterface::class);
-        $warehouse = $addressProvider->searchWarehouseByRef($warehouseRef);
-        if ($warehouse !== null) {
-            if (false !== strpos($warehouse->getNameUa(), 'Поштомат') || false !== strpos($warehouse->getNameRu(), 'Почтомат')) {
-                $this->data['ttn']['global_params'] = 0;
-            }
+        try {
+            $orderPayload = (new OrderResource($this->order))->toArray();
+
+            return $this->smartyParcelApi->sendRequest('/v1/labels/prepare', [
+                'order' => $orderPayload,
+            ]);
+        } catch (\Throwable $e) {
+            throw new \Exception('Unable to prepare label request. Please try again.');
         }
     }
 }

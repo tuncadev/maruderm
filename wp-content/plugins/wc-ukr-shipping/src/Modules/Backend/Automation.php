@@ -6,9 +6,6 @@ namespace kirillbdev\WCUkrShipping\Modules\Backend;
 
 use kirillbdev\WCUkrShipping\Api\SmartyParcelWPApi;
 use kirillbdev\WCUkrShipping\Component\Automation\Context;
-use kirillbdev\WCUkrShipping\Component\Carriers\RozetkaDelivery\Label\BatchLabelRequestAdapter;
-use kirillbdev\WCUkrShipping\Component\Carriers\RozetkaDelivery\Label\PurchaseLabelDataCollector;
-use kirillbdev\WCUkrShipping\Component\Carriers\Ukrposhta\Label\UkrposhtaBatchLabelRequestBuilder;
 use kirillbdev\WCUkrShipping\Component\SmartyParcel\OrderLabelRequestBuilder;
 use kirillbdev\WCUkrShipping\Enums\CarrierSlug;
 use kirillbdev\WCUkrShipping\Exceptions\SmartyParcel\SmartyParcelErrorException;
@@ -72,28 +69,22 @@ class Automation implements ModuleInterface
 
         try {
             $carrierSlug = SmartyParcelHelper::getOrderCarrierSlug($order);
-            $builder = null;
-            switch ($carrierSlug) {
-                case CarrierSlug::NOVA_POSHTA:
-                    $builder = new OrderLabelRequestBuilder($order);
-                    break;
-                case CarrierSlug::UKRPOSHTA:
-                    $builder = new UkrposhtaBatchLabelRequestBuilder($order);
-                    break;
-                case CarrierSlug::ROZETKA_DELIVERY:
-                    $builder = new BatchLabelRequestAdapter(
-                        new PurchaseLabelDataCollector($order)
-                    );
-                break;
+            $supportedCarriers = [
+                CarrierSlug::NOVA_POSHTA,
+                CarrierSlug::UKRPOSHTA,
+                CarrierSlug::ROZETKA_DELIVERY,
+                CarrierSlug::MEEST,
+            ];
+
+            if (!in_array($carrierSlug, $supportedCarriers, true)) {
+                throw new \Exception('Carrier not supported for auto label operations yet');
             }
 
-            if ($builder !== null) {
-                $this->smartyParcelService->createLabel(
-                    $carrierSlug,
-                    $order->get_id(),
-                    $builder
-                );
-            }
+            $this->smartyParcelService->createLabel(
+                $carrierSlug,
+                $order->get_id(),
+                new OrderLabelRequestBuilder($order)
+            );
         } catch (SmartyParcelErrorException $e) {
             $order->add_meta_data(
                 '_wcus_automation_error',

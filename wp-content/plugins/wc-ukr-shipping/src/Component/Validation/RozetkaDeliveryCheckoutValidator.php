@@ -19,7 +19,7 @@ class RozetkaDeliveryCheckoutValidator implements CheckoutValidatorInterface
             || empty($data['wcus_rozetka_' . $type . '_warehouse'])
         ) {
             wc_add_notice(
-                __('Select warehouse for Rozetka Delivery', 'wc-ukr-shipping-i18n'),
+                __('Select warehouse for Rozetka Delivery', 'wc-ukr-shipping'),
                 'error'
             );
         }

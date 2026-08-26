@@ -5,7 +5,10 @@ namespace kirillbdev\WCUkrShipping\Foundation;
 use Automattic\WooCommerce\Internal\DataStores\Orders\CustomOrdersTableController;
 use kirillbdev\WCUkrShipping\Address\Provider\AddressProviderInterface;
 use kirillbdev\WCUkrShipping\Api\SmartyParcelAddressBook;
+use kirillbdev\WCUkrShipping\Api\SmartyParcelWPApi;
+use kirillbdev\WCUkrShipping\Component\Cache\TransientCache;
 use kirillbdev\WCUkrShipping\Component\Cache\TransientLockProvider;
+use kirillbdev\WCUkrShipping\Contracts\Cache\CacheInterface;
 use kirillbdev\WCUkrShipping\Contracts\Cache\LockProviderInterface;
 use kirillbdev\WCUkrShipping\Contracts\Customer\CustomerStorageInterface;
 use kirillbdev\WCUkrShipping\Contracts\NovaPoshtaAddressProviderInterface;
@@ -53,6 +56,9 @@ final class Dependencies
             LockProviderInterface::class => function ($container) {
                 return $container->make(TransientLockProvider::class);
             },
+            CacheInterface::class => function ($container) {
+                return $container->make(TransientCache::class);
+            },
             OrderRepositoryInterface::class => function ($container) {
                 $controller = wcus_wc_container_safe_get(CustomOrdersTableController::class);
                 return $controller !== null && $controller->custom_orders_table_usage_is_enabled()
@@ -61,7 +67,10 @@ final class Dependencies
             },
             // Modules
             Activator::class => function ($container) {
-                return new Activator($container->make(Migrator::class));
+                return new Activator(
+                    $container->make(Migrator::class),
+                    $container->make(SmartyParcelWPApi::class)
+                );
             },
         ];
     }

@@ -208,9 +208,6 @@ class Preview extends ExceptionalElements {
 		'link-block',
 		'form',
 		'button',
-		'file-upload-inner',
-		'file-upload-threshold-text',
-		'file-upload',
 		'popup-body',
 		'navigation',
 		'navigation-item',
@@ -794,7 +791,13 @@ class Preview extends ExceptionalElements {
 		}
 		$prefix = 'kirki';
 		$value  = wp_json_encode( $value );
-		$s      = "var $prefix$name = window.$prefix$name === undefined? $value : {...$prefix$name, ...$value};";
+		// SECURITY (prototype-pollution guard): only merge a PRE-EXISTING value when it is
+		// an OWN property of window. `window.kirkiX === undefined` is false when
+		// `Object.prototype.kirkiX` has been polluted (crafted query params / third-party
+		// gadget), and `{...kirkiX, ...}` would then launder attacker-controlled keys into a
+		// real own property that downstream scripts trust. Starting from `{}` unless window
+		// truly owns the value keeps inherited (attacker) data out.
+		$s = "var $prefix$name = Object.assign({}, (Object.prototype.hasOwnProperty.call(window, '$prefix$name') && window.$prefix$name) || {}, $value);";
 		return $s;
 	}
 
@@ -1361,19 +1364,13 @@ class Preview extends ExceptionalElements {
 				$element['name'] === 'textarea' ||
 				$element['name'] === 'select' ||
 				$element['name'] === 'checkbox-element' ||
-				$element['name'] === 'radio-group' ||
-				$element['name'] === 'file-upload'
+				$element['name'] === 'radio-group'
 			) {
 				$parent_form_id = $options['form']['id'] ?? '';
 				$session_data   = HelperFunctions::get_session_data( $parent_form_id );
 
 				$type              = $element['properties']['attributes']['type'] ?? '';
 				$others_attributes = array();
-
-				if ( 'file-upload' === $element['name'] ) {
-					$type                               = 'file';
-					$others_attributes['max-file-size'] = $element['properties']['maxFileSize'] ?? 2;
-				}
 
 				if ( $session_data && isset( $element['properties']['attributes']['name'] ) ) {
 					if ( ! isset( $session_data['fields'] ) ) {
@@ -1416,15 +1413,29 @@ class Preview extends ExceptionalElements {
 			}
 
 			if ( $element['name'] === 'recaptcha' ) {
-				$common_data = WpAdmin::get_common_data( true );
-				if ( ! isset( $common_data['recaptcha'], $common_data['recaptcha']['GRC_version'] ) ) {
+				if (!isset($properties['recaptcha'], $properties['recaptcha']['GRC_version'])) {
 					return;
 				}
-				$version   = $common_data['recaptcha']['GRC_version'];
-				$recaptcha = $common_data['recaptcha'][ $version ];
 
-				$this->re_captchas[ $id ]['data-version'] = $version;
-				$this->re_captchas[ $id ]['data-sitekey'] = $recaptcha['GRC_site_key'];
+				$parent_form_id = $options['form']['id'] ?? '';
+				$session_data = HelperFunctions::get_session_data($parent_form_id);
+
+				$version = $properties['recaptcha']['GRC_version'];
+				$grc_site_key = $properties['recaptcha']['GRC_site_key'];
+
+				$this->re_captchas[$id]['data-version'] = $version;
+				$this->re_captchas[$id]['data-sitekey'] = $grc_site_key;
+
+				// set recaptcha version and site key at form session data
+				if ($session_data) {
+					$session_data['recaptcha'] = array(
+						'GRC_version' => $properties['recaptcha']['GRC_version'],
+						'GRC_site_key' => $properties['recaptcha']['GRC_site_key'],
+						'GRC_secret_key' => $properties['recaptcha']['GRC_secret_key'],
+					);
+
+					HelperFunctions::set_session_data($parent_form_id, $session_data);
+				}
 			}
 		}
 	}
@@ -1717,10 +1728,12 @@ class Preview extends ExceptionalElements {
 	private function updateStylesForInteractionLibrary( $interactionLibraryData, $element ) {
 		$id = $element['id'];
 		foreach ( $interactionLibraryData as $interactionLibrary ) {
-			if ( isset( $interactionLibrary['type'] ) && $interactionLibrary['type'] === 'textAnimation' ) {
-				$devices = isset( $interactionLibrary['deviceAndClassList']['devices'] ) ? $interactionLibrary['deviceAndClassList']['devices'] : array();
-				$this->interaction_library_text_animation_tracker[ $id ] = $devices;
-				break;
+			if ( isset( $interactionLibrary['type'] ) && $interactionLibrary['type'] === 'textAnimation'  ) {
+				if( isset($interactionLibrary['trigger']) && $interactionLibrary['trigger'] === 'scrollIntoView' ) {
+						$devices = isset( $interactionLibrary['deviceAndClassList']['devices'] ) ? $interactionLibrary['deviceAndClassList']['devices'] : array();
+						$this->interaction_library_text_animation_tracker[ $id ] = $devices;
+						break;	
+				}
 			}
 		}
 		return $interactionLibraryData;
@@ -1968,10 +1981,12 @@ class Preview extends ExceptionalElements {
 			if ( isset( $this_data['id'], $this->data[ $this_data['id'] ], $this->data[ $this_data['id'] ]['children'] ) ) {
 				$child_count = count( $this->data[ $this_data['id'] ]['children'] );
 				for ( $i = 0; $i < $child_count; $i++ ) {
+					// Position of the child inside its parent. Kept separate from `item_index`,
+					// which carries the collection item index down the whole item markup.
 					$merged_options    = array_merge(
 							$options,
 							array(
-								'item_index' => $i,
+								'child_index' => $i,
 							)
 						);
 					$html .= $this->recGenHTML( $this->data[ $this_data['id'] ]['children'][ $i ], $merged_options );
@@ -2018,10 +2033,21 @@ class Preview extends ExceptionalElements {
 
 		if ( $tag !== 'a' && $href ) {
 			$target = isset( $properties['attributes'], $properties['attributes']['target'] ) ? "target={$properties['attributes']['target']}" : '';
-			$rel    = isset( $properties['attributes'], $properties['attributes']['rel'] ) ? "rel={$properties['attributes']['rel']}" : '';
+			$rel = '';
+
+			// check if rel is array and convert to string
+			if (isset($properties['attributes'], $properties['attributes']['rel'])) {
+				$rel_value = $properties['attributes']['rel'];
+
+				if (is_array($rel_value)) {
+					$rel_value = implode(' ', $rel_value);
+				}
+
+				$rel = "rel='{$rel_value}'";
+			}
 
 			if ( isset( $properties['type'] ) ) {
-				$html = "<a href={$href} {$target} {$rel}>{$html}</a>";
+				$html = "<a href='{$href}' {$target} {$rel}>{$html}</a>";
 			}
 		}
 

@@ -11,10 +11,10 @@
 <form id="wcus-automation-rule-form" method="POST" action="#">
     <div class="wcus-settings wcus-settings--full">
         <div class="wcus-settings__header">
-            <h1 class="wcus-settings__title"><?php esc_html_e('Rule constructor', 'wc-ukr-shipping-i18n'); ?></h1>
+            <h1 class="wcus-settings__title"><?php esc_html_e('Rule constructor', 'wc-ukr-shipping'); ?></h1>
             <div class="wcus-settings__head-buttons">
                 <button type="submit" class="wcus-settings__submit wcus-btn wcus-btn--primary wcus-btn--md">
-                    <?php esc_html_e('Save', 'wc-ukr-shipping-i18n'); ?>
+                    <?php esc_html_e('Save', 'wc-ukr-shipping'); ?>
                 </button>
             </div>
         </div>
@@ -23,13 +23,13 @@
             <?php
                 HtmlHelper::textField(
                     'rule_name',
-                    __('Name', 'wc-ukr-shipping-i18n'),
+                    __('Name', 'wc-ukr-shipping'),
                     $model->name ?? ''
                 );
 
                 HtmlHelper::switcherField(
                     'active',
-                    __('Active', 'wc-ukr-shipping-i18n'),
+                    __('Active', 'wc-ukr-shipping'),
                     $model !== null ? (bool)$model->active : true
                 );
             ?>

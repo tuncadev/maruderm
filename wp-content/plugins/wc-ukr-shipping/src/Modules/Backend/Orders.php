@@ -147,7 +147,7 @@ class Orders implements ModuleInterface
 
         add_meta_box(
             'wcus_edit_order_ttn_metabox',
-            __('SmartyParcel', 'wc-ukr-shipping-i18n'),
+            __('SmartyParcel', 'wc-ukr-shipping'),
             [$this, 'editOrderTTNMetaboxHtml'],
             $screen,
             'side'
@@ -162,7 +162,7 @@ class Orders implements ModuleInterface
         }
 
         if (!SmartyParcelHelper::canPurchaseLabelForOrder($order)) {
-            esc_html_e('Purchase label is not available for this order.', 'wc-ukr-shipping-i18n');
+            esc_html_e('Purchase label is not available for this order.', 'wc-ukr-shipping');
             return;
         }
 
@@ -200,7 +200,7 @@ class Orders implements ModuleInterface
         ?>
         <div class="wcus-order-shipping__edit-wrap">
             <button id="wcus-edit-shipping-btn" data-order-id="<?php echo esc_attr($item->get_order_id()); ?>" class="wcus-btn wcus-btn--default wcus-btn--xs">
-                <?php esc_html_e('Edit shipping address', 'wc-ukr-shipping-i18n'); ?>
+                <?php esc_html_e('Edit shipping address', 'wc-ukr-shipping'); ?>
             </button>
         </div>
         <?php

@@ -3,40 +3,71 @@
         exit;
     }
 
-    use \kirillbdev\WCUkrShipping\Helpers\HtmlHelper;
-    use kirillbdev\WCUkrShipping\Enums\CarrierSlug;
-    use kirillbdev\WCUkrShipping\Helpers\WCUSHelper;
+    /** @var array<int, array<string, mixed>> $carriers */
 ?>
 
-<div id="wcus-pane-carriers" class="wcus-tab-pane active">
+<div class="wcus-message wcus-message--info wcus-mb-3">
+    <div style="font-size: 14px; line-height: 1.4;">
+        <div class="wcus-mb-2">
+            <?php esc_html_e('Enable the carriers you want to integrate with your store.', 'wc-ukr-shipping'); ?>
+        </div>
+        <a target="_blank" href="https://smartyparcel.com/supported-carriers/">
+            <?php esc_html_e('List of supported carriers and features', 'wc-ukr-shipping'); ?>
+        </a>
+    </div>
+</div>
 
-    <div class="wcus-message wcus-message--info wcus-mb-3">
-        <div style="font-size: 14px; line-height: 1.4;">
-            <?php esc_html_e('On this page, you can enable the carriers you want to integrate with your store.', 'wc-ukr-shipping-i18n'); ?>
-            <a target="_blank" href="https://smartyparcel.com/docs/platform-supported-carriers/"><?php esc_html_e('List of supported carriers', 'wc-ukr-shipping-i18n'); ?></a>
+<div id="wcus-carriers" class="wcus-carriers">
+    <?php foreach ($carriers as $carrier) { ?>
+        <div class="wcus-carrier <?php echo $carrier['enabled'] ? '' : 'wcus-carrier--disabled'; ?>"
+             data-carrier="<?php echo esc_attr($carrier['slug']); ?>">
+
+            <img class="wcus-carrier__icon"
+                 src="<?php echo esc_url($carrier['icon']); ?>"
+                 alt="<?php echo esc_attr($carrier['name']); ?>">
+
+            <div class="wcus-carrier__info">
+                <div class="wcus-carrier__name"><?php echo esc_html($carrier['name']); ?></div>
+                <div class="wcus-carrier__features">
+                    <?php esc_html_e('Features:', 'wc-ukr-shipping'); ?>
+                    <?php foreach ($carrier['features'] as $feature) { ?>
+                        <span class="wcus-carrier__feature"><?php echo esc_html($feature); ?></span>
+                    <?php } ?>
+                </div>
+            </div>
+
+            <div class="wcus-carrier__actions">
+                <?php if ($carrier['hasOptions']) { ?>
+                    <button type="button" class="wcus-btn wcus-btn--outline wcus-btn--sm j-wcus-carrier-settings">
+                        <?php esc_html_e('Settings', 'wc-ukr-shipping'); ?>
+                    </button>
+                <?php } ?>
+
+                <label class="wcus-switcher">
+                    <input type="checkbox"
+                           class="j-wcus-carrier-toggle"
+                           value="1"
+                           aria-label="<?php echo esc_attr($carrier['name']); ?>" <?php checked($carrier['enabled']); ?>>
+                    <span class="wcus-switcher__control"></span>
+                </label>
+            </div>
+
+        </div>
+    <?php } ?>
+
+    <div class="wcus-carrier wcus-carrier--universal">
+        <div class="wcus-carrier__icon wcus-carrier__icon--glyph">
+            <?php echo wc_ukr_shipping_import_svg('truck.svg'); ?>
+        </div>
+
+        <div class="wcus-carrier__info">
+            <div class="wcus-carrier__name"><?php esc_html_e('1000+ other carriers', 'wc-ukr-shipping'); ?></div>
+            <div class="wcus-carrier__features">
+                <span class="wcus-carrier__feature"><?php esc_html_e('Tracking', 'wc-ukr-shipping'); ?></span>
+            </div>
+            <div class="wcus-carrier__note">
+                <?php esc_html_e('Shipments sent with any other carrier can be tracked by their tracking number.', 'wc-ukr-shipping'); ?>
+            </div>
         </div>
     </div>
-
-    <?php
-        $activeCarriers = WCUSHelper::safeGetJsonOption('wcus_active_carriers');
-        $carrierOptions = [
-            CarrierSlug::NOVA_POSHTA => 'Nova Poshta (Ukraine)',
-            CarrierSlug::UKRPOSHTA => 'Ukrposhta',
-            CarrierSlug::ROZETKA_DELIVERY => 'Rozetka Delivery (Ukraine)',
-            CarrierSlug::NOVA_POST => 'Nova Post',
-            CarrierSlug::NOVA_GLOBAL => 'Nova Global',
-            CarrierSlug::MEEST => 'Meest',
-        ];
-
-        foreach ($carrierOptions as $carrierSlug => $name) {
-            HtmlHelper::switcherField(
-                'wcus[active_carriers][]',
-                $name,
-                in_array($carrierSlug, $activeCarriers),
-                null,
-                $carrierSlug
-            );
-        }
-    ?>
-
 </div>

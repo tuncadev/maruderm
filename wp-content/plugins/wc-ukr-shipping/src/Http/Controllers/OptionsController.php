@@ -28,7 +28,7 @@ class OptionsController extends Controller
         return $this->jsonResponse([
             'success' => true,
             'data' => [
-                'message' => __('Settings saved successfully!', 'wc-ukr-shipping-i18n'),
+                'message' => __('Settings saved successfully!', 'wc-ukr-shipping'),
             ]
         ]);
     }

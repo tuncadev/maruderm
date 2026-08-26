@@ -2,9 +2,11 @@
 
 namespace kirillbdev\WCUkrShipping\Modules\Core;
 
+use kirillbdev\WCUkrShipping\Api\SmartyParcelWPApi;
 use kirillbdev\WCUkrShipping\DB\Migrations\CreateAutomationActionsTable_20240923215754;
 use kirillbdev\WCUkrShipping\DB\Migrations\CreateAutomationRulesTable_20240923215722;
 use kirillbdev\WCUkrShipping\DB\Migrations\CreateShippingLabelsTable_20250203230634;
+use kirillbdev\WCUkrShipping\DB\Migrations\MigrateShippingOptions_20260819000000;
 use kirillbdev\WCUkrShipping\DB\Migrations\UpdateNpWarehouses_20260406002401;
 use kirillbdev\WCUkrShipping\DB\Migrations\UpdateShippingLabels_20250428213701;
 use kirillbdev\WCUkrShipping\DB\Migrations\UpdateShippingLabels_20251008164100;
@@ -16,15 +18,20 @@ use kirillbdev\WCUSCore\Exceptions\MigrateException;
 class Activator implements ModuleInterface
 {
     private Migrator $migrator;
+    private SmartyParcelWPApi $api;
 
-    public function __construct(Migrator $migrator)
-    {
+    public function __construct(
+        Migrator $migrator,
+        SmartyParcelWPApi $api
+    ) {
         $this->migrator = $migrator;
+        $this->api = $api;
     }
 
     public function init(): void
     {
         add_action('plugins_loaded', [$this, 'activate']);
+        add_action('activated_plugin', [$this, 'activationRedirect']);
         register_activation_hook(WC_UKR_SHIPPING_PLUGIN_ENTRY, [$this, 'activate']);
         register_deactivation_hook(WC_UKR_SHIPPING_PLUGIN_ENTRY, [$this, 'deactivate']);
     }
@@ -40,10 +47,27 @@ class Activator implements ModuleInterface
             $this->migrator->addMigration(new UpdateShippingLabels_20250428213701());
             $this->migrator->addMigration(new UpdateShippingLabels_20251008164100());
             $this->migrator->addMigration(new UpdateNpWarehouses_20260406002401());
+            $this->migrator->addMigration(new MigrateShippingOptions_20260819000000($this->api));
+
             $this->migrator->run();
         } catch (MigrateException $e) {
             // do nothing yet
         }
+    }
+
+    public function activationRedirect(string $plugin): void
+    {
+        if ($plugin !== plugin_basename(WC_UKR_SHIPPING_PLUGIN_ENTRY)) {
+            return;
+        }
+
+        // Skips bulk activation of several plugins at once
+        if (($_GET['action'] ?? null) !== 'activate') {
+            return;
+        }
+
+        wp_safe_redirect(admin_url('admin.php?page=wcus_smarty_parcel'));
+        exit;
     }
 
     public function deactivate(): void

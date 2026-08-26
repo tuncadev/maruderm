@@ -56,6 +56,21 @@ final class SmartyParcelApi
         return $this->processResponse($response);
     }
 
+    public function getCarriers(string $apiKey): array
+    {
+        $response = wp_remote_get(self::API_URL . '/v1/carriers/list', [
+            'headers' => [
+                'Accept' => 'application/json',
+                'Content-Type' => 'application/json',
+                'SP-API-Key' => $apiKey,
+                'SP-Site-Url' => get_site_url(),
+            ],
+            'timeout' => 10,
+        ]);
+
+        return $this->processResponse($response);
+    }
+
     public function createLabel(LabelRequestBuilderInterface $builder): array
     {
         $response = wp_remote_post(self::API_URL . '/v1/labels', [

@@ -25,14 +25,14 @@ class MigrationController extends Controller
 
             return $this->jsonResponse([
                 'success' => true,
-                'message' => __('Migrations were successfully applied', 'wc-ukr-shipping-i18n'),
+                'message' => __('Migrations were successfully applied', 'wc-ukr-shipping'),
             ]);
         } catch (MigrateException $e) {
             return $this->jsonResponse([
                 'success' => false,
                 'error_message' => sprintf(
                     '%s %s',
-                    __('Unable to apply migrations', 'wc-ukr-shipping-i18n'),
+                    __('Unable to apply migrations', 'wc-ukr-shipping'),
                     $e->getMessage()
                 ),
             ]);

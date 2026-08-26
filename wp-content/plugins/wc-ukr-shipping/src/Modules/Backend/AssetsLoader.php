@@ -57,7 +57,7 @@ class AssetsLoader implements ModuleInterface
             filemtime(WC_UKR_SHIPPING_PLUGIN_DIR . 'assets/js/tabs.js')
         );
 
-        if (get_current_screen() !== null && get_current_screen()->id === 'toplevel_page_wc_ukr_shipping_options') {
+        if (get_current_screen() !== null && get_current_screen()->id === 'smartyparcel_page_wcus_settings') {
             wp_enqueue_script(
                 'wcus_settings_js',
                 WC_UKR_SHIPPING_PLUGIN_URL . 'assets/js/settings.min.js',
@@ -112,7 +112,7 @@ class AssetsLoader implements ModuleInterface
             );
         }
 
-        if (get_current_screen() !== null && get_current_screen()->id === 'wc-ukr-shipping_page_wc_ukr_shipping_ttn_list') {
+        if (get_current_screen() !== null && get_current_screen()->id === 'smartyparcel_page_wc_ukr_shipping_ttn_list') {
             wp_enqueue_script(
                 'wcus_orders_js',
                 WC_UKR_SHIPPING_PLUGIN_URL . 'assets/js/orders.min.js',
@@ -132,7 +132,7 @@ class AssetsLoader implements ModuleInterface
             );
         }
 
-        if (get_current_screen() !== null && get_current_screen()->id === 'wc-ukr-shipping_page_wc_ukr_shipping_tools') {
+        if (get_current_screen() !== null && get_current_screen()->id === 'smartyparcel_page_wc_ukr_shipping_tools') {
             wp_enqueue_script(
                 'wcus_tools_js',
                 WC_UKR_SHIPPING_PLUGIN_URL . 'assets/js/tools.min.js',
@@ -200,8 +200,8 @@ class AssetsLoader implements ModuleInterface
         ];
 
         $needAccountScreens = [
-            'toplevel_page_wc_ukr_shipping_options',
-            'wc-ukr-shipping_page_wc_ukr_shipping_ttn_list',
+            'smartyparcel_page_wcus_settings',
+            'smartyparcel_page_wc_ukr_shipping_ttn_list',
         ];
         if (get_current_screen() !== null && in_array(get_current_screen()->id, $needAccountScreens)) {
             $globals['smarty_parcel']['account'] = $this->smartyParcelService->getAccountInfo();

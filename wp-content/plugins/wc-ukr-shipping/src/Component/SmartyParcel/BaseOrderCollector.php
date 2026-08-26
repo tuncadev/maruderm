@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace kirillbdev\WCUkrShipping\Component\SmartyParcel;
 
+use kirillbdev\WCUkrShipping\Api\SmartyParcelWPApi;
 use kirillbdev\WCUkrShipping\Factories\ProductFactory;
 use kirillbdev\WCUkrShipping\Helpers\SmartyParcelHelper;
 use kirillbdev\WCUkrShipping\Helpers\WCUSHelper;
+use kirillbdev\WCUkrShipping\Http\Resources\OrderResource;
 use kirillbdev\WCUkrShipping\Services\Calculation\ProductDimensionService;
 
 /**
@@ -20,6 +22,8 @@ class BaseOrderCollector
     protected \WC_Order_Item_Shipping $orderShipping;
     protected ProductDimensionService $productDimensionService;
     protected ProductFactory $productFactory;
+    protected SmartyParcelWPApi $smartyParcelApi;
+    protected array $defaults = [];
 
     public function __construct(\WC_Order $order, string $carrierSlug)
     {
@@ -29,6 +33,7 @@ class BaseOrderCollector
 
         $this->productFactory = new ProductFactory();
         $this->productDimensionService = wcus_container()->make(ProductDimensionService::class);
+        $this->smartyParcelApi = wcus_container()->make(SmartyParcelWPApi::class);
     }
 
     protected function collectShipToAAddress(): array
@@ -39,6 +44,8 @@ class BaseOrderCollector
     public function collect(): array
     {
         $this->data['carrierSlug'] = $this->carrierSlug;
+
+        $this->collectPreparedDefaults();
         $this->data['order'] = $this->collectOrder();
         $this->data['cod'] = $this->collectCOD();
         $this->data['defaults'] = $this->collectDefaults();
@@ -134,33 +141,62 @@ class BaseOrderCollector
         return $this->order->get_subtotal() + (float)$this->order->get_total_fees() + (float)$this->order->get_total_tax('') - $this->order->get_total_discount();
     }
 
+    protected function collectPreparedDefaults(): void
+    {
+        $response = $this->prepareLabelRequest();
+        $prepared = $response['result'] ?? [];
+        $parcel = $prepared['shipment']['parcels'][0] ?? [];
+
+        $this->defaults = [
+            'paid_by' => $prepared['billing']['paid_by'] ?? null,
+            'description' => $parcel['description'] ?? 'Order #' . $this->order->get_id(),
+            'weight' => [
+                'value' => (float)($parcel['weight']['value'] ?? 0.1),
+                'unit' => $parcel['weight']['unit'] ?? get_option('woocommerce_weight_unit'),
+            ],
+            'dimensions' => [
+                'width' => (int)($parcel['dimensions']['width'] ?? 10),
+                'height' => (int)($parcel['dimensions']['height'] ?? 10),
+                'length' => (int)($parcel['dimensions']['length'] ?? 10),
+                'unit' => $parcel['dimensions']['unit'] ?? get_option('woocommerce_dimension_unit'),
+            ],
+            'cod' => $prepared['service_options']['cod'] ?? null,
+        ];
+    }
+
     protected function collectCOD(): ?array
     {
-        $codPaymentId = wc_ukr_shipping_get_option('wcus_cod_payment_id');
-        if ($codPaymentId && $codPaymentId === $this->order->get_payment_method()) {
-            return [
-                'amount' => $this->getOrderTotal(),
-                'currency' => get_woocommerce_currency(),
-            ];
+        $cod = $this->defaults['cod'] ?? null;
+        if ($cod === null) {
+            return null;
         }
 
-        return null;
+        return [
+            'amount' => (float)($cod['value']['amount'] ?? $this->getOrderTotal()),
+            'currency' => $cod['value']['currency'] ?? get_woocommerce_currency(),
+        ];
     }
 
     protected function collectDefaults(): array
     {
         return [
-            'weight' => [
-                'value' => (float)wc_ukr_shipping_get_option('wcus_ttn_weight_default'),
-                'unit' => get_option('woocommerce_weight_unit'),
-            ],
-            'dimensions' => [
-                'width' => (int)wc_ukr_shipping_get_option('wcus_ttn_width_default'),
-                'height' => (int)wc_ukr_shipping_get_option('wcus_ttn_height_default'),
-                'length' => (int)wc_ukr_shipping_get_option('wcus_ttn_length_default'),
-                'unit' => get_option('woocommerce_dimension_unit'),
-            ],
-            'description' => wc_ukr_shipping_get_option('wcus_ttn_description') ?: 'Order #' . $this->order->get_id(),
+            'weight' => $this->defaults['weight'],
+            'dimensions' => $this->defaults['dimensions'],
+            'description' => $this->defaults['description'],
+            'paidBy' => $this->defaults['paid_by'] ?? 'recipient',
         ];
+    }
+
+    protected function prepareLabelRequest(): array
+    {
+        try {
+            $orderPayload = (new OrderResource($this->order))->toArray();
+
+            return $this->smartyParcelApi->sendRequest('/v1/labels/prepare', [
+                'order' => $orderPayload,
+            ]);
+        } catch (\Throwable $e) {
+            throw new \Exception('Unable to prepare label request. Please try again.');
+        }
     }
 }

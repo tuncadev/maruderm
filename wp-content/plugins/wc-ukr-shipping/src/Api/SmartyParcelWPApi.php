@@ -14,6 +14,7 @@ final class SmartyParcelWPApi
     private const ROUTE_METHOD_MAP = [
         '/v1/account' => 'GET',
         '/v1/dashboard/overview' => 'GET',
+        '/v1/carriers/list' => 'GET',
         '/v1/carriers' => 'GET',
         '/v1/billing/plans' => 'GET',
         '/v1/locator/cities' => 'GET',
@@ -29,6 +30,13 @@ final class SmartyParcelWPApi
         '/v1/addresses' => 'GET',
         '/v1/orders' => 'POST',
         '/v1/checkout/link' => 'POST',
+
+        // Label
+        '/v1/labels' => 'POST',
+        '/v1/labels/prepare' => 'POST',
+
+        // Legacy route for migration settings
+        '/v1/legacy/settings/migrate' => 'POST',
     ];
 
     private const PUBLIC_ROUTES = [

@@ -53,11 +53,11 @@ class AutomationListTable extends \WP_List_Table
     {
         return [
             'cb' => '<input type="checkbox" />',
-            'name' => __('Name', 'wc-ukr-shipping-i18n'),
-            'event_name' => __('Event', 'wc-ukr-shipping-i18n'),
-            'event_data' => __('Event data', 'wc-ukr-shipping-i18n'),
-            'active' => __('Active', 'wc-ukr-shipping-i18n'),
-            'created_at' => __('Created At', 'wc-ukr-shipping-i18n'),
+            'name' => __('Name', 'wc-ukr-shipping'),
+            'event_name' => __('Event', 'wc-ukr-shipping'),
+            'event_data' => __('Event data', 'wc-ukr-shipping'),
+            'active' => __('Active', 'wc-ukr-shipping'),
+            'created_at' => __('Created At', 'wc-ukr-shipping'),
         ];
     }
 
@@ -89,13 +89,13 @@ class AutomationListTable extends \WP_List_Table
             $actions['edit'] = sprintf(
                 '<a href="%s">%s</a>',
                 admin_url('admin.php?page=wcus_automation_rule_edit&id=' . (int)$item->id),
-                __('Edit','wc-ukr-shipping-i18n')
+                __('Edit','wc-ukr-shipping')
             );
             $actions['delete'] = sprintf(
                 '<a href="%s" onclick = "return confirm( \'%s\' );">%s</a>',
                 wp_nonce_url('?page=wcus_automation&action=delete&id=' . $item->id, 'wcus_automation_delete'),
-                esc_js(__( 'Confirm action', 'wc-ukr-shipping-i18n')),
-                esc_html__( 'Delete', 'wc-ukr-shipping-i18n')
+                esc_js(__( 'Confirm action', 'wc-ukr-shipping')),
+                esc_html__( 'Delete', 'wc-ukr-shipping')
             );
 
             return esc_html( $item->name ) . $this->row_actions( $actions );

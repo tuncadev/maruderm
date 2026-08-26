@@ -36,7 +36,21 @@ abstract class AbstractShippingMethod extends \WC_Shipping_Method
             'cost' => $shippingCost,
             'package' => $package,
         ];
+
+        if ($this->isCostViewOnly() && $shippingCost !== null && $shippingCost > 0) {
+            $rate['cost'] = 0;
+            $rate['taxes'] = [];
+            $rate['meta_data'] = [
+                WCUS_SHIPPING_META_VIEW_COST => (string)wc_format_decimal($shippingCost),
+            ];
+        }
+
         $this->add_rate($rate);
+    }
+
+    public function isCostViewOnly(): bool
+    {
+        return $this->get_option('add_cost_to_order') === 'no';
     }
 
     /**

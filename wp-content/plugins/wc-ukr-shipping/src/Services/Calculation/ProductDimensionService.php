@@ -14,7 +14,7 @@ class ProductDimensionService
      */
     public function getTotalWeight(array $products): float
     {
-        $defaultWeight = wc_ukr_shipping_get_option('wcus_ttn_weight_default') ?: 0.1;
+        $defaultWeight = $this->getDefaultWeight();
         $weight = 0;
         foreach ($products as $product) {
             $weight += $product->getWeight() * $product->getQuantity();
@@ -25,21 +25,15 @@ class ProductDimensionService
 
     /**
      * @param OrderProduct[] $products
-     * @return array
+     * @param bool $applyDefaults If true will return default dimensions if any of the products has invalid dimensions
+     * @return array|null
      */
-    public function getTotalDimensions(array $products): array
+    public function getTotalDimensions(array $products, bool $applyDefaults = true): ?array
     {
-        $defaultWidth = wc_ukr_shipping_get_option('wcus_ttn_width_default');
-        $defaultHeight = wc_ukr_shipping_get_option('wcus_ttn_height_default');
-        $defaultLength = wc_ukr_shipping_get_option('wcus_ttn_length_default');
-
         $width = $height = $length = 0;
         foreach ($products as $product) {
             if ($product->getWidth() <= 0 || $product->getHeight() <= 0 || $product->getLength() <= 0) {
-                $width = $defaultWidth;
-                $height = $defaultHeight;
-                $length = $defaultLength;
-                break;
+                return $applyDefaults ? $this->getDefaultDimensions() : null;
             }
 
             $width = $product->getWidth() > $width ? $product->getWidth() : $width;
@@ -55,23 +49,26 @@ class ProductDimensionService
     }
 
     /**
-     * @param OrderProduct[] $products
+     * Default parcel weight, used when the order products have no weight set.
+     *
      * @return float
      */
-    public function calculateTotalVolumeWeight(array $products): float
+    public function getDefaultWeight(): float
     {
-        $defaultWidth = wc_ukr_shipping_get_option('wcus_ttn_width_default');
-        $defaultHeight = wc_ukr_shipping_get_option('wcus_ttn_height_default');
-        $defaultLength = wc_ukr_shipping_get_option('wcus_ttn_length_default');
-        $volumeWeight = 0;
+        return (float)apply_filters('wcus_default_parcel_weight', (float)WCUS_DEFAULT_PARCEL_WEIGHT);
+    }
 
-        foreach ($products as $product) {
-            $width = $product->getWidth() > 0 ? $product->getWidth() : $defaultWidth;
-            $height = $product->getHeight() > 0 ? $product->getHeight() : $defaultHeight;
-            $length = $product->getLength() > 0 ? $product->getLength() : $defaultLength;
-            $volumeWeight += $width * $height * $length / 4000 * $product->getQuantity();
-        }
-
-        return $volumeWeight ? round($volumeWeight, 2) : 0.1;
+    /**
+     * Default parcel dimensions, used when any of the order products has invalid dimensions.
+     *
+     * @return array
+     */
+    public function getDefaultDimensions(): array
+    {
+        return (array)apply_filters('wcus_default_parcel_dimensions', [
+            'width' => WCUS_DEFAULT_PARCEL_WIDTH,
+            'height' => WCUS_DEFAULT_PARCEL_HEIGHT,
+            'length' => WCUS_DEFAULT_PARCEL_LENGTH,
+        ]);
     }
 }

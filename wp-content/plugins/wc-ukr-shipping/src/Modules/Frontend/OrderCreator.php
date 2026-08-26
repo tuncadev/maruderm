@@ -4,6 +4,7 @@ namespace kirillbdev\WCUkrShipping\Modules\Frontend;
 
 use kirillbdev\WCUkrShipping\Contracts\Order\OrderHandlerInterface;
 use kirillbdev\WCUkrShipping\Contracts\Order\OrderShippingHandlerInterface;
+use kirillbdev\WCUkrShipping\Helpers\SmartyParcelHelper;
 use kirillbdev\WCUSCore\Contracts\ModuleInterface;
 use kirillbdev\WCUkrShipping\Component\Carriers\NovaPoshta\Order\CheckoutOrderHandler as NovaPoshtaCheckoutOrderHandler;
 use kirillbdev\WCUkrShipping\Component\Carriers\NovaPoshta\Order\CheckoutOrderShippingHandler as NovaPoshtaCheckoutOrderShippingHandler;
@@ -42,7 +43,9 @@ class OrderCreator implements ModuleInterface
 
     public function handleSyncOrder(int $orderId): void
     {
-        wp_schedule_single_event(time(), 'wcus_smartyparcel_sync_order', [$orderId]);
+        if (SmartyParcelHelper::isConnected()) {
+            wp_schedule_single_event(time(), 'wcus_smartyparcel_sync_order', [$orderId]);
+        }
     }
 
     /**

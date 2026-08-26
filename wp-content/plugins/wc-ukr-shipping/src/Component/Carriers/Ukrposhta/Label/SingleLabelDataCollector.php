@@ -6,8 +6,8 @@ namespace kirillbdev\WCUkrShipping\Component\Carriers\Ukrposhta\Label;
 
 use kirillbdev\WCUkrShipping\Api\SmartyParcelWPApi;
 use kirillbdev\WCUkrShipping\Factories\ProductFactory;
-use kirillbdev\WCUkrShipping\Foundation\UkrPoshtaShipping;
 use kirillbdev\WCUkrShipping\Helpers\WCUSHelper;
+use kirillbdev\WCUkrShipping\Http\Resources\OrderResource;
 use kirillbdev\WCUkrShipping\Services\Calculation\ProductDimensionService;
 use kirillbdev\WCUkrShipping\Services\SmartyParcelService;
 
@@ -15,16 +15,15 @@ class SingleLabelDataCollector
 {
     private array $data;
     private \WC_Order $order;
-    private \WC_Order_Item_Shipping $orderShipping;
     private array $orderProducts;
     private ProductDimensionService $productDimensionService;
     private SmartyParcelService $smartyParcelService;
     private SmartyParcelWPApi $smartyParcelApi;
+    private array $defaults;
 
     public function __construct(\WC_Order $order)
     {
         $this->order = $order;
-        $this->orderShipping = WCUSHelper::getOrderShippingMethod($this->order);
         $this->data = [];
 
         $factory = new ProductFactory();
@@ -43,6 +42,7 @@ class SingleLabelDataCollector
     {
         $this->data['carrier'] = 'ukrposhta';
 
+        $this->collectDefaults();
         $this->collectCommonData();
         $this->collectSender();
         $this->collectParcelsData();
@@ -53,23 +53,50 @@ class SingleLabelDataCollector
         return $this->data;
     }
 
+    private function collectDefaults(): void
+    {
+        $response = $this->prepareLabelRequest();
+        $prepared = $response['result'];
+        $parcel = $prepared['shipment']['parcels'][0];
+
+        $this->defaults = [
+            'service_type' => $prepared['service_type'],
+            'paid_by' => $prepared['billing']['paid_by'],
+            'payment_method' => $prepared['billing']['payment_method'] === 'cash' ? 'Cash' : 'NonCash',
+            'ship_date' => new \DateTime($prepared['shipment']['ship_date']),
+            'description' => $parcel['description'] ?? 'Order #' . $this->order->get_id(),
+            'weight' => $parcel['weight']['value'] ?? 0.1,
+            'declared_value' => $parcel['declared_value']['amount'],
+            'dimensions' => [
+                'width' => $parcel['dimensions']['width'] ?? 10,
+                'height' => $parcel['dimensions']['height'] ?? 10,
+                'length' => $parcel['dimensions']['length'] ?? 10,
+            ],
+            'carrier_account_id' => $prepared['carrier_account_id'] ?? '',
+            'ship_from_address_id' => $prepared['shipment']['ship_from_address_id'] ?? '',
+            'cod' => $prepared['service_options']['cod'] ?? null,
+            'service_options' => $prepared['service_options'] ?? [],
+        ];
+    }
+
     private function collectCommonData(): void
     {
         $this->data['order_id'] = $this->order->get_id();
+        $this->data['common']['service_type'] = $this->defaults['service_type'];
 
-        $shippingMethod = new UkrPoshtaShipping((int)$this->orderShipping->get_instance_id());
-        $this->data['common']['service_type'] = 'ukrposhta_' . strtolower($shippingMethod->get_option('service_type'));
-
-        $this->data['common']['paid_by'] = wc_ukr_shipping_get_option('wcus_ukrposhta_ttn_default_payer');
-        $description = wc_ukr_shipping_get_option('wcus_ttn_description') ?: 'Order #' . $this->order->get_id();
+        $this->data['common']['paid_by'] = $this->defaults['paid_by'];
+        $description = $this->defaults['description'] ?? 'Order #' . $this->order->get_id();
         $this->data['common']['description'] = apply_filters('wcus_ttn_form_description', $description, $this->order);
         $this->data['common']['external_order_id'] = $this->order->get_id();
-        $this->data['common']['declared_price'] = $this->getDeclaredPrice();
+        $this->data['common']['declared_price'] = $this->defaults['declared_value'];
     }
 
     private function collectParcelsData(): void
     {
-        $dimensions = $this->productDimensionService->getTotalDimensions($this->orderProducts);
+        $dimensions = $this->productDimensionService->getTotalDimensions($this->orderProducts, false);
+        if ($dimensions === null) {
+            $dimensions = $this->defaults['dimensions'];
+        }
 
         $this->data['common']['parcels'] = [
             [
@@ -84,17 +111,10 @@ class SingleLabelDataCollector
     private function collectSender(): void
     {
         $accounts = $this->smartyParcelService->getCarrierAccounts('ukrposhta');
-        $defaultAcc = $accounts[0]['id'] ?? '';
-        foreach ($accounts as $account) {
-            if ($account['is_default']) {
-                $defaultAcc = $account['id'];
-                break;
-            }
-        }
 
         $this->data['carrier_accounts'] = $accounts;
         $this->data['sender'] = [
-            'carrier_account_id' => $defaultAcc,
+            'carrier_account_id' => $this->defaults['carrier_account_id'],
         ];
 
         // V2 address flow
@@ -110,13 +130,7 @@ class SingleLabelDataCollector
             $this->data['sender']['addresses'] = [];
         }
 
-        $this->data['sender']['selected_address_id'] = '';
-        foreach ($this->data['sender']['addresses'] as $address) {
-            if ($address['is_default']) {
-                $this->data['sender']['selected_address_id'] = $address['id'];
-                break;
-            }
-        }
+        $this->data['sender']['selected_address_id'] = $this->defaults['ship_from_address_id'];
     }
 
     private function collectRecipient(): void
@@ -184,15 +198,15 @@ class SingleLabelDataCollector
     private function collectAdditionalServices(): void
     {
         $this->data['additional_services'] = [
-            'on_fail_receive' => wc_ukr_shipping_get_option('wcus_ukrposhta_on_fail_receive'),
-            'check_on_delivery' => (int)wc_ukr_shipping_get_option('wcus_ukrposhta_check_on_delivery') === 1,
-            'sms_notification' => (int)wc_ukr_shipping_get_option('wcus_ukrposhta_sms_notification') === 1,
+            'on_fail_receive' => $this->defaults['service_options']['ukrposhta_on_fail_receive'] ?? 'return',
+            'check_on_delivery' => (bool)($this->defaults['service_options']['ukrposhta_check_on_delivery'] ?? 0),
+            'sms_notification' => (bool)($this->defaults['service_options']['ukrposhta_sms_notification'] ?? 0),
         ];
     }
 
     private function calculateWeight(): float
     {
-        $defaultWeight = wc_ukr_shipping_get_option('wcus_ttn_weight_default') ?: 0.1;
+        $defaultWeight = $this->defaults['weight'];
         $weight = 0;
 
         foreach ($this->orderProducts as $product) {
@@ -209,11 +223,23 @@ class SingleLabelDataCollector
 
     private function collectCOD(): void
     {
-        $codPaymentId = wc_ukr_shipping_get_option('wcus_cod_payment_id');
         $this->data['cod'] = [
-            'active' => $codPaymentId && $codPaymentId === $this->order->get_payment_method(),
-            'paid_by' => wc_ukr_shipping_get_option('wcus_ukrposhta_cod_payer'),
-            'amount' => $this->getDeclaredPrice(),
+            'active' => $this->defaults['cod'] !== null,
+            'paid_by' => $this->defaults['cod']['paid_by'] ?? 'recipient',
+            'amount' => $this->defaults['cod']['value']['amount'] ?? 0,
         ];
+    }
+
+    private function prepareLabelRequest(): array
+    {
+        try {
+            $orderPayload = (new OrderResource($this->order))->toArray();
+
+            return $this->smartyParcelApi->sendRequest('/v1/labels/prepare', [
+                'order' => $orderPayload,
+            ]);
+        } catch (\Throwable $e) {
+            throw new \Exception('Unable to prepare label request. Please try again.');
+        }
     }
 }

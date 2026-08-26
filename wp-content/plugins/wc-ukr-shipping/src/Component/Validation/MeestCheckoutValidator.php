@@ -19,7 +19,7 @@ class MeestCheckoutValidator implements CheckoutValidatorInterface
             || empty($data['wcus_meest_' . $type . '_warehouse'])
         ) {
             wc_add_notice(
-                __('Select warehouse of Meest Post', 'wc-ukr-shipping-i18n'),
+                __('Select warehouse of Meest Post', 'wc-ukr-shipping'),
                 'error'
             );
         }

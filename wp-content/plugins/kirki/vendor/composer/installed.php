@@ -29,9 +29,9 @@
             'dev_requirement' => false,
         ),
         'themeum/framework' => array(
-            'pretty_version' => '2.1.7',
-            'version' => '2.1.7.0',
-            'reference' => 'baa13d110ab722ae934542635ade9c398e42e109',
+            'pretty_version' => '2.1.16',
+            'version' => '2.1.16.0',
+            'reference' => '38153ccd9dbb6af4cf81db2151250208a127d360',
             'type' => 'library',
             'install_path' => __DIR__ . '/../themeum/framework',
             'aliases' => array(),

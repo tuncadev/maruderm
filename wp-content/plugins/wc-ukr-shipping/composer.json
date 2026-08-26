@@ -10,6 +10,7 @@
     ],
     "minimum-stability": "dev",
     "require": {
+        "php": "^8.0",
         "kirillbdev/wcus-core": "^1.0"
     },
     "autoload": {

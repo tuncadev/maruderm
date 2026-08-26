@@ -11,6 +11,7 @@ use kirillbdev\WCUkrShipping\Component\Rates\RatesApiV2Calculator;
 use kirillbdev\WCUkrShipping\Contracts\Rates\RatesCalculatorInterface;
 use kirillbdev\WCUkrShipping\Dto\Rates\RateShipmentDTO;
 use kirillbdev\WCUkrShipping\Foundation\AbstractShippingMethod;
+use kirillbdev\WCUkrShipping\Helpers\WCUSHelper;
 
 class RatesCalculatorFactory implements RatesCalculatorFactoryInterface
 {
@@ -45,7 +46,7 @@ class RatesCalculatorFactory implements RatesCalculatorFactoryInterface
             case 'rates_api':
                 return new RatesApiV2Calculator(
                     $shippingMethod->get_option('include_cod') === 'yes'
-                        && wc_ukr_shipping_get_option('wcus_cod_payment_id') === $dto->paymentMethod,
+                        && WCUSHelper::isCodPaymentMethod((string)$dto->paymentMethod),
                     $this->api
                 );
             default:

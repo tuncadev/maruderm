@@ -5,17 +5,16 @@ namespace kirillbdev\WCUkrShipping\Http\Controllers;
 use kirillbdev\WCUkrShipping\Api\SmartyParcelApi;
 use kirillbdev\WCUkrShipping\Api\SmartyParcelWPApi;
 use kirillbdev\WCUkrShipping\Component\Automation\Context;
-use kirillbdev\WCUkrShipping\Component\Carriers\RozetkaDelivery\Label\BatchLabelRequestAdapter;
-use kirillbdev\WCUkrShipping\Component\Carriers\RozetkaDelivery\Label\PurchaseLabelDataCollector;
-use kirillbdev\WCUkrShipping\Component\Carriers\Ukrposhta\Label\UkrposhtaBatchLabelRequestBuilder;
 use kirillbdev\WCUkrShipping\Component\Carriers\Ukrposhta\Label\UkrposhtaFormLabelRequestBuilder;
 use kirillbdev\WCUkrShipping\Component\SmartyParcel\FormLabelRequestBuilder;
 use kirillbdev\WCUkrShipping\Component\SmartyParcel\OrderLabelRequestBuilder;
 use kirillbdev\WCUkrShipping\DB\Repositories\ShippingLabelsRepository;
 use kirillbdev\WCUkrShipping\Enums\CarrierSlug;
 use kirillbdev\WCUkrShipping\Exceptions\SmartyParcel\SmartyParcelErrorException;
+use kirillbdev\WCUkrShipping\Helpers\SmartyParcelHelper;
 use kirillbdev\WCUkrShipping\Helpers\WCUSHelper;
 use kirillbdev\WCUkrShipping\Services\AutomationService;
+use kirillbdev\WCUkrShipping\Services\SmartyParcel\CarrierService;
 use kirillbdev\WCUkrShipping\Services\SmartyParcelService;
 use kirillbdev\WCUSCore\Http\Contracts\ResponseInterface;
 use kirillbdev\WCUSCore\Http\Controller;
@@ -28,19 +27,22 @@ class SmartyParcelController extends Controller
     private SmartyParcelService $smartyParcelService;
     private ShippingLabelsRepository $shippingLabelsRepository;
     private AutomationService $automationService;
+    private CarrierService $carrierService;
 
     public function __construct(
         SmartyParcelApi $api,
         SmartyParcelWPApi $spApi,
         SmartyParcelService $smartyParcelService,
         ShippingLabelsRepository $shippingLabelsRepository,
-        AutomationService $automationService
+        AutomationService $automationService,
+        CarrierService $carrierService
     ) {
         $this->api = $api;
         $this->spApi = $spApi;
         $this->smartyParcelService = $smartyParcelService;
         $this->shippingLabelsRepository = $shippingLabelsRepository;
         $this->automationService = $automationService;
+        $this->carrierService = $carrierService;
     }
 
     public function sendApiRequest(Request $request): ResponseInterface
@@ -98,6 +100,7 @@ class SmartyParcelController extends Controller
         delete_option('wcus_nova_poshta_default_carrier');
         delete_option('wcus_ukrposhta_default_carrier');
         delete_transient('smarty_parcel_acc');
+        $this->carrierService->flushCache();
 
         return $this->jsonResponse([
             'success' => true,
@@ -169,9 +172,57 @@ class SmartyParcelController extends Controller
         }
     }
 
+    public function initTrackingForm(Request $request): ResponseInterface
+    {
+        if ( ! SmartyParcelHelper::isConnected()) {
+            return $this->jsonResponse([
+                'success' => true,
+                'data' => [
+                    'connected' => false,
+                    'carriers' => [],
+                    'suggested_carrier' => null,
+                ],
+            ]);
+        }
+
+        try {
+            return $this->jsonResponse([
+                'success' => true,
+                'data' => [
+                    'connected' => true,
+                    'carriers' => $this->carrierService->getAvailableCarriers(),
+                    'suggested_carrier' => $this->detectOrderCarrier((int)$request->get('orderId')),
+                ],
+            ]);
+        } catch (SmartyParcelErrorException $e) {
+            return $this->jsonResponse([
+                'success' => false,
+                'error' => [
+                    'source' => 'smarty_parcel',
+                    'code' => $e->getCode(),
+                    'message' => $e->getMessage(),
+                    'details' => $e->getDetails(),
+                ],
+            ]);
+        } catch (\Throwable $e) {
+            return $this->jsonResponse([
+                'success' => false,
+                'error' => [
+                    'source' => 'internal',
+                    'code' => 0,
+                    'message' => $e->getMessage(),
+                ],
+            ]);
+        }
+    }
+
     public function attachShippingLabel(Request $request): ResponseInterface
     {
         try {
+            if ( ! $this->carrierService->isCarrierSupported((string)$request->get('carrierSlug'))) {
+                throw new \Exception('Carrier ' . (string)$request->get('carrierSlug') . ' is not supported');
+            }
+
             $this->smartyParcelService->attachLabel(
                 $request->get('carrierSlug'),
                 $request->get('trackingNumber'),
@@ -216,27 +267,22 @@ class SmartyParcelController extends Controller
                 throw new \Exception('Unable to get order shipping method');
             }
 
-            switch ($shippingMethod->get_method_id()) {
-                case WC_UKR_SHIPPING_NP_SHIPPING_NAME:
-                    $carrier = CarrierSlug::NOVA_POSHTA;
-                    $builder = new OrderLabelRequestBuilder($order);
-                    break;
-                case WCUS_SHIPPING_METHOD_UKRPOSHTA:
-                    $carrier = CarrierSlug::UKRPOSHTA;
-                    $builder = new UkrposhtaBatchLabelRequestBuilder($order);
-                    break;
-                case WCUS_SHIPPING_METHOD_ROZETKA:
-                    $carrier = CarrierSlug::ROZETKA_DELIVERY;
-                    $builder = new BatchLabelRequestAdapter(new PurchaseLabelDataCollector($order));
-                    break;
-                default:
-                    throw new \Exception('Carrier not supported for bulk operations yet');
+            $carrier = SmartyParcelHelper::getOrderCarrierSlug($order);
+            $supportedCarriers = [
+                CarrierSlug::NOVA_POSHTA,
+                CarrierSlug::UKRPOSHTA,
+                CarrierSlug::ROZETKA_DELIVERY,
+                CarrierSlug::MEEST,
+            ];
+
+            if (!in_array($carrier, $supportedCarriers, true)) {
+                throw new \Exception('Carrier not supported for bulk operations yet');
             }
 
             $response = $this->smartyParcelService->createLabel(
                 $carrier,
                 $order->get_id(),
-                $builder
+                new OrderLabelRequestBuilder($order)
             );
 
             $downloads = [];
@@ -345,6 +391,20 @@ class SmartyParcelController extends Controller
                 ],
             ]);
         }
+    }
+
+    private function detectOrderCarrier(int $orderId): ?string
+    {
+        if ($orderId <= 0) {
+            return null;
+        }
+
+        $order = wc_get_order($orderId);
+        if ( ! $order) {
+            return null;
+        }
+
+        return SmartyParcelHelper::getOrderCarrierSlug($order);
     }
 
     public function removeLabel(Request $request): ResponseInterface

@@ -7,6 +7,7 @@ namespace kirillbdev\WCUkrShipping\Modules\Core;
 use kirillbdev\WCUkrShipping\Http\Controllers\JWTController;
 use kirillbdev\WCUkrShipping\Http\Controllers\OrdersController;
 use kirillbdev\WCUkrShipping\Http\Controllers\SmartyParcelController;
+use kirillbdev\WCUkrShipping\Http\Middleware\CheckManageWooPermission;
 use kirillbdev\WCUSCore\Contracts\ModuleInterface;
 use kirillbdev\WCUSCore\Http\Routing\Route;
 
@@ -27,8 +28,22 @@ class Router implements ModuleInterface
             new Route('wcus_smartyparcel_jwt', JWTController::class, 'issueToken'),
 
             // Orders
-            new Route('wcus_get_order_shipping_address', OrdersController::class, 'getOrderShippingAddress'),
-            new Route('wcus_update_order_shipping_address', OrdersController::class, 'updateOrderShippingAddress'),
+            new Route(
+                'wcus_get_order_shipping_address',
+                OrdersController::class,
+                'getOrderShippingAddress',
+                [
+                    'middleware' => [CheckManageWooPermission::class]
+                ]
+            ),
+            new Route(
+                'wcus_update_order_shipping_address',
+                OrdersController::class,
+                'updateOrderShippingAddress',
+                [
+                    'middleware' => [CheckManageWooPermission::class]
+                ]
+            ),
         ];
     }
 }

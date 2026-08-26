@@ -2,6 +2,7 @@
 
 namespace kirillbdev\WCUkrShipping\Modules\Frontend;
 
+use kirillbdev\WCUkrShipping\Component\Block\ShippingBlockIntegration;
 use kirillbdev\WCUkrShipping\Enums\CarrierSlug;
 use kirillbdev\WCUkrShipping\Foundation\NovaGlobalAddress;
 use kirillbdev\WCUkrShipping\Foundation\NovaPoshtaShipping;
@@ -27,7 +28,21 @@ class ShippingMethod implements ModuleInterface
     {
         add_filter('woocommerce_shipping_methods', [ $this, 'registerShippingMethod' ]);
         add_filter('woocommerce_cart_shipping_packages', [$this, 'calculatePackageRateHash']);
-        add_filter('woocommerce_calculated_total', [$this, 'calculateCartTotal'], 10, 2);
+        add_filter('woocommerce_cart_shipping_method_full_label', [$this, 'appendViewCostToRateLabel'], 10, 2);
+        add_filter('woocommerce_order_shipping_to_display', [$this, 'displayOrderViewCost'], 10, 2);
+
+        // test
+        add_action( 'woocommerce_blocks_loaded', function () {
+
+            add_action(
+                'woocommerce_blocks_checkout_block_registration',
+                function ( $integration_registry ) {
+                    $integration_registry->register(
+                        new ShippingBlockIntegration()
+                    );
+                }
+            );
+        });
     }
 
     public function registerShippingMethod($methods)
@@ -92,47 +107,31 @@ class ShippingMethod implements ModuleInterface
         return $packages;
     }
 
-    public function calculateCartTotal(float $total, \WC_Cart $cart): float
+    /**
+     * The rate cost is zero in view only mode, so the calculated cost is rendered from the rate meta.
+     *
+     * @param string $label
+     * @param \WC_Shipping_Rate $rate
+     */
+    public function appendViewCostToRateLabel($label, $rate): string
     {
-        // Safe skip feature if any problems with WooCommerce session detected
-        if ( ! is_callable([WC()->session, 'get'])) {
-            return $total;
-        }
+        $viewCost = WCUSHelper::getRateViewCost($rate);
 
-        $chosenMethods = WC()->session->get( 'chosen_shipping_methods', []);
-        $chosenInstance = reset($chosenMethods);
-        if (!$chosenInstance) {
-            return $total;
-        }
+        return $viewCost === null
+            ? $label
+            : $label . ': ' . wc_price($viewCost);
+    }
 
-        [$methodId, $instanceId] = explode(':', $chosenInstance);
-        $shippingInstance = null;
-        switch ($methodId) {
-            case WC_UKR_SHIPPING_NP_SHIPPING_NAME:
-                $shippingInstance = new NovaPoshtaShipping((int)$instanceId);
-                break;
-            case WCUS_SHIPPING_METHOD_UKRPOSHTA:
-                $shippingInstance = new UkrPoshtaShipping((int)$instanceId);
-                break;
-            case WCUS_SHIPPING_METHOD_ROZETKA:
-                $shippingInstance = new RozetkaDeliveryShipping((int)$instanceId);
-                break;
-            case WCUS_SHIPPING_METHOD_MEEST:
-                $shippingInstance = new MeestShipping((int)$instanceId);
-                break;
-            case WCUS_SHIPPING_METHOD_MEEST_ADDRESS:
-                $shippingInstance = new MeestAddressShipping((int)$instanceId);
-                break;
-            case WCUS_SHIPPING_METHOD_NOVA_POST:
-                $shippingInstance = new NovaPostShipping((int)$instanceId);
-                break;
-            case WCUS_SHIPPING_METHOD_NOVA_GLOBAL_ADDRESS:
-                $shippingInstance = new NovaGlobalAddress((int)$instanceId);
-                break;
-        }
+    /**
+     * @param string $shipping
+     * @param \WC_Order $order
+     */
+    public function displayOrderViewCost($shipping, $order): string
+    {
+        $viewCost = WCUSHelper::getOrderViewShippingCost($order);
 
-        return $shippingInstance !== null && $shippingInstance->get_option('add_cost_to_order') === 'no'
-            ? $total - $cart->get_shipping_total()
-            : $total;
+        return $viewCost === null
+            ? $shipping
+            : wc_price($viewCost, ['currency' => $order->get_currency()]) . ' (' . $shipping . ')';
     }
 }

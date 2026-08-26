@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace kirillbdev\WCUkrShipping\Http\Resources;
 
+use kirillbdev\WCUkrShipping\Enums\CarrierSlug;
+use kirillbdev\WCUkrShipping\Foundation\UkrPoshtaShipping;
 use kirillbdev\WCUkrShipping\Helpers\SmartyParcelHelper;
 use kirillbdev\WCUkrShipping\Helpers\WCUSHelper;
 
@@ -21,6 +23,7 @@ class OrderResource
         $order = $this->order;
         $orderShipping = WCUSHelper::getOrderShippingMethod($order);
         $billingOnly = 'billing_only' === get_option('woocommerce_ship_to_destination');
+        $carrierSlug = SmartyParcelHelper::getOrderCarrierSlug($order);
 
         $orderPayload = [
             'order_number' => $order->get_order_number(),
@@ -32,7 +35,8 @@ class OrderResource
             'tax_total' => $order->get_total_tax(),
             'discount_total' => $order->get_total_discount(),
             'subtotal' => $order->get_subtotal(),
-            'shipping_carrier' => SmartyParcelHelper::getOrderCarrierSlug($order),
+            'shipping_carrier' => $carrierSlug,
+            'shipping_service_type' => $this->getCarrierServiceType($orderShipping, $carrierSlug),
             'shipping_method_id' => $orderShipping ? $orderShipping->get_method_id() : null,
             'shipping_method_name' => $orderShipping ? $orderShipping->get_method_title() : null,
             'payment_method_id' => $order->get_payment_method(),
@@ -94,5 +98,16 @@ class OrderResource
         }
 
         return null;
+    }
+
+    private function getCarrierServiceType(\WC_Order_Item_Shipping $orderShipping, ?string $carrierSlug): ?string
+    {
+        if ($carrierSlug !== CarrierSlug::UKRPOSHTA) {
+            return null;
+        }
+
+        $shippingInstance = new UkrPoshtaShipping((int)$orderShipping->get_instance_id());
+
+        return 'ukrposhta_' . strtolower($shippingInstance->get_option('service_type'));
     }
 }

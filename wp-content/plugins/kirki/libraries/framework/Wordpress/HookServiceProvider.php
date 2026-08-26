@@ -13,18 +13,21 @@ namespace Kirki\Framework\Wordpress;
 
 \defined('ABSPATH') || exit;
 use Kirki\Framework\ServiceProvider;
+use Kirki\Framework\Wordpress\Hooks\Actions\FlushQueuedCookies;
+use Kirki\Framework\Wordpress\Hooks\Actions\VersionUpdate;
 use Kirki\Framework\Wordpress\Hooks\Actions\RegisterRestApi;
 use Kirki\Framework\Wordpress\Hooks\Actions\RegisterSiteRoutes;
+use Kirki\Framework\Wordpress\Hooks\Filters\FlushRestCookies;
 class HookServiceProvider extends ServiceProvider
 {
     /**
      * The defaults.
      *
-     * @var string
+     * @var array<string, array<string>>
      *
      * @since 1.0.0
      */
-    protected static $defaults = ['actions' => [RegisterRestApi::class, RegisterSiteRoutes::class], 'filters' => []];
+    protected static $defaults = ['actions' => [RegisterRestApi::class, RegisterSiteRoutes::class, VersionUpdate::class, FlushQueuedCookies::class], 'filters' => [FlushRestCookies::class]];
     /**
      * Register the hooks to the application.
      *
@@ -55,13 +58,33 @@ class HookServiceProvider extends ServiceProvider
         if (empty($hooks)) {
             return static::$defaults;
         }
-        if (!\in_array(RegisterRestApi::class, $hooks['actions'], \true)) {
-            \array_unshift($hooks['actions'], RegisterRestApi::class);
+        return ['actions' => $this->merge_defaults($hooks['actions'] ?? [], 'actions'), 'filters' => $this->merge_defaults($hooks['filters'] ?? [], 'filters')];
+    }
+    /**
+     * Merge the framework default hooks into the configured ones.
+     *
+     * Defaults are prepended so the framework hooks register before application hooks,
+     * and are skipped when the application already lists them.
+     *
+     * @param array $configured The hooks defined by the application.
+     * @param string $type The hook group, either actions or filters.
+     *
+     * @return array
+     *
+     * @since 1.0.0
+     */
+    protected function merge_defaults(array $configured, string $type)
+    {
+        $missing = [];
+        foreach (static::$defaults[$type] as $hook) {
+            if (!\in_array($hook, $configured, \true)) {
+                $missing[] = $hook;
+            }
         }
-        if (!\in_array(RegisterSiteRoutes::class, $hooks['actions'], \true)) {
-            $hooks['actions'][] = RegisterSiteRoutes::class;
+        if (empty($missing)) {
+            return $configured;
         }
-        return ['actions' => $hooks['actions'] ?? [], 'filters' => $hooks['filters'] ?? []];
+        return \array_merge($missing, $configured);
     }
     /**
      * Add the action hooks on after the application booted.

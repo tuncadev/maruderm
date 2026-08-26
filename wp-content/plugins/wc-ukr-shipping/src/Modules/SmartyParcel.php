@@ -41,6 +41,9 @@ class SmartyParcel implements ModuleInterface
 
                 update_option(WCUS_OPTION_SMARTY_PARCEL_API_KEY, $response['api_key']);
                 update_option(WCUS_OPTION_SMARTY_PARCEL_USER_STATUS, 'connected');
+
+                // Enable locator API by default
+                update_option('wcus_use_smartyparcel_locator', 1);
             }
 
             wp_safe_redirect(admin_url('admin.php?page=wcus_smarty_parcel'));

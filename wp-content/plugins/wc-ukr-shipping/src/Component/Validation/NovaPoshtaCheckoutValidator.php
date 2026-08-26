@@ -30,7 +30,7 @@ class NovaPoshtaCheckoutValidator implements CheckoutValidatorInterface
         if (empty($data['wcus_np_' . $type . '_settlement_name'])
             || empty($data['wcus_np_' . $type . '_street_name'])
             || empty($data['wcus_np_' . $type . '_house'])) {
-            $this->addErrorNotice(__('Enter shipping address of Nova Poshta', 'wc-ukr-shipping-i18n'));
+            $this->addErrorNotice(__('Enter shipping address of Nova Poshta', 'wc-ukr-shipping'));
         }
     }
 
@@ -39,7 +39,7 @@ class NovaPoshtaCheckoutValidator implements CheckoutValidatorInterface
         if (empty($data['wcus_np_' . $type . '_city'])
             || empty($data['wcus_np_' . $type . '_warehouse'])
         ) {
-            $this->addErrorNotice(__('Select warehouse of Nova Poshta', 'wc-ukr-shipping-i18n'));
+            $this->addErrorNotice(__('Select warehouse of Nova Poshta', 'wc-ukr-shipping'));
         }
     }
 
