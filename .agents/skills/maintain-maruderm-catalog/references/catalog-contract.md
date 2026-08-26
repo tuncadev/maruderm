@@ -42,6 +42,8 @@ This contract records behavior verified locally on 2026-08-12. It is the primary
 - Cards expose the data consumed by JavaScript: product id/name, category, skin types, concerns, hair needs, price, popularity, and creation timestamp.
 - Out-of-stock products do not appear in the general catalog or homepage merchandising queries.
 - A product-category route also renders its assigned unavailable products. Their out-of-stock badge suppresses every promotional/custom badge, and they have no add-to-cart action.
+- Every frontend product listing groups available products before out-of-stock products. The requested/default sort remains the secondary order inside each stock group.
+- The custom catalog's client-side popularity, newest, price, and name sort modes must preserve that available-first grouping.
 - A homepage/catalog block with no in-stock products must not render an empty product section.
 
 ## Filter truth table

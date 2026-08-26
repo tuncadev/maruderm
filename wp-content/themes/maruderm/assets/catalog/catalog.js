@@ -112,6 +112,13 @@ if (root) {
       : 0;
   };
 
+  const compareStock = (left, right) => {
+    const leftInStock = left.dataset.inStock === 'yes';
+    const rightInStock = right.dataset.inStock === 'yes';
+
+    return leftInStock === rightInStock ? 0 : leftInStock ? -1 : 1;
+  };
+
   const sorters = {
     popular: (left, right) =>
       Number(right.dataset.popularity) - Number(left.dataset.popularity) ||
@@ -250,7 +257,8 @@ if (root) {
 
   const render = (historyMode = 'replace') => {
     const sorter = sorters[sort.value] || sorters.popular;
-    const sortedCards = [...cards].sort(sorter);
+    const sortedCards = [...cards].sort((left, right) =>
+      compareStock(left, right) || sorter(left, right));
     let visibleCount = 0;
 
     sortedCards.forEach((card) => {

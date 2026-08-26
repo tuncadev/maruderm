@@ -52,7 +52,7 @@
     ]
   },
   "assets/catalog/index.js": {
-    "file": "assets/catalog-84E9nv7g.js",
+    "file": "assets/catalog-tBNfrwZ3.js",
     "name": "catalog",
     "src": "assets/catalog/index.js",
     "isEntry": true,
@@ -116,12 +116,12 @@
     ]
   },
   "assets/globals/index.js": {
-    "file": "assets/globals-B-X2b78m.js",
+    "file": "assets/globals-CnziaPXM.js",
     "name": "globals",
     "src": "assets/globals/index.js",
     "isEntry": true,
     "css": [
-      "assets/globals-CdX8ea8f.css"
+      "assets/globals-C8GkXM2u.css"
     ],
     "assets": [
       "assets/RozetkaWeb-Regular-D9f3z7ky.woff2",
@@ -184,12 +184,12 @@
     ]
   },
   "assets/product/index.js": {
-    "file": "assets/product-UDkGSvgb.js",
+    "file": "assets/product-DJhd5LM3.js",
     "name": "product",
     "src": "assets/product/index.js",
     "isEntry": true,
     "css": [
-      "assets/product-CUifnxjy.css",
+      "assets/product-BWD0SoaK.css",
       "assets/product-card-ChpXSw1m.css",
       "assets/storefront-foundation-BSY9g9DU.css"
     ]

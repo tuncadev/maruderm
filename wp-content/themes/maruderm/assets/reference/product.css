@@ -647,7 +647,6 @@
 
 .product-specifications__ingredients {
   display: flex;
-  min-height: 410px;
   flex-direction: column;
   justify-content: space-between;
   border: 1px solid rgba(91, 70, 120, 0.12);
@@ -662,7 +661,7 @@
 .product-specifications__facts dt {
   color: #5d526a;
   font-size: 9px;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
@@ -672,7 +671,7 @@
   margin: auto 0;
   padding: 42px 0;
   font-family: var(--display);
-  font-size: clamp(20px, 2.1vw, 29px);
+  font-size: 15px;
   letter-spacing: -0.025em;
   line-height: 1.42;
 }
@@ -1177,7 +1176,6 @@
   }
 
   .product-specifications__ingredients {
-    min-height: 360px;
     border-radius: 24px;
   }
 

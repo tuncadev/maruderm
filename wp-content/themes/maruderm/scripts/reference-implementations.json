@@ -181,6 +181,26 @@
       }
     },
     {
+      "id": "header-mini-cart",
+      "target": "header.css",
+      "kind": "component",
+      "reference": {
+        "markup": ["components/header.html"],
+        "javascript": ["assets/js/components/header.js"]
+      },
+      "wordpress": {
+        "status": "implemented",
+        "entries": ["assets/globals/index.js"],
+        "renderers": [
+          "app/WooCommerce/HeaderMiniCart.php",
+          "functions.php"
+        ],
+        "routes": ["global WooCommerce storefront header"],
+        "legacyFiles": [],
+        "blocker": ""
+      }
+    },
+    {
       "id": "hair-analysis",
       "target": "hair-analysis.css",
       "kind": "page",

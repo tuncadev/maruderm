@@ -41,6 +41,7 @@ while IFS= read -r php_file; do
     php -l "$php_file" >/dev/null
 done < <(find "${THEME_ROOT}/app/Catalog" -type f -name '*.php' -print | sort)
 php -l "${THEME_ROOT}/app/WooCommerce/ProductBadges.php" >/dev/null
+php -l "${THEME_ROOT}/app/WooCommerce/ProductOrdering.php" >/dev/null
 php -l "${THEME_ROOT}/woocommerce/archive-product.php" >/dev/null
 
 printf 'Validating JavaScript syntax...\n'
@@ -53,6 +54,10 @@ require_pattern 'productsForCurrentView' "${THEME_ROOT}/app/Catalog/CatalogRepos
 require_pattern 'data-in-stock=' "${THEME_ROOT}/app/WooCommerce/ProductCardRenderer.php" 'product cards must expose stock context'
 require_pattern 'if ($product->is_in_stock())' "${THEME_ROOT}/app/WooCommerce/ProductCardRenderer.php" 'unavailable cards must suppress cart actions'
 require_pattern 'matchesStockContext' "${THEME_ROOT}/assets/catalog/catalog.js" 'unavailable cards must remain category-scoped'
+require_pattern 'const compareStock' "${THEME_ROOT}/assets/catalog/catalog.js" 'catalog sorting must compare stock availability'
+require_pattern 'compareStock(left, right) || sorter(left, right)' "${THEME_ROOT}/assets/catalog/catalog.js" 'stock availability must precede the selected catalog sort'
+require_pattern "stock_status = 'outofstock'" "${THEME_ROOT}/app/WooCommerce/ProductOrdering.php" 'frontend product queries must sort unavailable products last'
+require_pattern 'ProductOrdering::load()' "${THEME_ROOT}/app/Bootstrap.php" 'frontend stock ordering module must be registered'
 require_pattern "category: 'category'" "${THEME_ROOT}/assets/catalog/catalog.js" 'category query-state mapping is missing'
 require_pattern "selected.join(',')" "${THEME_ROOT}/assets/catalog/catalog.js" 'multi-value URL serialization is missing'
 require_pattern 'matchesAny(values(card' "${THEME_ROOT}/assets/catalog/catalog.js" 'within-group union matching is missing'
@@ -80,6 +85,63 @@ if ($unavailable !== []) {
 }
 
 WP_CLI::log(sprintf("Catalog repository: %d in-stock products, 0 unavailable products.", count($products)));
+'
+
+wp --path="${PROJECT_ROOT}" eval '
+$orderings = [
+    ["date", "DESC", ""],
+    ["title", "ASC", ""],
+    ["meta_value_num", "DESC", "total_sales"],
+    ["meta_value_num", "ASC", "_price"],
+];
+
+foreach ($orderings as [$orderby, $order, $meta_key]) {
+    $args = [
+        "post_type" => "product",
+        "post_status" => "publish",
+        "posts_per_page" => -1,
+        "fields" => "ids",
+        "orderby" => $orderby,
+        "order" => $order,
+    ];
+
+    if ($meta_key !== "") {
+        $args["meta_key"] = $meta_key;
+    }
+
+    $query = new \WP_Query($args);
+    $seen_unavailable = false;
+    $available_count = 0;
+    $unavailable_count = 0;
+
+    foreach ($query->posts as $product_id) {
+        $product = wc_get_product($product_id);
+        $available = $product instanceof \WC_Product && $product->is_in_stock();
+
+        if ($available) {
+            if ($seen_unavailable) {
+                WP_CLI::error(sprintf(
+                    "Available product %d followed an unavailable product for %s ordering.",
+                    $product_id,
+                    $orderby
+                ));
+            }
+
+            $available_count++;
+            continue;
+        }
+
+        $seen_unavailable = true;
+        $unavailable_count++;
+    }
+
+    WP_CLI::log(sprintf(
+        "Stock ordering %s: %d available before %d unavailable products.",
+        $orderby,
+        $available_count,
+        $unavailable_count
+    ));
+}
 '
 coming_soon_after="$(wp --path="${PROJECT_ROOT}" --skip-plugins --skip-themes option get woocommerce_coming_soon 2>/dev/null || true)"
 

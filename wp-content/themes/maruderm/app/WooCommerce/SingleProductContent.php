@@ -36,10 +36,16 @@ final class SingleProductContent
 
     public function fullIngredients(\WC_Product $product): string
     {
+        $ingredients = trim(wp_strip_all_tags((string) $product->get_meta(ProductIngredients::META_KEY, true)));
+
+        if ($ingredients !== '') {
+            return $ingredients;
+        }
+
         return $this->productDetail(
             $product,
-            ['pa_inci', 'inci', 'ingredients', 'повний склад', 'склад'],
-            ['_maruderm_inci', 'maruderm_inci', '_product_inci', 'product_inci', 'inci', 'ingredients']
+            ['pa_inci', 'inci', 'повний склад', 'склад'],
+            ['_maruderm_inci', 'maruderm_inci', '_product_inci', 'product_inci', 'inci']
         ) ?? 'Актуальний склад зазначено на пакованні продукту.';
     }
 

@@ -40,3 +40,37 @@
     background-color: white;
     border: none white;
 }
+
+/* Parent-theme layout adapter for the canonical header mini-cart component. */
+#site-header .header-main {
+    display: block;
+    min-height: 0;
+    grid-template-columns: none;
+    align-items: initial;
+    gap: 0;
+}
+
+#site-header .extras-menu > .header-cart > .header-cart__trigger {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#site-header .extras-menu > .header-cart > .header-cart__trigger::after {
+    display: none;
+    content: none;
+}
+
+#site-header .header-cart__dropdown {
+    color: var(--ink);
+    font-family: var(--font-family-sans), sans-serif;
+    text-align: left;
+}
+
+#site-header .header-cart__item {
+    margin-bottom: 0;
+}
+
+#site-header .header-cart__item > button {
+    cursor: pointer;
+}

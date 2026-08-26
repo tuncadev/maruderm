@@ -1,7 +1,7 @@
 {
   "version": 1,
   "manifest": "src/reference-assets.json",
-  "manifestSha256": "3689ca41d40446d364726033874f5bf231a71a04be9d6ab53d9183c760a2eb61",
+  "manifestSha256": "b2d8b56ab2f754ab6e525b763767dfde363dc516e427212dadb394c2df5c89ef",
   "sourceRepository": "maruderm.html",
   "styles": [
     {
@@ -12,7 +12,7 @@
     {
       "source": "assets/styles/components/product.css",
       "target": "product.css",
-      "sha256": "07011408e1c86c35ec538a4b5e0c458bf71f50a17cd3ac2e356fc8f73d4193a6"
+      "sha256": "cf056caaedb329eecd10a299cf745706226f9c254619b8c9de566487b77b72f7"
     },
     {
       "source": "assets/styles/components/product-card.css",
@@ -43,6 +43,11 @@
       "source": "assets/styles/components/footer.css",
       "target": "footer.css",
       "sha256": "52c29af3a57674944e388f9133541f956a4f84b1c37f917e6c31ca35811f4e9e"
+    },
+    {
+      "source": "assets/styles/components/header.css",
+      "target": "header.css",
+      "sha256": "e7f58944f91acac0479f202648b7054c40bc448546153af897ee7df441daa1b8"
     },
     {
       "source": "assets/styles/components/hair-analysis.css",
