@@ -43,6 +43,7 @@ require_once __DIR__ . '/LandingPage/LandingPageCatalog.php';
 require_once __DIR__ . '/LandingPage/LandingPageContent.php';
 require_once __DIR__ . '/LandingPage/LandingPageRenderer.php';
 require_once __DIR__ . '/Homepage/HomepagePage.php';
+require_once __DIR__ . '/Homepage/HomepageHeroRenderer.php';
 require_once __DIR__ . '/Homepage/HomepageRenderer.php';
 require_once __DIR__ . '/Layout/FooterRenderer.php';
 require_once __DIR__ . '/HairAnalysis/HairAnalysisRenderer.php';

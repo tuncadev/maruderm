@@ -50,14 +50,16 @@
       "kind": "page",
       "reference": {
         "markup": [
+          "product.html",
           "components/product-detail.html",
+          "components/product-specifications.html",
           "components/product-benefits.html",
           "components/product-ingredients.html",
           "components/product-related.html",
           "components/product-reviews.html",
           "components/product-routine.html"
         ],
-        "javascript": ["assets/js/components/product.js"]
+        "javascript": ["assets/data/products.js", "assets/js/components/product.js"]
       },
       "wordpress": {
         "status": "implemented",
@@ -215,6 +217,7 @@
         "entries": ["assets/home/index.js"],
         "renderers": [
           "app/Homepage/HomepagePage.php",
+          "app/Homepage/HomepageHeroRenderer.php",
           "app/Homepage/HomepageRenderer.php",
           "front-page.php"
         ],

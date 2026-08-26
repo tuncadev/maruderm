@@ -71,12 +71,14 @@ if (root) {
   const values = (card, key) => new Set((card.dataset[key] || '').split(' ').filter(Boolean));
   const matchesAny = (available, selected) =>
     selected.size === 0 || [...selected].some((value) => available.has(value));
-  const matchesPrice = (price, selected) =>
+  const matchesPrice = (card, selected) =>
     selected.size === 0 ||
-    [...selected].some((range) => {
-      const [minimum, maximum] = range.split('-').map(Number);
-      return price >= minimum && price <= maximum;
-    });
+    (card.dataset.inStock === 'yes' && card.dataset.price !== '' &&
+      [...selected].some((range) => {
+        const [minimum, maximum] = range.split('-').map(Number);
+        const price = Number(card.dataset.price);
+        return price >= minimum && price <= maximum;
+      }));
   const matchesStockContext = (card, selection) =>
     card.dataset.inStock === 'yes' || selection.category.size > 0;
 
@@ -86,7 +88,7 @@ if (root) {
     matchesAny(values(card, 'skinTypes'), selection.skinTypes) &&
     matchesAny(values(card, 'concerns'), selection.concerns) &&
     matchesAny(values(card, 'hairNeeds'), selection.hairNeeds) &&
-    matchesPrice(Number(card.dataset.price || 0), selection.price) &&
+    matchesPrice(card, selection.price) &&
     (!search || (card.dataset.productName || '').toLocaleLowerCase('uk').includes(search));
 
   const cloneState = () => Object.fromEntries(
@@ -97,13 +99,26 @@ if (root) {
   const hasSelections = (selection = state) =>
     Object.values(selection).some((selected) => selected.size > 0);
 
+  const comparePrice = (left, right, direction) => {
+    const leftHasPrice = left.dataset.price !== '';
+    const rightHasPrice = right.dataset.price !== '';
+
+    if (leftHasPrice !== rightHasPrice) {
+      return leftHasPrice ? -1 : 1;
+    }
+
+    return leftHasPrice
+      ? direction * (Number(left.dataset.price) - Number(right.dataset.price))
+      : 0;
+  };
+
   const sorters = {
     popular: (left, right) =>
       Number(right.dataset.popularity) - Number(left.dataset.popularity) ||
       Number(right.dataset.created) - Number(left.dataset.created),
     newest: (left, right) => Number(right.dataset.created) - Number(left.dataset.created),
-    'price-asc': (left, right) => Number(left.dataset.price) - Number(right.dataset.price),
-    'price-desc': (left, right) => Number(right.dataset.price) - Number(left.dataset.price),
+    'price-asc': (left, right) => comparePrice(left, right, 1),
+    'price-desc': (left, right) => comparePrice(left, right, -1),
     name: (left, right) =>
       (left.dataset.productName || '').localeCompare(right.dataset.productName || '', 'uk'),
   };

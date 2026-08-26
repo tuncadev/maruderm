@@ -5,14 +5,6 @@ const initSlick = () => {
     return;
   }
 
-  $(".js-maruderm-home-slider").not(".slick-initialized").slick({
-    arrows: false,
-    dots: true,
-    autoplay: false,
-    infinite: true,
-    rtl: $("body").hasClass("rtl"),
-  });
-
   $(".mf-elementor-product-deals-carousel").each(function initDeals() {
     const $selector = $(this);
     const settings = $selector.data("settings") || {};

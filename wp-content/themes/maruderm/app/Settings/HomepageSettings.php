@@ -440,7 +440,17 @@ final class HomepageSettings implements Registrable
     {
         $id = absint($value);
 
-        return $id > 0 && get_post_type($id) === 'product' ? $id : 0;
+        if ($id < 1 || !function_exists('wc_get_product')) {
+            return 0;
+        }
+
+        $product = wc_get_product($id);
+
+        return $product instanceof \WC_Product
+            && $product->get_status() === 'publish'
+            && $product->is_in_stock()
+                ? $id
+                : 0;
     }
 
     private function sanitizeImageId(mixed $value): int

@@ -216,6 +216,7 @@
 }
 
 .product-summary__category {
+  display: block;
   color: var(--purple);
   font-size: 10px;
   font-weight: 600;
@@ -223,9 +224,26 @@
   text-transform: uppercase;
 }
 
+.product-summary__sku {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 9px;
+  color: var(--muted);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.product-summary__sku strong {
+  color: var(--ink);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
 .product-summary h1 {
   max-width: 620px;
-  margin: 15px 0 16px;
+  margin: 12px 0 16px;
   font-family: var(--display);
   font-size: clamp(36px, 3.6vw, 54px);
   font-weight: 600;
@@ -590,6 +608,109 @@
   margin-bottom: 45px;
 }
 
+.product-specifications {
+  border-bottom: 1px solid var(--line);
+  background: #fff;
+}
+
+.product-specifications__heading {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(360px, 0.7fr);
+  align-items: end;
+  gap: clamp(50px, 9vw, 130px);
+  margin-bottom: 42px;
+}
+
+.product-specifications__heading h2 {
+  margin: 14px 0 0;
+  font-family: var(--display);
+  font-size: clamp(38px, 4.2vw, 58px);
+  font-weight: 600;
+  letter-spacing: -0.05em;
+  line-height: 1.02;
+}
+
+.product-specifications__heading > p {
+  max-width: 560px;
+  margin: 0 0 4px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.product-specifications__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(480px, 0.95fr);
+  align-items: stretch;
+  gap: 16px;
+}
+
+.product-specifications__ingredients {
+  display: flex;
+  min-height: 410px;
+  flex-direction: column;
+  justify-content: space-between;
+  border: 1px solid rgba(91, 70, 120, 0.12);
+  border-radius: 28px;
+  padding: clamp(28px, 4vw, 48px);
+  background:
+    radial-gradient(circle at 92% 12%, rgba(255, 255, 255, 0.9) 0 12%, transparent 12.2%),
+    linear-gradient(145deg, #f0eaff, #f8f4ff 56%, #f1fbf5);
+}
+
+.product-specifications__ingredients > span,
+.product-specifications__facts dt {
+  color: #5d526a;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.product-specifications__ingredients > p {
+  max-width: 720px;
+  margin: auto 0;
+  padding: 42px 0;
+  font-family: var(--display);
+  font-size: clamp(20px, 2.1vw, 29px);
+  letter-spacing: -0.025em;
+  line-height: 1.42;
+}
+
+.product-specifications__ingredients > small {
+  max-width: 560px;
+  color: var(--muted);
+  font-size: 9px;
+  line-height: 1.6;
+}
+
+.product-specifications__facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0;
+}
+
+.product-specifications__facts > div {
+  display: flex;
+  min-height: 128px;
+  flex-direction: column;
+  justify-content: space-between;
+  border: 1px solid rgba(32, 32, 35, 0.08);
+  border-radius: 22px;
+  padding: 22px;
+  background: #fbfaf8;
+}
+
+.product-specifications__facts dd {
+  margin: 24px 0 0;
+  font-family: var(--display);
+  font-size: clamp(18px, 1.7vw, 23px);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+}
+
 .product-section-heading h2,
 .product-ingredients h2,
 .product-use h2 {
@@ -939,9 +1060,19 @@
 
 @media (max-width: 900px) {
   .product-detail__grid,
+  .product-specifications__heading,
+  .product-specifications__grid,
   .product-ingredients__grid,
   .product-use__grid {
     grid-template-columns: 1fr;
+  }
+
+  .product-specifications__heading {
+    gap: 22px;
+  }
+
+  .product-specifications__heading > p {
+    margin: 0;
   }
 
   .product-gallery__stage,
@@ -1037,6 +1168,24 @@
     font-size: clamp(34px, 10vw, 46px);
   }
 
+  .product-specifications__heading {
+    margin-bottom: 28px;
+  }
+
+  .product-specifications__heading h2 {
+    font-size: clamp(34px, 10vw, 46px);
+  }
+
+  .product-specifications__ingredients {
+    min-height: 360px;
+    border-radius: 24px;
+  }
+
+  .product-specifications__facts > div {
+    min-height: 118px;
+    padding: 18px;
+  }
+
   .product-buy {
     grid-template-columns: 112px 1fr;
   }
@@ -1114,5 +1263,9 @@
 
   .quantity-control {
     width: 126px;
+  }
+
+  .product-specifications__facts {
+    grid-template-columns: 1fr;
   }
 }

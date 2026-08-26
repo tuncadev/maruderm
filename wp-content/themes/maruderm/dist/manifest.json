@@ -52,7 +52,7 @@
     ]
   },
   "assets/catalog/index.js": {
-    "file": "assets/catalog-DWCuT9JS.js",
+    "file": "assets/catalog-84E9nv7g.js",
     "name": "catalog",
     "src": "assets/catalog/index.js",
     "isEntry": true,
@@ -107,12 +107,12 @@
     ]
   },
   "assets/frontend/index.js": {
-    "file": "assets/frontend-BQ4_qGBN.js",
+    "file": "assets/frontend-S9pStMG6.js",
     "name": "frontend",
     "src": "assets/frontend/index.js",
     "isEntry": true,
     "css": [
-      "assets/frontend-Br15v-zn.css"
+      "assets/frontend-DyIwsoyR.css"
     ]
   },
   "assets/globals/index.js": {
@@ -140,12 +140,12 @@
     ]
   },
   "assets/home/index.js": {
-    "file": "assets/home-i34OEn5g.js",
+    "file": "assets/home-DBx2fwWq.js",
     "name": "home",
     "src": "assets/home/index.js",
     "isEntry": true,
     "css": [
-      "assets/home-DeHvzTdX.css",
+      "assets/home-CPM9hWcl.css",
       "assets/catalog-integration-DSZAziGK.css",
       "assets/product-card-ChpXSw1m.css",
       "assets/storefront-foundation-BSY9g9DU.css"
@@ -184,12 +184,12 @@
     ]
   },
   "assets/product/index.js": {
-    "file": "assets/product-BftsVPaK.js",
+    "file": "assets/product-UDkGSvgb.js",
     "name": "product",
     "src": "assets/product/index.js",
     "isEntry": true,
     "css": [
-      "assets/product-D8tMzi--.css",
+      "assets/product-CUifnxjy.css",
       "assets/product-card-ChpXSw1m.css",
       "assets/storefront-foundation-BSY9g9DU.css"
     ]

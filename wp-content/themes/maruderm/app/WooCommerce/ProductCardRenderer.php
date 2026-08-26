@@ -41,10 +41,11 @@ final class ProductCardRenderer
             'product_type_' . $product->get_type(),
             $product->supports('ajax_add_to_cart') ? 'add_to_cart_button ajax_add_to_cart' : '',
         ]));
+        $filter_price = $product->is_in_stock() ? (string) (float) $product->get_price() : '';
 
         ob_start();
         ?>
-        <article class="product-card<?= $product->is_in_stock() ? '' : ' is-out-of-stock'; ?>" data-product-id="<?= esc_attr((string) $product->get_id()); ?>" data-product-name="<?= esc_attr(wp_strip_all_tags($product->get_name())); ?>" data-category="<?= esc_attr(implode(' ', $category_slugs)); ?>" data-skin-types="<?= esc_attr(implode(' ', $this->repository->termSlugs($product, 'pa_skin_type'))); ?>" data-concerns="<?= esc_attr(implode(' ', $this->repository->termSlugs($product, 'pa_skin_problem'))); ?>" data-hair-needs="<?= esc_attr(implode(' ', $this->repository->termSlugs($product, 'pa_hair_need'))); ?>" data-price="<?= esc_attr((string) (float) $product->get_price()); ?>" data-popularity="<?= esc_attr((string) $product->get_total_sales()); ?>" data-created="<?= esc_attr((string) $created_timestamp); ?>" data-in-stock="<?= $product->is_in_stock() ? 'yes' : 'no'; ?>">
+        <article class="product-card<?= $product->is_in_stock() ? '' : ' is-out-of-stock'; ?>" data-product-id="<?= esc_attr((string) $product->get_id()); ?>" data-product-name="<?= esc_attr(wp_strip_all_tags($product->get_name())); ?>" data-category="<?= esc_attr(implode(' ', $category_slugs)); ?>" data-skin-types="<?= esc_attr(implode(' ', $this->repository->termSlugs($product, 'pa_skin_type'))); ?>" data-concerns="<?= esc_attr(implode(' ', $this->repository->termSlugs($product, 'pa_skin_problem'))); ?>" data-hair-needs="<?= esc_attr(implode(' ', $this->repository->termSlugs($product, 'pa_hair_need'))); ?>" data-price="<?= esc_attr($filter_price); ?>" data-popularity="<?= esc_attr((string) $product->get_total_sales()); ?>" data-created="<?= esc_attr((string) $created_timestamp); ?>" data-in-stock="<?= $product->is_in_stock() ? 'yes' : 'no'; ?>">
             <a class="product-card__image" href="<?= esc_url($product->get_permalink()); ?>">
                 <?= wp_kses_post($product->get_image('woocommerce_thumbnail', ['loading' => 'lazy'])); ?>
                 <?php if ($badge !== null) : ?>

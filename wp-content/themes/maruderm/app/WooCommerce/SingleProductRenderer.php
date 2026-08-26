@@ -39,6 +39,7 @@ final class SingleProductRenderer
         $badge = $this->badges->resolve($product);
         $rating = (float) $product->get_average_rating();
         $review_count = $product->get_review_count();
+        $sku = trim($product->get_sku());
 
         echo '<main class="maruderm-product-page maruderm-catalog" data-product-page data-product-id="' . esc_attr((string) $product->get_id()) . '">';
         woocommerce_output_all_notices();
@@ -58,11 +59,12 @@ final class SingleProductRenderer
                             <button class="product-gallery__wishlist" type="button" aria-label="Додати товар в обране" data-product-wishlist><?= $this->heartIcon(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></button>
                             <span class="product-gallery__orbit product-gallery__orbit--one"></span><span class="product-gallery__orbit product-gallery__orbit--two"></span>
                             <span class="product-gallery__main-image" role="img" aria-label="<?= esc_attr($product->get_name()); ?>" data-gallery-main style="background-image:url('<?= esc_url((string) wp_get_attachment_image_url($main_image, 'woocommerce_single')); ?>')"></span>
-                            <span class="product-gallery__note">skin ritual</span>
+                            <span class="product-gallery__note">ритуал догляду</span>
                         </div>
                     </div>
                     <div class="product-summary">
                         <a class="product-summary__category" href="<?= esc_url($category_url); ?>"><?= esc_html($category_name); ?></a>
+                        <?php if ($sku !== '') : ?><span class="product-summary__sku"><span>Артикул</span> <strong data-product-sku><?= esc_html($sku); ?></strong></span><?php endif; ?>
                         <h1><?= esc_html($product->get_name()); ?></h1>
                         <div class="product-summary__rating"><span class="product-summary__stars" aria-label="<?= esc_attr(number_format($rating, 1) . ' з 5 зірок'); ?>"><?= esc_html($this->stars($rating)); ?></span><a href="#product-reviews"><?= esc_html($review_count > 0 ? number_format($rating, 1) . ' · ' . $review_count . ' відгуків' : 'Ще немає відгуків'); ?></a></div>
                         <p class="product-summary__lead"><?= esc_html($this->content->lead($product)); ?></p>
@@ -77,6 +79,7 @@ final class SingleProductRenderer
             </div>
         </section>
         <?php
+        $this->renderSpecifications($product);
         $this->renderBenefits($product);
         $this->renderIngredients($product);
         $this->renderRoutine($product);
@@ -116,6 +119,33 @@ final class SingleProductRenderer
         echo '</div>';
     }
 
+    private function renderSpecifications(\WC_Product $product): void
+    {
+        ?>
+        <section class="section product-specifications" id="product-specifications" data-product-specifications aria-labelledby="product-specifications-title">
+            <div class="shell">
+                <header class="product-specifications__heading">
+                    <div><span class="kicker">Деталі продукту</span><h2 id="product-specifications-title">Усе важливе —<br>на етикетці.</h2></div>
+                    <p>Повний склад, формат паковання та технічні характеристики, які допомагають зробити усвідомлений вибір.</p>
+                </header>
+                <div class="product-specifications__grid">
+                    <article class="product-specifications__ingredients">
+                        <span>Повний склад</span>
+                        <p data-product-ingredients><?= esc_html($this->content->fullIngredients($product)); ?></p>
+                        <small>Перед використанням перевіряйте актуальний перелік інгредієнтів на пакованні продукту.</small>
+                    </article>
+                    <dl class="product-specifications__facts">
+                        <div><dt>Вага нетто</dt><dd data-product-net-weight><?= esc_html($this->content->netWeight($product)); ?></dd></div>
+                        <div><dt>Розмір коробки</dt><dd data-product-box-dimensions><?= esc_html($this->content->boxDimensions($product)); ?></dd></div>
+                        <div><dt>Країна виробництва</dt><dd data-product-origin><?= esc_html($this->content->origin($product)); ?></dd></div>
+                        <div><dt>Термін придатності</dt><dd data-product-shelf-life><?= esc_html($this->content->shelfLife($product)); ?></dd></div>
+                    </dl>
+                </div>
+            </div>
+        </section>
+        <?php
+    }
+
     private function renderAccordions(\WC_Product $product): void
     {
         $description = $product->get_description() !== '' ? $product->get_description() : $this->content->lead($product);
@@ -144,7 +174,7 @@ final class SingleProductRenderer
 
     private function renderIngredients(\WC_Product $product): void
     {
-        echo '<section class="section product-ingredients"><div class="shell product-ingredients__grid"><div class="ingredient-visual" aria-hidden="true"><span class="ingredient-visual__circle ingredient-visual__circle--large"></span><span class="ingredient-visual__circle ingredient-visual__circle--small"></span><div class="ingredient-visual__formula"><small>active blend</small><strong>' . wp_kses($this->content->formula($product), ['br' => []]) . '</strong><span>focused care</span></div><span class="ingredient-visual__label ingredient-visual__label--one">active care</span><span class="ingredient-visual__label ingredient-visual__label--two">daily ritual</span></div><div class="product-ingredients__copy"><span class="kicker">Всередині формули</span><h2>Активи працюють.<br>Ритуал залишається легким.</h2><p>Ключові компоненти поєднані так, щоб доповнювати регулярний домашній догляд.</p><dl>';
+        echo '<section class="section product-ingredients"><div class="shell product-ingredients__grid"><div class="ingredient-visual" aria-hidden="true"><span class="ingredient-visual__circle ingredient-visual__circle--large"></span><span class="ingredient-visual__circle ingredient-visual__circle--small"></span><div class="ingredient-visual__formula"><small>активний комплекс</small><strong>' . wp_kses($this->content->formula($product), ['br' => []]) . '</strong><span>цільовий догляд</span></div><span class="ingredient-visual__label ingredient-visual__label--one">активний догляд</span><span class="ingredient-visual__label ingredient-visual__label--two">щоденний ритуал</span></div><div class="product-ingredients__copy"><span class="kicker">Всередині формули</span><h2>Активи працюють.<br>Ритуал залишається легким.</h2><p>Ключові компоненти поєднані так, щоб доповнювати регулярний домашній догляд.</p><dl>';
         foreach ($this->content->ingredients($product) as $ingredient) {
             echo '<div><dt>' . esc_html($ingredient['title']) . '</dt><dd>' . esc_html($ingredient['text']) . '</dd></div>';
         }

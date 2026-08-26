@@ -12,7 +12,7 @@
     {
       "source": "assets/styles/components/product.css",
       "target": "product.css",
-      "sha256": "570670f529b4087eef2bbdb3d29936a301b98f0faffcf74d58824aceaf72a194"
+      "sha256": "07011408e1c86c35ec538a4b5e0c458bf71f50a17cd3ac2e356fc8f73d4193a6"
     },
     {
       "source": "assets/styles/components/product-card.css",
@@ -52,7 +52,7 @@
     {
       "source": "assets/styles/components/home.css",
       "target": "home.css",
-      "sha256": "f136a65fb745d0513834e0e3d7d4b4a23a3c5d11ba25b309d8ffc2d5d3fbb06d"
+      "sha256": "8e5bceb6f38544fc34d8cd867084b430189371f59a618395530e7b1566c207f1"
     },
     {
       "source": "assets/styles/components/login.css",

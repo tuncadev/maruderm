@@ -98,11 +98,14 @@ final class LandingPageCatalog
         ));
     }
 
-    public function heroProduct(int $productId = 0): ?\WC_Product
+    /** @param int[] $exclude */
+    public function heroProduct(int $productId = 0, ?\WP_Term $category = null, array $exclude = []): ?\WC_Product
     {
         if (!function_exists('wc_get_products')) {
             return null;
         }
+
+        $exclude = array_values(array_unique(array_filter(array_map('absint', $exclude))));
 
         if ($productId > 0) {
             $selected = wc_get_product($productId);
@@ -111,23 +114,66 @@ final class LandingPageCatalog
                 $selected instanceof \WC_Product
                 && $selected->get_status() === 'publish'
                 && $selected->is_in_stock()
+                && !in_array($selected->get_id(), $exclude, true)
+                && ($category === null || $this->productBelongsToCategory($selected, $category))
             ) {
                 return $selected;
             }
         }
 
-        $products = wc_get_products([
+        $args = [
             'status' => 'publish',
             'stock_status' => 'instock',
             'limit' => 1,
             'orderby' => 'date',
             'order' => 'DESC',
             'return' => 'objects',
-        ]);
+            'exclude' => $exclude,
+        ];
+
+        if ($category instanceof \WP_Term) {
+            $args['category'] = [$category->slug];
+        }
+
+        $products = wc_get_products($args);
 
         return isset($products[0]) && $products[0] instanceof \WC_Product
             ? $products[0]
             : null;
+    }
+
+    public function categoryBySlug(string $slug): ?\WP_Term
+    {
+        $category = get_term_by('slug', sanitize_title($slug), 'product_cat');
+
+        return $category instanceof \WP_Term ? $category : null;
+    }
+
+    public function topLevelCategoryForProduct(int $productId): ?\WP_Term
+    {
+        $product = wc_get_product($productId);
+
+        if (
+            !$product instanceof \WC_Product
+            || $product->get_status() !== 'publish'
+            || !$product->is_in_stock()
+        ) {
+            return null;
+        }
+
+        $categories = wp_get_post_terms($productId, 'product_cat');
+
+        if (is_wp_error($categories)) {
+            return null;
+        }
+
+        foreach ($categories as $category) {
+            if ($category instanceof \WP_Term && $category->parent === 0) {
+                return $category;
+            }
+        }
+
+        return null;
     }
 
     public function categoryImage(\WP_Term $category, string $size = 'medium_large', int $overrideId = 0): string
@@ -169,5 +215,26 @@ final class LandingPageCatalog
         $this->inStockCategoryCounts[$category->term_id] = $count;
 
         return $count;
+    }
+
+    private function productBelongsToCategory(\WC_Product $product, \WP_Term $category): bool
+    {
+        $categoryIds = wp_get_post_terms($product->get_id(), 'product_cat', ['fields' => 'ids']);
+
+        if (is_wp_error($categoryIds)) {
+            return false;
+        }
+
+        foreach ($categoryIds as $categoryId) {
+            if ((int) $categoryId === $category->term_id) {
+                return true;
+            }
+
+            if (in_array($category->term_id, get_ancestors((int) $categoryId, 'product_cat', 'taxonomy'), true)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

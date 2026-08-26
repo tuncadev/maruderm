@@ -34,6 +34,63 @@ final class SingleProductContent
         return $lead !== '' ? $lead : trim(wp_strip_all_tags($product->get_description()));
     }
 
+    public function fullIngredients(\WC_Product $product): string
+    {
+        return $this->productDetail(
+            $product,
+            ['pa_inci', 'inci', 'ingredients', 'повний склад', 'склад'],
+            ['_maruderm_inci', 'maruderm_inci', '_product_inci', 'product_inci', 'inci', 'ingredients']
+        ) ?? 'Актуальний склад зазначено на пакованні продукту.';
+    }
+
+    public function netWeight(\WC_Product $product): string
+    {
+        $weight = $product->get_weight();
+
+        if ($weight === '') {
+            return 'Не вказано';
+        }
+
+        $grams = wc_get_weight((float) $weight, 'g', get_option('woocommerce_weight_unit', 'kg'));
+
+        return $this->formatMeasurement($grams) . ' г';
+    }
+
+    public function boxDimensions(\WC_Product $product): string
+    {
+        $dimensions = [$product->get_length(), $product->get_width(), $product->get_height()];
+
+        if (in_array('', $dimensions, true)) {
+            return 'Не вказано';
+        }
+
+        $unit = get_option('woocommerce_dimension_unit', 'cm');
+        $centimeters = array_map(
+            fn (string $dimension): string => $this->formatMeasurement(wc_get_dimension((float) $dimension, 'cm', $unit)),
+            $dimensions
+        );
+
+        return implode(' × ', $centimeters) . ' см';
+    }
+
+    public function origin(\WC_Product $product): string
+    {
+        return $this->productDetail(
+            $product,
+            ['pa_country_of_origin', 'country_of_origin', 'країна виробництва'],
+            ['_maruderm_origin', 'maruderm_origin', '_country_of_origin', 'country_of_origin']
+        ) ?? 'Не вказано';
+    }
+
+    public function shelfLife(\WC_Product $product): string
+    {
+        return $this->productDetail(
+            $product,
+            ['pa_shelf_life', 'shelf_life', 'термін придатності'],
+            ['_maruderm_shelf_life', 'maruderm_shelf_life', '_shelf_life', 'shelf_life']
+        ) ?? 'Зазначено на пакованні';
+    }
+
     /** @return string[] */
     public function highlights(\WC_Product $product): array
     {
@@ -106,10 +163,10 @@ final class SingleProductContent
         $text = mb_strtolower($this->lead($product));
 
         if (str_contains($text, 'кофеїн') && str_contains($text, 'біотин')) {
-            return 'CAFFEINE<br>+ BIOTIN';
+            return 'КОФЕЇН<br>+ БІОТИН';
         }
 
-        return 'ACTIVE<br>BLEND';
+        return 'АКТИВНИЙ<br>КОМПЛЕКС';
     }
 
     /** @return array<int, array{title: string, text: string}> */
@@ -168,5 +225,34 @@ final class SingleProductContent
             [$product->get_image_id()],
             $product->get_gallery_image_ids()
         ))));
+    }
+
+    /** @param string[] $attributeNames @param string[] $metaKeys */
+    private function productDetail(\WC_Product $product, array $attributeNames, array $metaKeys): ?string
+    {
+        foreach ($attributeNames as $attributeName) {
+            $value = trim(wp_strip_all_tags($product->get_attribute($attributeName)));
+
+            if ($value !== '') {
+                return $value;
+            }
+        }
+
+        foreach ($metaKeys as $metaKey) {
+            $value = trim(wp_strip_all_tags((string) $product->get_meta($metaKey, true)));
+
+            if ($value !== '') {
+                return $value;
+            }
+        }
+
+        return null;
+    }
+
+    private function formatMeasurement(float $value): string
+    {
+        $decimals = abs($value - round($value)) < 0.001 ? 0 : 1;
+
+        return number_format_i18n($value, $decimals);
     }
 }

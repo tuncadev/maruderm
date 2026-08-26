@@ -20,17 +20,20 @@ final class HomepageRenderer
     private LandingPageContent $content;
     private HomepageSettings $settings;
     private ProductCardRenderer $productCards;
+    private HomepageHeroRenderer $hero;
 
     public function __construct(
         ?LandingPageCatalog $catalog = null,
         ?LandingPageContent $content = null,
         ?HomepageSettings $settings = null,
-        ?ProductCardRenderer $productCards = null
+        ?ProductCardRenderer $productCards = null,
+        ?HomepageHeroRenderer $hero = null
     ) {
         $this->catalog = $catalog ?? new LandingPageCatalog();
         $this->content = $content ?? new LandingPageContent();
         $this->settings = $settings ?? new HomepageSettings();
         $this->productCards = $productCards ?? new ProductCardRenderer();
+        $this->hero = $hero ?? new HomepageHeroRenderer($this->catalog);
     }
 
     public function render(): void
@@ -58,58 +61,13 @@ final class HomepageRenderer
             : $this->catalog->categories(2, $editorialIds);
 
         echo '<main id="main-content">';
-        $this->renderHero($categories, $settings['hero']);
+        $this->hero->render($categories, $settings['hero']);
         $this->renderCategories($categories, $settings['categories']);
         $this->renderProducts($products, $settings['new_products']);
         $this->renderEditorial($editorialCategories, $settings['editorial']);
         $this->renderRoutine($settings['routine']);
         $this->renderClosing($settings['closing']);
         echo '</main>';
-    }
-
-    /** @param \WP_Term[] $categories */
-    private function renderHero(array $categories, array $settings): void
-    {
-        $copy = $this->content->hero();
-        $product = $this->catalog->heroProduct((int) ($settings['product_id'] ?? 0));
-        $primaryCategories = (int) ($settings['primary_category_id'] ?? 0) > 0
-            ? $this->catalog->categories(1, [(int) $settings['primary_category_id']])
-            : [];
-        $primaryCategory = $primaryCategories[0] ?? ($categories[0] ?? null);
-        $catalogUrl = function_exists('wc_get_page_permalink') ? wc_get_page_permalink('shop') : home_url('/catalog/');
-        $primaryUrl = $primaryCategory instanceof \WP_Term
-            ? $this->catalog->categoryUrl($primaryCategory)
-            : $catalogUrl;
-        $publishedProducts = (int) (wp_count_posts('product')->publish ?? 0);
-
-        echo '<section class="home-hero"><div class="shell home-hero__grid"><div class="home-hero__copy">';
-        echo '<span class="kicker">' . esc_html((string) ($settings['eyebrow'] ?? $copy['eyebrow'])) . '</span>';
-        echo '<h1>' . wp_kses((string) ($settings['heading'] ?? $copy['title']), ['em' => [], 'br' => []]) . '</h1>';
-        echo '<p>' . esc_html((string) ($settings['description'] ?? $copy['description'])) . '</p>';
-        echo '<div class="home-hero__actions"><a class="button button--dark" href="' . esc_url($primaryUrl) . '">';
-        echo esc_html($copy['primary_label']) . $this->arrowIcon() . '</a>';
-        echo '<a class="text-link" href="#new-products">' . esc_html($copy['secondary_label']) . '</a></div>';
-        echo '<div class="home-hero__proof"><span><strong>' . esc_html((string) $publishedProducts) . '+</strong> засобів</span>';
-        echo '<span><strong>' . esc_html((string) count($categories)) . '</strong> категорій догляду</span></div></div>';
-        echo '<div class="home-hero__visual"><span class="home-hero__orbit home-hero__orbit--one"></span>';
-        echo '<span class="home-hero__orbit home-hero__orbit--two"></span>';
-
-        if ($product instanceof \WC_Product) {
-            echo wp_kses_post($product->get_image('woocommerce_single', [
-                'loading' => 'eager',
-                'fetchpriority' => 'high',
-            ]));
-        }
-
-        echo '<span class="home-hero__note home-hero__note--top">skin first</span>';
-        echo '<span class="home-hero__note home-hero__note--bottom">made for real life</span>';
-
-        if ($product instanceof \WC_Product) {
-            echo '<div class="home-hero__product-label"><small>Новинка</small><strong>'
-                . esc_html($product->get_name()) . '</strong></div>';
-        }
-
-        echo '</div></div></section>';
     }
 
     /** @param \WP_Term[] $categories */
