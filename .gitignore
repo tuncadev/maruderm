@@ -43,5 +43,3 @@ Thumbs.db
 ehthumbs.db
 Desktop.ini
 .phpcs.cache
-/.agents/skills/sync-maruderm-production-db/scripts/sync-production-db.sh
-/.agents/skills/sync-maruderm-production-db/SKILL.md
