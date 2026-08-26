@@ -21,6 +21,8 @@
 .agents/skills/*
 !.agents/skills/implement-maruderm-html-reference/
 !.agents/skills/implement-maruderm-html-reference/**
+!.agents/skills/sync-maruderm-production-db/
+!.agents/skills/sync-maruderm-production-db/**
 
 *~
 
@@ -41,3 +43,5 @@ Thumbs.db
 ehthumbs.db
 Desktop.ini
 .phpcs.cache
+/.agents/skills/sync-maruderm-production-db/scripts/sync-production-db.sh
+/.agents/skills/sync-maruderm-production-db/SKILL.md
