@@ -35,12 +35,19 @@
       "kind": "component",
       "reference": {
         "markup": ["components/product-grid.html"],
-        "javascript": ["assets/js/components/product-card.js"]
+        "javascript": [
+          "assets/data/product-card-promotions.js",
+          "assets/js/components/product-card.js"
+        ]
       },
       "wordpress": {
         "status": "implemented",
         "entries": ["assets/account/index.js", "assets/catalog/index.js", "assets/home/index.js", "assets/product/index.js"],
-        "renderers": ["app/WooCommerce/ProductCardRenderer.php"],
+        "renderers": [
+          "app/WooCommerce/ProductGoodFor.php",
+          "app/WooCommerce/ProductCardPromotion.php",
+          "app/WooCommerce/ProductCardRenderer.php"
+        ],
         "routes": ["/catalog/ and product-category routes", "single products"]
       }
     },

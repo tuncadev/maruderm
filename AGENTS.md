@@ -26,6 +26,11 @@ Load the global rules from `/home/pardus/.codex/AGENTS.md` first. These rules ar
 
 - For `/catalog/`, product-category routes, filters, product cards, badges, or catalog visibility, also use `.agents/skills/maintain-maruderm-catalog/SKILL.md` and run its validator.
 
+## Image Optimization
+
+- For product or other project raster-image resizing, format conversion, or metadata reduction, use `.agents/skills/optimize-project-images/SKILL.md`.
+- Run its dry-run mode before mutating a real image folder. Runtime backups and manifests belong under `arch/backups/` and must not be deleted automatically.
+
 ## Daily Production Database Sync
 
 - Before the first substantive Maruderm task on each Europe/Kyiv calendar day, use `.agents/skills/sync-maruderm-production-db/SKILL.md` and run its default daily sync command.

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Maruderm\Auth;
 
+use Maruderm\WooCommerce\ProductImageRepository;
+
 if (!defined('ABSPATH')) {
     exit();
 }
@@ -11,6 +13,13 @@ if (!defined('ABSPATH')) {
 /** Adapts the canonical login experience to WooCommerce authentication handlers. */
 final class LoginRenderer
 {
+    private ProductImageRepository $images;
+
+    public function __construct(?ProductImageRepository $images = null)
+    {
+        $this->images = $images ?? new ProductImageRepository();
+    }
+
     public function render(): void
     {
         $mode = $this->requestedMode();
@@ -249,10 +258,9 @@ final class LoginRenderer
 
         foreach ([6062, 6007] as $productId) {
             $product = function_exists('wc_get_product') ? wc_get_product($productId) : false;
-            $image = $product instanceof \WC_Product
-                ? wp_get_attachment_image_url($product->get_image_id(), 'woocommerce_single')
-                : false;
-            $images[] = is_string($image) ? $image : (function_exists('wc_placeholder_img_src') ? wc_placeholder_img_src() : '');
+            $images[] = $product instanceof \WC_Product
+                ? $this->images->primaryUrl($product)
+                : (function_exists('wc_placeholder_img_src') ? wc_placeholder_img_src() : '');
         }
 
         return $images;

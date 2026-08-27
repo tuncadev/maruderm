@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Maruderm\HairAnalysis;
 
+use Maruderm\WooCommerce\ProductImageRepository;
+
 if (!defined('ABSPATH')) {
     exit();
 }
@@ -11,6 +13,13 @@ if (!defined('ABSPATH')) {
 /** Supplies live product imagery to the canonical hair diagnostic template. */
 final class HairAnalysisRenderer
 {
+    private ProductImageRepository $images;
+
+    public function __construct(?ProductImageRepository $images = null)
+    {
+        $this->images = $images ?? new ProductImageRepository();
+    }
+
     public function render(): void
     {
         $heroImages = [
@@ -29,11 +38,7 @@ final class HairAnalysisRenderer
         $product = function_exists('wc_get_product') ? wc_get_product($productId) : false;
 
         if ($product instanceof \WC_Product) {
-            $image = wp_get_attachment_image_url($product->get_image_id(), 'woocommerce_single');
-
-            if (is_string($image)) {
-                return $image;
-            }
+            return $this->images->primaryUrl($product);
         }
 
         return function_exists('wc_placeholder_img_src') ? wc_placeholder_img_src() : '';

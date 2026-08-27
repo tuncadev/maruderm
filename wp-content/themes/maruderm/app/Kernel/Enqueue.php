@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Maruderm\Kernel;
 
+use Maruderm\WooCommerce\ProductImageRepository;
+
 if (!defined('ABSPATH')) {
     exit();
 }
@@ -41,8 +43,14 @@ final class Enqueue implements Registrable
     private ?array $critical_font_urls = null;
     private ?string $dev_server_url = null;
     private bool $dev_server_url_resolved = false;
+    private ProductImageRepository $product_images;
     /** @var array<string, true> */
     private array $module_script_handles = [];
+
+    public function __construct(?ProductImageRepository $product_images = null)
+    {
+        $this->product_images = $product_images ?? new ProductImageRepository();
+    }
 
     public function register(): void
     {
@@ -268,7 +276,7 @@ final class Enqueue implements Registrable
                 'id' => $productId,
                 'name' => $product->get_name(),
                 'price' => (int) round((float) $product->get_price()),
-                'image' => wp_get_attachment_image_url($product->get_image_id(), 'woocommerce_thumbnail') ?: wc_placeholder_img_src(),
+                'image' => $this->product_images->primaryUrl($product, 'woocommerce_thumbnail'),
                 'url' => $product->get_permalink(),
                 'categoryLabel' => !is_wp_error($categoryNames) && $categoryNames !== [] ? $categoryNames[0] : 'Догляд за волоссям',
                 'subcategory' => $subcategory,

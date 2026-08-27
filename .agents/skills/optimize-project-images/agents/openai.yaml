@@ -1,0 +1,4 @@
+interface:
+  display_name: "Optimize Project Images"
+  short_description: "Back up and optimize image folders safely"
+  default_prompt: "Use $optimize-project-images to safely back up and optimize an image folder."

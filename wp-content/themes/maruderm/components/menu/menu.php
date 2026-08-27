@@ -24,6 +24,7 @@ if (is_wp_error($categoryTerms) || $categoryTerms === []) {
 $categoryTerms = array_values($categoryTerms);
 $shopUrl = function_exists('wc_get_page_permalink') ? wc_get_page_permalink('shop') : home_url('/shop/');
 $menuTones = ['coral', 'yellow', 'mint', 'lilac', 'blue'];
+$productImages = new \Maruderm\WooCommerce\ProductImageRepository();
 ?>
 <div class="maruderm-menu" data-maruderm-menu>
     <button class="maruderm-menu__toggle" type="button" aria-label="Відкрити меню" aria-expanded="false" data-maruderm-menu-toggle>
@@ -69,6 +70,7 @@ $menuTones = ['coral', 'yellow', 'mint', 'lilac', 'blue'];
                 $imageId = $customImageId > 0
                     ? $customImageId
                     : (int) get_term_meta($categoryTerm->term_id, 'thumbnail_id', true);
+                $productImageUrl = '';
 
                 if ($imageId === 0 && class_exists('WC_Product_Query')) {
                     $productQuery = new WC_Product_Query([
@@ -80,11 +82,11 @@ $menuTones = ['coral', 'yellow', 'mint', 'lilac', 'blue'];
                     ]);
                     $featuredProducts = $productQuery->get_products();
                     if ($featuredProducts !== []) {
-                        $imageId = (int) $featuredProducts[0]->get_image_id();
+                        $productImageUrl = $productImages->primaryUrl($featuredProducts[0], 'medium');
                     }
                 }
 
-                $imageUrl = $imageId > 0 ? wp_get_attachment_image_url($imageId, 'medium') : '';
+                $imageUrl = $imageId > 0 ? wp_get_attachment_image_url($imageId, 'medium') : $productImageUrl;
                 $dropdownId = 'maruderm-menu-dropdown-' . (int) $categoryTerm->term_id;
                 ?>
                 <div class="maruderm-menu__item" data-maruderm-menu-item>

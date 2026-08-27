@@ -224,15 +224,6 @@ final class SingleProductContent
         return array_values(array_filter($products, static fn ($item): bool => $item instanceof \WC_Product && $item->is_visible()));
     }
 
-    /** @return int[] */
-    public function imageIds(\WC_Product $product): array
-    {
-        return array_values(array_unique(array_filter(array_merge(
-            [$product->get_image_id()],
-            $product->get_gallery_image_ids()
-        ))));
-    }
-
     /** @param string[] $attributeNames @param string[] $metaKeys */
     private function productDetail(\WC_Product $product, array $attributeNames, array $metaKeys): ?string
     {

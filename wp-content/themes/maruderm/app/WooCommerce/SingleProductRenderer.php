@@ -15,17 +15,20 @@ final class SingleProductRenderer
     private ProductBadges $badges;
     private StockNotificationRenderer $stock_notifications;
     private ProductCardRenderer $product_cards;
+    private ProductImageRepository $images;
 
     public function __construct(
         ?SingleProductContent $content = null,
         ?ProductBadges $badges = null,
         ?StockNotificationRenderer $stock_notifications = null,
-        ?ProductCardRenderer $product_cards = null
+        ?ProductCardRenderer $product_cards = null,
+        ?ProductImageRepository $images = null
     ) {
         $this->content = $content ?? new SingleProductContent();
         $this->badges = $badges ?? new ProductBadges();
         $this->stock_notifications = $stock_notifications ?? new StockNotificationRenderer();
         $this->product_cards = $product_cards ?? new ProductCardRenderer();
+        $this->images = $images ?? new ProductImageRepository();
     }
 
     public function render(\WC_Product $product): void
@@ -34,8 +37,8 @@ final class SingleProductRenderer
         $category_name = $category?->name ?? 'Maruderm';
         $category_url = $category instanceof \WP_Term ? get_term_link($category) : wc_get_page_permalink('shop');
         $category_url = is_wp_error($category_url) ? wc_get_page_permalink('shop') : $category_url;
-        $images = $this->content->imageIds($product);
-        $main_image = $images[0] ?? 0;
+        $images = $this->images->images($product);
+        $main_image = $images[0] ?? null;
         $badge = $this->badges->resolve($product);
         $rating = (float) $product->get_average_rating();
         $review_count = $product->get_review_count();
@@ -50,15 +53,17 @@ final class SingleProductRenderer
                 <div class="product-detail__grid">
                     <div class="product-gallery" data-product-gallery>
                         <div class="product-gallery__thumbs" aria-label="Зображення товару">
-                            <?php foreach ($this->gallerySlots($images) as $index => $image_id) : ?>
-                                <button class="product-gallery__thumb<?= $index === 0 ? ' is-active' : ''; ?><?= $index === 1 ? ' product-gallery__thumb--lilac' : ''; ?><?= $index === 2 ? ' product-gallery__thumb--detail' : ''; ?>" type="button" data-gallery-image="<?= esc_attr((string) $image_id); ?>" data-gallery-src="<?= esc_url((string) wp_get_attachment_image_url($image_id, 'woocommerce_single')); ?>" data-gallery-srcset="<?= esc_attr((string) wp_get_attachment_image_srcset($image_id, 'woocommerce_single')); ?>" data-gallery-view="<?= esc_attr(['clean', 'lilac', 'detail'][$index]); ?>" aria-label="Зображення товару <?= esc_attr((string) ($index + 1)); ?>"><?= wp_get_attachment_image($image_id, 'woocommerce_thumbnail', false, ['alt' => $product->get_name(), 'loading' => 'lazy']); ?></button>
+                            <?php foreach ($this->gallerySlots($images) as $index => $image) :
+                                $view = ['clean', 'lilac', 'detail'][$index % 3];
+                                ?>
+                                <button class="product-gallery__thumb<?= $index === 0 ? ' is-active' : ''; ?><?= $view === 'lilac' ? ' product-gallery__thumb--lilac' : ''; ?><?= $view === 'detail' ? ' product-gallery__thumb--detail' : ''; ?>" type="button" data-gallery-image="<?= esc_attr((string) $image['key']); ?>" data-gallery-src="<?= esc_url((string) $image['url']); ?>" data-gallery-srcset="<?= esc_attr((string) $image['srcset']); ?>" data-gallery-view="<?= esc_attr($view); ?>" aria-label="Зображення товару <?= esc_attr((string) ($index + 1)); ?>"><?= $this->galleryThumbnail($image, $product); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></button>
                             <?php endforeach; ?>
                         </div>
                         <div class="product-gallery__stage" data-gallery-stage data-view="clean">
                             <?php if ($badge !== null) : ?><span class="product-gallery__badge product-gallery__badge--<?= esc_attr($badge['tone']); ?> maruderm-product-badge maruderm-product-badge--<?= esc_attr($badge['tone']); ?>"><?= esc_html($badge['label']); ?></span><?php endif; ?>
                             <button class="product-gallery__wishlist" type="button" aria-label="Додати товар в обране" data-product-wishlist><?= $this->heartIcon(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></button>
                             <span class="product-gallery__orbit product-gallery__orbit--one"></span><span class="product-gallery__orbit product-gallery__orbit--two"></span>
-                            <span class="product-gallery__main-image" role="img" aria-label="<?= esc_attr($product->get_name()); ?>" data-gallery-main style="background-image:url('<?= esc_url((string) wp_get_attachment_image_url($main_image, 'woocommerce_single')); ?>')"></span>
+                            <span class="product-gallery__main-image" role="img" aria-label="<?= esc_attr($product->get_name()); ?>" data-gallery-main style="background-image:url('<?= esc_url((string) ($main_image['url'] ?? '')); ?>')"></span>
                             <span class="product-gallery__note">ритуал догляду</span>
                         </div>
                     </div>
@@ -88,7 +93,10 @@ final class SingleProductRenderer
         echo '</main>';
     }
 
-    /** @param int[] $images @return int[] */
+    /**
+     * @param array<int, array<string, int|string|bool>> $images
+     * @return array<int, array<string, int|string|bool>>
+     */
     private function gallerySlots(array $images): array
     {
         if ($images === []) {
@@ -99,7 +107,22 @@ final class SingleProductRenderer
             $images[] = $images[0];
         }
 
-        return array_slice($images, 0, 3);
+        return $images;
+    }
+
+    /** @param array<string, int|string|bool> $image */
+    private function galleryThumbnail(array $image, \WC_Product $product): string
+    {
+        $attachmentId = (int) $image['attachment_id'];
+
+        if ($attachmentId > 0) {
+            return (string) wp_get_attachment_image($attachmentId, 'woocommerce_thumbnail', false, [
+                'alt' => $product->get_name(),
+                'loading' => 'lazy',
+            ]);
+        }
+
+        return '<img src="' . esc_url((string) $image['thumbnail_url']) . '" alt="' . esc_attr($product->get_name()) . '" loading="lazy" decoding="async">';
     }
 
     private function renderPurchase(\WC_Product $product): void

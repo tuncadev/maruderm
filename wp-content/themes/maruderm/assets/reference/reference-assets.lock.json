@@ -17,7 +17,7 @@
     {
       "source": "assets/styles/components/product-card.css",
       "target": "product-card.css",
-      "sha256": "e6bc82d4c84a2da1b2c7358c72a198c0ad295fb7d8d5f48e26a8eb0da4f0536a"
+      "sha256": "a0a782febf80f581a3dd122c74bb91e25c7fcd0fe7b256b186abaeac965b4e83"
     },
     {
       "source": "assets/styles/components/account.css",

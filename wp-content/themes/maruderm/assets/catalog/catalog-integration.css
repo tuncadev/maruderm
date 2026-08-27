@@ -4,11 +4,11 @@
 }
 
 .maruderm-catalog .product-card__badge {
-  z-index: 1;
+  z-index: 3;
 }
 
 .maruderm-catalog .product-card__heart {
-  z-index: 2;
+  z-index: 4;
   padding: 0;
 }
 

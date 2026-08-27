@@ -86,6 +86,14 @@ body.single-product .martfury-preloader {
   visibility: visible !important;
 }
 
+.product-gallery__thumbs {
+  max-height: 690px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-right: 3px;
+  scrollbar-width: thin;
+}
+
 .product-card__cart.button {
   min-width: 42px;
   min-height: 42px;
@@ -103,6 +111,16 @@ body.single-product .martfury-preloader {
 
 .product-card__price ins {
   text-decoration: none;
+}
+
+@media (max-width: 900px) {
+  .product-gallery__thumbs {
+    max-height: none;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-right: 0;
+    padding-bottom: 3px;
+  }
 }
 
 @media (max-width: 767px) {

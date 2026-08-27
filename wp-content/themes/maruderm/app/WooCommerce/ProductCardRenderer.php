@@ -16,15 +16,18 @@ final class ProductCardRenderer
     private CatalogRepository $repository;
     private ProductBadges $badges;
     private StockNotificationRenderer $stock_notifications;
+    private ProductCardPromotion $promotions;
 
     public function __construct(
         ?CatalogRepository $repository = null,
         ?ProductBadges $badges = null,
-        ?StockNotificationRenderer $stock_notifications = null
+        ?StockNotificationRenderer $stock_notifications = null,
+        ?ProductCardPromotion $promotions = null
     ) {
         $this->repository = $repository ?? new CatalogRepository();
         $this->badges = $badges ?? new ProductBadges();
         $this->stock_notifications = $stock_notifications ?? new StockNotificationRenderer();
+        $this->promotions = $promotions ?? new ProductCardPromotion();
     }
 
     public function render(\WC_Product $product): string
@@ -33,6 +36,7 @@ final class ProductCardRenderer
         $category_slugs = $this->repository->categorySlugs($product);
         $category_label = $categories[0]->name ?? 'Maruderm';
         $badge = $this->badges->resolve($product);
+        $promotion = $this->promotions->resolve($product, $category_slugs);
         $created_at = $product->get_date_created();
         $created_timestamp = $created_at !== null ? $created_at->getTimestamp() : 0;
         $button_label = $product->is_type('simple') ? 'Додати до кошика' : 'Обрати варіант';
@@ -46,8 +50,23 @@ final class ProductCardRenderer
         ob_start();
         ?>
         <article class="product-card<?= $product->is_in_stock() ? '' : ' is-out-of-stock'; ?>" data-product-id="<?= esc_attr((string) $product->get_id()); ?>" data-product-name="<?= esc_attr(wp_strip_all_tags($product->get_name())); ?>" data-category="<?= esc_attr(implode(' ', $category_slugs)); ?>" data-skin-types="<?= esc_attr(implode(' ', $this->repository->termSlugs($product, 'pa_skin_type'))); ?>" data-concerns="<?= esc_attr(implode(' ', $this->repository->termSlugs($product, 'pa_skin_problem'))); ?>" data-hair-needs="<?= esc_attr(implode(' ', $this->repository->termSlugs($product, 'pa_hair_need'))); ?>" data-price="<?= esc_attr($filter_price); ?>" data-popularity="<?= esc_attr((string) $product->get_total_sales()); ?>" data-created="<?= esc_attr((string) $created_timestamp); ?>" data-in-stock="<?= $product->is_in_stock() ? 'yes' : 'no'; ?>">
-            <a class="product-card__image" href="<?= esc_url($product->get_permalink()); ?>">
-                <?= wp_kses_post($product->get_image('woocommerce_thumbnail', ['loading' => 'lazy'])); ?>
+            <a class="product-card__image" href="<?= esc_url($product->get_permalink()); ?>" aria-label="<?= esc_attr('Переглянути ' . $product->get_name()); ?>">
+                <span class="product-card__media product-card__media--primary">
+                    <?= wp_kses_post($product->get_image('woocommerce_thumbnail', ['loading' => 'lazy'])); ?>
+                </span>
+                <?php if ($promotion !== null) : ?>
+                    <div class="product-card__promo product-card__promo--<?= esc_attr($promotion['tone']); ?>" data-product-card-promo data-product-card-promo-source="<?= esc_attr($promotion['image_source']); ?>" aria-hidden="true">
+                        <div class="product-card__promo-copy">
+                            <strong class="product-card__promo-title"><?= esc_html($promotion['heading']); ?></strong>
+                            <ul class="product-card__promo-list">
+                                <?php foreach ($promotion['items'] as $item) : ?>
+                                    <li><?= esc_html($item); ?></li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </div>
+                        <img class="product-card__promo-image" src="<?= esc_url($promotion['image_url']); ?>" alt="" loading="lazy" decoding="async">
+                    </div>
+                <?php endif; ?>
                 <?php if ($badge !== null) : ?>
                     <span class="product-card__badge product-card__badge--<?= esc_attr($badge['tone']); ?> maruderm-product-badge maruderm-product-badge--<?= esc_attr($badge['tone']); ?>"><?= esc_html($badge['label']); ?></span>
                 <?php endif; ?>

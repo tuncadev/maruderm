@@ -23,6 +23,8 @@
 !.agents/skills/implement-maruderm-html-reference/**
 !.agents/skills/sync-maruderm-production-db/
 !.agents/skills/sync-maruderm-production-db/**
+!.agents/skills/optimize-project-images/
+!.agents/skills/optimize-project-images/**
 
 *~
 
