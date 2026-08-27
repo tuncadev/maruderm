@@ -25,6 +25,8 @@
 !.agents/skills/sync-maruderm-production-db/**
 !.agents/skills/optimize-project-images/
 !.agents/skills/optimize-project-images/**
+!.agents/skills/sync-maruderm-local-db-to-production/
+!.agents/skills/sync-maruderm-local-db-to-production/**
 
 *~
 

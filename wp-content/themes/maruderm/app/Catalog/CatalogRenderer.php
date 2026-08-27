@@ -40,6 +40,7 @@ final class CatalogRenderer
         echo '<main class="maruderm-catalog" data-catalog-root data-catalog-url="' . esc_url(wc_get_page_permalink('shop')) . '" data-catalog-title="Каталог догляду" data-catalog-description="' . esc_attr($this->defaultDescription()) . '" data-site-name="' . esc_attr(get_bloginfo('name')) . '" data-initial-category="' . esc_attr($initialCategory) . '" data-initial-category-label="' . esc_attr($initialCategory !== '' ? $title : '') . '" data-initial-category-description="' . esc_attr($initialCategory !== '' ? $description : '') . '" data-initial-category-url="' . esc_url($this->initialCategoryUrl()) . '">';
         woocommerce_output_all_notices();
         $this->renderHero($title, $description);
+        $this->renderCategoryNavigation($this->repository->navigationCategories(), $initialCategory);
         echo '<section class="catalog-content"><div class="shell catalog-layout">';
         $this->renderFilters($products, $categories);
         $this->renderResults($products);
@@ -55,6 +56,34 @@ final class CatalogRenderer
         echo '<span data-catalog-breadcrumb-current>' . esc_html($title) . '</span></nav>';
         echo '<div class="catalog-hero__content"><div><span class="kicker">Уся колекція Maruderm</span><h1 data-catalog-heading>' . esc_html($title) . '</h1></div>';
         echo '<p data-catalog-description>' . esc_html($description) . '</p></div></div></section>';
+    }
+
+    /**
+     * @param array<int, array{value: string, label: string, url: string, image: string, tone: string}> $categories
+     */
+    private function renderCategoryNavigation(array $categories, string $active_category): void
+    {
+        if ($categories === []) {
+            return;
+        }
+
+        echo '<section class="catalog-categories" aria-labelledby="catalog-categories-title"><div class="shell">';
+        echo '<h2 class="sr-only" id="catalog-categories-title">Основні категорії товарів</h2>';
+        echo '<ul class="catalog-categories__list" data-catalog-category-list>';
+
+        foreach ($categories as $category) {
+            $is_active = $category['value'] === $active_category;
+            $item_classes = 'catalog-categories__item' . ($is_active ? ' is-active' : '');
+            $link_classes = 'catalog-categories__link catalog-categories__link--' . $category['tone'];
+
+            echo '<li class="' . esc_attr($item_classes) . '">';
+            echo '<a class="' . esc_attr($link_classes) . '" href="' . esc_url($category['url']) . '"' . ($is_active ? ' aria-current="page"' : '') . '>';
+            echo '<span class="catalog-categories__circle"><img src="' . esc_url($category['image']) . '" alt="" loading="lazy"></span>';
+            echo '<span class="catalog-categories__label">' . esc_html($category['label']) . '</span>';
+            echo '</a></li>';
+        }
+
+        echo '</ul></div></section>';
     }
 
     /**

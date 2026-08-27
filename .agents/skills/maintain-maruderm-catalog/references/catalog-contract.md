@@ -1,6 +1,6 @@
 # Maruderm catalog contract
 
-This contract records behavior verified locally on 2026-08-12. It is the primary reference for future catalog work; internet research is unnecessary.
+This contract records behavior verified locally through 2026-08-27. It is the primary reference for future catalog work; internet research is unnecessary.
 
 ## File map
 
@@ -13,6 +13,7 @@ This contract records behavior verified locally on 2026-08-12. It is the primary
 | Filter state and interactions | `wp-content/themes/maruderm/assets/catalog/catalog.js` |
 | Catalog Vite entry | `wp-content/themes/maruderm/assets/catalog/index.js` |
 | Layout and filter UI | `wp-content/themes/maruderm/assets/globals/components/catalog/catalog.css` |
+| Category-circle reference UI | `wp-content/themes/maruderm/assets/reference/catalog-categories.css` |
 | Card UI | `wp-content/themes/maruderm/assets/globals/components/catalog/product-card.css` |
 | Badge rules | `wp-content/themes/maruderm/app/WooCommerce/ProductBadges.php` and `assets/globals/components/product-badges/` |
 | Registration and assets | `app/Bootstrap.php`, `app/Kernel/Enqueue.php`, `vite.config.js`, `dist/manifest.json` |
@@ -58,6 +59,10 @@ This contract records behavior verified locally on 2026-08-12. It is the primary
 
 ## Rendering and CSS invariants
 
+- Immediately after the hero, render the five configured non-empty root `product_cat` terms as category circles using live term names, pretty URLs, and WooCommerce term thumbnails.
+- Preserve the canonical `catalog-categories` section/list/item/link/circle/label classes, `data-catalog-category-list`, five semantic tone modifiers, `is-active`, and `aria-current="page"` contract.
+- Category-circle clicks participate in the existing in-memory History API behavior. Active styling and `aria-current` must update on selection and Back/Forward without reloading.
+- Load `catalog-categories.css` through `assets/catalog/index.js` before the WordPress-only catalog integration stylesheet; never edit its synchronized snapshot directly.
 - `[hidden]` must win over `.product-card { display: ... }`; keep an explicit catalog-scoped hidden rule.
 - Active-filter typography needs a selector at least as specific as `.maruderm-catalog button`, because the catalog form-control reset uses `font: inherit`.
 - Desktop filters are sticky, viewport-height constrained, and independently scrollable. Mobile retains a full-height scrollable drawer and overlay.
@@ -75,11 +80,12 @@ Run:
 For client interaction changes, verify in a real browser:
 
 1. `/catalog/` renders the custom root and all in-stock cards.
-2. Selecting one category changes to its pretty URL without reload.
-3. Selecting another category produces a comma-separated `category` query and unions results.
-4. Selecting a value from another group intersects results.
-5. An incompatible unchecked value is disabled and cannot create an empty result.
-6. Removing a category chip collapses to the remaining pretty route when one category remains.
-7. Back/Forward restores inputs, chips, count, hero, sort, and URL without reload.
-8. The desktop filter panel scrolls independently while `window.scrollY` stays unchanged.
-9. WooCommerce option `woocommerce_coming_soon` has its original value after testing.
+2. Five category circles render immediately after the hero, with a centered desktop row and centered 3+2 mobile wrap.
+3. Selecting a category circle changes to its pretty URL without reload and synchronizes its active state, `aria-current`, heading, and result count.
+4. Selecting another category produces a comma-separated `category` query and unions results.
+5. Selecting a value from another group intersects results.
+6. An incompatible unchecked value is disabled and cannot create an empty result.
+7. Removing a category chip collapses to the remaining pretty route when one category remains.
+8. Back/Forward restores inputs, chips, category-circle state, count, hero, sort, and URL without reload.
+9. The desktop filter panel scrolls independently while `window.scrollY` stays unchanged.
+10. WooCommerce option `woocommerce_coming_soon` has its original value after testing.

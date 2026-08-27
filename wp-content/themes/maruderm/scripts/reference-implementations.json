@@ -52,6 +52,29 @@
       }
     },
     {
+      "id": "catalog-categories",
+      "target": "catalog-categories.css",
+      "kind": "component",
+      "reference": {
+        "markup": ["catalog.html", "components/catalog-categories.html"],
+        "javascript": [
+          "assets/data/products.js",
+          "assets/js/components/catalog-category-navigation.js"
+        ]
+      },
+      "wordpress": {
+        "status": "implemented",
+        "entries": ["assets/catalog/index.js"],
+        "renderers": [
+          "app/Catalog/CatalogRepository.php",
+          "app/Catalog/CatalogRenderer.php"
+        ],
+        "routes": ["/catalog/ and product-category routes"],
+        "legacyFiles": [],
+        "blocker": ""
+      }
+    },
+    {
       "id": "product",
       "target": "product.css",
       "kind": "page",

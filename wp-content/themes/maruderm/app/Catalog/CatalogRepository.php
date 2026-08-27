@@ -10,6 +10,14 @@ if (!defined('ABSPATH')) {
 
 final class CatalogRepository
 {
+    private const CATEGORY_NAVIGATION_TONES = [
+        'zasoby-dlya-doglyadu-za-shkiroyu' => 'skin',
+        'makiyazh' => 'makeup',
+        'zasoby-dlya-doglyadu-za-volossyam' => 'hair',
+        'gunes-bakim-urunleri' => 'sun',
+        'zasoby-dlya-doglyadu-za-tilom' => 'body',
+    ];
+
     /** @var array<int, array<string, \WP_Term[]>> */
     private array $termCache = [];
 
@@ -178,6 +186,61 @@ final class CatalogRepository
         }
 
         return $this->flattenCategoryOptions($categories);
+    }
+
+    /**
+     * @return array<int, array{value: string, label: string, url: string, image: string, tone: string}>
+     */
+    public function navigationCategories(): array
+    {
+        $terms = get_terms([
+            'taxonomy' => 'product_cat',
+            'parent' => 0,
+            'hide_empty' => true,
+            'slug' => array_keys(self::CATEGORY_NAVIGATION_TONES),
+        ]);
+
+        if (is_wp_error($terms)) {
+            return [];
+        }
+
+        $terms_by_slug = [];
+
+        foreach ($terms as $term) {
+            if ($term instanceof \WP_Term) {
+                $terms_by_slug[$term->slug] = $term;
+            }
+        }
+
+        $categories = [];
+
+        foreach (self::CATEGORY_NAVIGATION_TONES as $slug => $tone) {
+            $term = $terms_by_slug[$slug] ?? null;
+
+            if (!$term instanceof \WP_Term) {
+                continue;
+            }
+
+            $url = get_term_link($term);
+            $thumbnail_id = (int) get_term_meta($term->term_id, 'thumbnail_id', true);
+            $image = $thumbnail_id > 0
+                ? wp_get_attachment_image_url($thumbnail_id, 'woocommerce_thumbnail')
+                : wc_placeholder_img_src('woocommerce_thumbnail');
+
+            if (is_wp_error($url) || !is_string($image) || $image === '') {
+                continue;
+            }
+
+            $categories[] = [
+                'value' => $term->slug,
+                'label' => $term->name,
+                'url' => $url,
+                'image' => $image,
+                'tone' => $tone,
+            ];
+        }
+
+        return $categories;
     }
 
     /**

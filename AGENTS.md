@@ -38,6 +38,12 @@ Load the global rules from `/home/pardus/.codex/AGENTS.md` first. These rules ar
 - The daily gate must finish successfully before continuing with the day's first task. If production SSH, export, local backup, import, URL migration, or validation fails, report the blocked gate and preserve the rollback/source artifacts; do not treat a failed attempt as completed.
 - This workflow is production-to-local database only. It must not deploy code, upload media, mutate the production database, or run a local-to-production synchronization.
 
+## Local Database to Production
+
+- When the user explicitly requests replacing the production database from local, use `.agents/skills/sync-maruderm-local-db-to-production/SKILL.md`.
+- Always run its read-only preflight before `--execute`; never bypass commerce-divergence checks, verified source/rollback exports, maintenance mode, serialization-safe URL migration, automatic rollback, or post-import validation.
+- This workflow changes only the production database. It must not deploy code or media, and it must retain the downloaded production rollback backup locally.
+
 ## Completion
 
 - Change source files, never generated assets by hand; rebuild Vite outputs after source changes.

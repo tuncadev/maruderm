@@ -1,0 +1,4 @@
+interface:
+  display_name: "Sync Maruderm DB to Production"
+  short_description: "Safely replace production from local DB"
+  default_prompt: "Use $sync-maruderm-local-db-to-production to safely replace the Maruderm production database from the current local database."

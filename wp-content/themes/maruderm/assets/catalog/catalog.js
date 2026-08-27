@@ -64,6 +64,27 @@ if (root) {
     }
   });
 
+  const syncCategoryNavigation = () => {
+    const selectedCategories = [...state.category];
+    const selectedCategory = selectedCategories.length === 1 ? selectedCategories[0] : '';
+
+    root.querySelectorAll('.catalog-categories__item').forEach((item) => {
+      const link = item.querySelector('a[href]');
+      const category = link
+        ? categoryPaths.get(new URL(link.href, window.location.origin).pathname) || ''
+        : '';
+      const active = category !== '' && category === selectedCategory;
+
+      item.classList.toggle('is-active', active);
+
+      if (active) {
+        link.setAttribute('aria-current', 'page');
+      } else {
+        link?.removeAttribute('aria-current');
+      }
+    });
+  };
+
   if ([...sort.options].some((option) => option.value === url.searchParams.get('sort'))) {
     sort.value = url.searchParams.get('sort');
   }
@@ -192,6 +213,7 @@ if (root) {
     breadcrumbLink.hidden = !value;
     breadcrumbSeparator.hidden = !value;
     document.title = `${value ? label : 'Каталог'}${siteName ? ` – ${siteName}` : ''}`;
+    syncCategoryNavigation();
   };
 
   const syncCategoryControls = () => {

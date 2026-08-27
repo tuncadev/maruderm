@@ -1,7 +1,7 @@
 {
   "version": 1,
   "manifest": "src/reference-assets.json",
-  "manifestSha256": "b2d8b56ab2f754ab6e525b763767dfde363dc516e427212dadb394c2df5c89ef",
+  "manifestSha256": "c1573c343e9e2c8a9480e0877cb3e89d908a5f2b7e3ee6c08dee01ff3384c7cf",
   "sourceRepository": "maruderm.html",
   "styles": [
     {
@@ -18,6 +18,11 @@
       "source": "assets/styles/components/product-card.css",
       "target": "product-card.css",
       "sha256": "a0a782febf80f581a3dd122c74bb91e25c7fcd0fe7b256b186abaeac965b4e83"
+    },
+    {
+      "source": "assets/styles/components/catalog-categories.css",
+      "target": "catalog-categories.css",
+      "sha256": "d84115e12f445ca4436087d798c7f18f7bcd5d5b2cc88af50913bd730e56e0c0"
     },
     {
       "source": "assets/styles/components/account.css",

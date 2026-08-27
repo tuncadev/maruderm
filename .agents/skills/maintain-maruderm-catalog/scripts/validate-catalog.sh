@@ -63,6 +63,10 @@ require_pattern "selected.join(',')" "${THEME_ROOT}/assets/catalog/catalog.js" '
 require_pattern 'matchesAny(values(card' "${THEME_ROOT}/assets/catalog/catalog.js" 'within-group union matching is missing'
 require_pattern 'const updateAvailability' "${THEME_ROOT}/assets/catalog/catalog.js" 'no-empty option gating is missing'
 require_pattern "window.history[mode === 'push' ? 'pushState' : 'replaceState']" "${THEME_ROOT}/assets/catalog/catalog.js" 'History API synchronization is missing'
+require_pattern 'data-catalog-category-list' "${THEME_ROOT}/app/Catalog/CatalogRenderer.php" 'category-circle navigation markup is missing'
+require_pattern 'navigationCategories' "${THEME_ROOT}/app/Catalog/CatalogRepository.php" 'live category-circle data query is missing'
+require_pattern 'syncCategoryNavigation' "${THEME_ROOT}/assets/catalog/catalog.js" 'category-circle active-state synchronization is missing'
+require_pattern 'reference/catalog-categories.css' "${THEME_ROOT}/assets/catalog/index.js" 'category-circle reference stylesheet consumer is missing'
 require_pattern '.maruderm-catalog [hidden]' "${THEME_ROOT}/assets/globals/components/catalog/catalog.css" 'hidden cards need a catalog-scoped display override'
 require_pattern 'overflow-y: auto' "${THEME_ROOT}/assets/globals/components/catalog/catalog.css" 'filter panel must scroll independently'
 
@@ -85,6 +89,31 @@ if ($unavailable !== []) {
 }
 
 WP_CLI::log(sprintf("Catalog repository: %d in-stock products, 0 unavailable products.", count($products)));
+
+$navigation = $repository->navigationCategories();
+$expected_tones = ["skin", "makeup", "hair", "sun", "body"];
+
+if (count($navigation) !== count($expected_tones)) {
+    WP_CLI::error(sprintf(
+        "Category-circle navigation returned %d items instead of %d.",
+        count($navigation),
+        count($expected_tones)
+    ));
+}
+
+if (array_column($navigation, "tone") !== $expected_tones) {
+    WP_CLI::error("Category-circle navigation tone order does not match the reference contract.");
+}
+
+foreach ($navigation as $category) {
+    foreach (["value", "label", "url", "image", "tone"] as $field) {
+        if (!isset($category[$field]) || !is_string($category[$field]) || $category[$field] === "") {
+            WP_CLI::error(sprintf("Category-circle navigation has an invalid %s field.", $field));
+        }
+    }
+}
+
+WP_CLI::log("Category-circle navigation: 5 live root terms with images and canonical tone order.");
 '
 
 wp --path="${PROJECT_ROOT}" eval '
