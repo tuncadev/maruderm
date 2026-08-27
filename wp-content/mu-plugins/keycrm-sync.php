@@ -124,6 +124,8 @@ final class KeyCRM_Sync_Reporter
 
 final class KeyCRM_Sync_Service
 {
+    private const ENGLISH_NAME_META = '_keycrm_english_name';
+
     private KeyCRM_Sync_Config $config;
     private KeyCRM_Sync_Reporter $reporter;
 
@@ -337,10 +339,18 @@ final class KeyCRM_Sync_Service
             return 'skipped';
         }
 
+        $english_name = trim((string) $product->get_meta(self::ENGLISH_NAME_META, true, 'edit'));
+        if ($english_name === '') {
+            $this->reporter->warning(
+                "SKIP {$product->get_id()} - missing verified English KeyCRM name ({$sku})"
+            );
+            return 'skipped';
+        }
+
         $response = wp_remote_post($this->config->get_products_url(), [
             'headers' => $this->json_headers(),
             'body' => wp_json_encode([
-                'name' => $product->get_name(),
+                'name' => $english_name,
                 'description' => $product->get_description(),
                 'pictures' => $this->product_picture_urls($product),
                 'currency_code' => get_woocommerce_currency(),

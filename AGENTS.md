@@ -26,6 +26,13 @@ Load the global rules from `/home/pardus/.codex/AGENTS.md` first. These rules ar
 
 - For `/catalog/`, product-category routes, filters, product cards, badges, or catalog visibility, also use `.agents/skills/maintain-maruderm-catalog/SKILL.md` and run its validator.
 
+## KeyCRM Product Names
+
+- Strict rule: every KeyCRM product name must be English.
+- The canonical English-name source is `products/product-pricing-table.xlsx`, matched by the unique `Barcode` value and read from `Title English`.
+- Routine WooCommerce-to-KeyCRM reconciliation must match products by unique SKU/barcode and must never send or copy the WooCommerce product name into KeyCRM.
+- A KeyCRM `name` write is allowed only for an explicit English-name correction or initial creation using a verified English value from the canonical workbook. If the English value is missing or the SKU/barcode match is not unique, stop or skip instead of using the WooCommerce title.
+
 ## Image Optimization
 
 - For product or other project raster-image resizing, format conversion, or metadata reduction, use `.agents/skills/optimize-project-images/SKILL.md`.
