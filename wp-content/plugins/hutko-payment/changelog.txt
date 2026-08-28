@@ -1,0 +1,26 @@
+*** Hutko Payment Gateway Changelog ***
+
+2026-08-19 - version 3.7.3
+* Fixed - Connect WooCommerce Subscriptions compatibility callbacks to the payment gateway hooks that are actually fired.
+* Fixed - Correctly detect a previously saved subscription token when it is the first stored token.
+
+2026-08-19 - version 3.7.2
+* Fixed - Prevent late declined or expired callbacks from changing paid orders or newer payment attempts.
+* Hardened - Validate approved callback status, transaction type, payment ID, amount, and currency.
+* Added - Track a bounded history of non-sensitive payment-attempt parameters for callback matching.
+* Hardened - Process callbacks sequentially per WooCommerce order and detect duplicate approved payments.
+* Fixed - Callback errors no longer change the WooCommerce order to failed.
+* Improved - Use limited WooCommerce logging without storing callback payloads, signatures, or payment tokens.
+
+2026-08-06 - version 3.7.1
+* Fixed - Removed permanent callback logging of payment data and signatures.
+* Fixed - Callback signatures are now validated before signed fields are sanitized or converted.
+* Fixed - Synchronized the plugin header and internal version number.
+
+2026-01-21 - version 3.5.0
+* Added - Support for accepting online payments via Hutko
+    * Secure payment processing through Hutko API
+    * Order status synchronization with WooCommerce
+* Added - Configuration settings for merchant credentials
+* Added - Logging for payment and callback events
+* Update - Compatibility with latest WooCommerce version

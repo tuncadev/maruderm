@@ -43,8 +43,8 @@ final class FooterRenderer
         echo '<input id="subscribe-email" name="maruderm_subscribe_email" type="email" placeholder="Ваш email" autocomplete="email">';
         echo '<button type="submit" aria-label="Підписатися">' . $this->arrowIcon() . '</button></form></div></div>';
         echo '<div class="shell footer-bottom"><span>© ' . esc_html(wp_date('Y')) . ' Maruderm Україна</span><div>';
-        echo '<a href="' . esc_url(get_privacy_policy_url() ?: home_url('/privacy-policy/')) . '">Політика конфіденційності</a>';
-        echo '<a href="' . esc_url($this->pageUrl(['publichna-oferta', 'terms-and-conditions'])) . '">Публічна оферта</a>';
+        echo '<a href="' . esc_url($this->pageUrl(['terms-and-privacy'])) . '">Політика конфіденційності</a>';
+        echo '<a href="' . esc_url($this->pageUrl(['public-offer'])) . '">Публічна оферта</a>';
         echo '</div></div></footer>';
     }
 

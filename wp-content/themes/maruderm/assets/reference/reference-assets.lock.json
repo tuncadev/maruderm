@@ -1,7 +1,7 @@
 {
   "version": 1,
   "manifest": "src/reference-assets.json",
-  "manifestSha256": "c1573c343e9e2c8a9480e0877cb3e89d908a5f2b7e3ee6c08dee01ff3384c7cf",
+  "manifestSha256": "c0ebe1be25bcebffa3fd44847dde113eacc55fcadce0d51b53e4bb027f793864",
   "sourceRepository": "maruderm.html",
   "styles": [
     {
@@ -68,6 +68,16 @@
       "source": "assets/styles/components/login.css",
       "target": "login.css",
       "sha256": "1ee412e949c3962da60aca0db670ab7cd3c162d1070e661e53b52ffeec574929"
+    },
+    {
+      "source": "assets/styles/components/legal-document.css",
+      "target": "legal-document.css",
+      "sha256": "a6ecca226bc2c7bb2444007a914f26fa4afabaa4f907f4254e0d5bc52c3e603a"
+    },
+    {
+      "source": "assets/styles/components/campaign-popup.css",
+      "target": "campaign-popup.css",
+      "sha256": "9ec5837f4cf0a95aa06a71a1911c1c9e95d414c9d30ebcf4cf0ed6d3669295da"
     },
     {
       "source": "assets/styles/components/payment.css",

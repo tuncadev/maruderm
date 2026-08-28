@@ -1,3 +1,10 @@
+const GOOGLE_ONE_TAP_DELAY_MS = 60_000;
+const GOOGLE_ONE_TAP_STORAGE = Object.freeze({
+  activeTime: "maruderm-one-tap-active-time",
+  dismissed: "maruderm-one-tap-dismissed",
+  shown: "maruderm-one-tap-shown",
+});
+
 class LoginExperience {
   constructor(documentRoot) {
     this.root = documentRoot;
@@ -5,6 +12,9 @@ class LoginExperience {
     this.oneTap = documentRoot.querySelector("[data-google-one-tap]");
     this.lastTrigger = null;
     this.oneTapTimer = null;
+    this.oneTapHideTimer = null;
+    this.activePeriodStartedAt = null;
+    this.oneTapReady = false;
   }
 
   init() {
@@ -12,12 +22,15 @@ class LoginExperience {
     this.root.addEventListener("click", (event) => this.handleClick(event));
     this.root.addEventListener("keydown", (event) => this.handleKeydown(event));
     this.root.querySelectorAll(".login-form-block").forEach((block) => {
-      this.setAuthMode(block, block.dataset.authMode || "login", false);
+      this.setAuthMode(block, block.dataset.authState || "login", false);
     });
     this.root.querySelectorAll("[data-login-form]").forEach((form) => {
       form.addEventListener("submit", (event) => this.validateForm(event));
       form.addEventListener("input", (event) => this.clearFieldError(event.target));
     });
+    this.root.addEventListener("visibilitychange", () => this.handleVisibilityChange());
+    this.root.addEventListener("campaign-popup:closed", () => this.showOneTapIfAllowed());
+    window.addEventListener("pagehide", () => this.handlePageHide());
 
     if (this.modal && !this.modal.hidden) document.body.classList.add("is-locked");
     this.scheduleOneTap();
@@ -33,7 +46,8 @@ class LoginExperience {
     const openButton = event.target.closest("[data-login-open]");
     const closeButton = event.target.closest("[data-login-close]");
     const passwordButton = event.target.closest("[data-password-toggle]");
-    const authModeButton = event.target.closest("[data-auth-mode]");
+    const authModeButton = event.target.closest("button[data-auth-mode]");
+    const googleButton = event.target.closest('[data-social-provider="google"]');
     const oneTapClose = event.target.closest("[data-one-tap-close]");
 
     if (openButton && !event.metaKey && !event.ctrlKey) {
@@ -43,6 +57,7 @@ class LoginExperience {
 
     if (closeButton) this.closeModal();
     if (passwordButton) this.togglePassword(passwordButton);
+    if (googleButton) this.suppressOneTap();
     if (oneTapClose) this.dismissOneTap();
     if (authModeButton) {
       const block = authModeButton.closest(".login-form-block");
@@ -50,12 +65,11 @@ class LoginExperience {
     }
   }
 
-  setAuthMode(block, requestedMode, focus = true) {
+  setAuthMode(block, requestedMode, shouldFocus = true) {
     const mode = requestedMode === "register" ? "register" : "login";
     const isRegistration = mode === "register";
-    const activeForm = block.querySelector(`[data-auth-form="${mode}"]`);
 
-    block.dataset.authMode = mode;
+    block.dataset.authState = mode;
     block.classList.toggle("is-registration", isRegistration);
     block.querySelectorAll("[data-auth-mode]").forEach((button) => {
       const isActive = button.dataset.authMode === mode;
@@ -89,13 +103,19 @@ class LoginExperience {
         : dialogTitle.dataset.loginCopy;
     }
 
-    if (focus) {
+    if (shouldFocus) {
       block.querySelectorAll(".login-field").forEach((field) => field.classList.remove("has-error"));
       block.querySelectorAll("[data-login-error], [data-login-status]").forEach((message) => {
         message.textContent = "";
       });
-      activeForm?.querySelector("input:not([type=hidden])")?.focus({ preventScroll: true });
+      this.focusAuthField(block);
     }
+  }
+
+  focusAuthField(block) {
+    const mode = block?.dataset.authState === "register" ? "register" : "login";
+    const form = block?.querySelector(`[data-auth-form="${mode}"]`);
+    form?.querySelector("input:not([type=hidden])")?.focus({ preventScroll: true });
   }
 
   openModal(trigger) {
@@ -107,7 +127,8 @@ class LoginExperience {
     document.body.classList.add("is-locked");
     this.hideOneTap();
     trigger.setAttribute("aria-expanded", "true");
-    window.requestAnimationFrame(() => this.modal.querySelector("input")?.focus());
+    const block = this.modal.querySelector(".login-form-block");
+    window.requestAnimationFrame(() => this.focusAuthField(block));
   }
 
   closeModal() {
@@ -119,32 +140,113 @@ class LoginExperience {
     window.setTimeout(() => {
       this.modal.hidden = true;
       this.lastTrigger?.focus();
+      this.showOneTapIfAllowed();
     }, 220);
   }
 
   scheduleOneTap() {
-    if (!this.oneTap || window.sessionStorage.getItem("maruderm-one-tap-dismissed")) return;
+    window.clearTimeout(this.oneTapTimer);
+    if (!this.oneTap || this.isOneTapSuppressed()) return;
 
+    if (this.getActiveTime() >= GOOGLE_ONE_TAP_DELAY_MS) {
+      this.oneTapReady = true;
+      this.showOneTapIfAllowed();
+      return;
+    }
+    if (this.root.visibilityState !== "visible") return;
+
+    this.startActivePeriod();
+    const remainingTime = GOOGLE_ONE_TAP_DELAY_MS - this.getActiveTime();
     this.oneTapTimer = window.setTimeout(() => {
-      if (this.modal && !this.modal.hidden) return;
-      this.oneTap.hidden = false;
-      window.requestAnimationFrame(() => this.oneTap?.classList.add("is-visible"));
-    }, 900);
+      this.persistActiveTime();
+      this.oneTapReady = true;
+      this.showOneTapIfAllowed();
+    }, remainingTime);
+  }
+
+  startActivePeriod() {
+    if (this.activePeriodStartedAt === null && this.root.visibilityState === "visible") {
+      this.activePeriodStartedAt = performance.now();
+    }
+  }
+
+  getStoredActiveTime() {
+    const storedTime = Number(
+      window.sessionStorage.getItem(GOOGLE_ONE_TAP_STORAGE.activeTime) || 0,
+    );
+    return Number.isFinite(storedTime) && storedTime > 0 ? storedTime : 0;
+  }
+
+  getActiveTime() {
+    const currentPeriod =
+      this.activePeriodStartedAt === null ? 0 : performance.now() - this.activePeriodStartedAt;
+    return this.getStoredActiveTime() + currentPeriod;
+  }
+
+  persistActiveTime() {
+    if (this.activePeriodStartedAt === null) return;
+    const activeTime = Math.min(this.getActiveTime(), GOOGLE_ONE_TAP_DELAY_MS);
+    window.sessionStorage.setItem(GOOGLE_ONE_TAP_STORAGE.activeTime, String(activeTime));
+    this.activePeriodStartedAt = null;
+  }
+
+  handleVisibilityChange() {
+    if (this.root.visibilityState === "hidden") {
+      this.persistActiveTime();
+      window.clearTimeout(this.oneTapTimer);
+      return;
+    }
+    this.scheduleOneTap();
+  }
+
+  handlePageHide() {
+    this.persistActiveTime();
+    window.clearTimeout(this.oneTapTimer);
+  }
+
+  isOneTapSuppressed() {
+    return Boolean(
+      window.sessionStorage.getItem(GOOGLE_ONE_TAP_STORAGE.dismissed) ||
+      window.sessionStorage.getItem(GOOGLE_ONE_TAP_STORAGE.shown),
+    );
+  }
+
+  showOneTapIfAllowed() {
+    if (!this.oneTap || !this.oneTapReady || this.isOneTapSuppressed()) return;
+    const campaignPopup = this.root.querySelector("[data-campaign-popup]:not([hidden])");
+    if (
+      this.root.visibilityState !== "visible" ||
+      (this.modal && !this.modal.hidden) ||
+      campaignPopup
+    )
+      return;
+
+    window.clearTimeout(this.oneTapHideTimer);
+    window.sessionStorage.setItem(GOOGLE_ONE_TAP_STORAGE.shown, "true");
+    this.oneTap.hidden = false;
+    window.requestAnimationFrame(() => this.oneTap?.classList.add("is-visible"));
   }
 
   hideOneTap() {
-    window.clearTimeout(this.oneTapTimer);
+    window.clearTimeout(this.oneTapHideTimer);
     if (!this.oneTap) return;
 
     this.oneTap.classList.remove("is-visible");
-    window.setTimeout(() => {
+    this.oneTapHideTimer = window.setTimeout(() => {
       this.oneTap.hidden = true;
     }, 180);
   }
 
-  dismissOneTap() {
-    window.sessionStorage.setItem("maruderm-one-tap-dismissed", "true");
+  suppressOneTap() {
+    window.sessionStorage.setItem(GOOGLE_ONE_TAP_STORAGE.shown, "true");
+    window.clearTimeout(this.oneTapTimer);
+    this.persistActiveTime();
     this.hideOneTap();
+  }
+
+  dismissOneTap() {
+    window.sessionStorage.setItem(GOOGLE_ONE_TAP_STORAGE.dismissed, "true");
+    this.suppressOneTap();
   }
 
   handleKeydown(event) {

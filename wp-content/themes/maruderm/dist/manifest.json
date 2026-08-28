@@ -20,7 +20,7 @@
     "src": "_storefront-foundation-BSY9g9DU.css"
   },
   "assets/account/index.js": {
-    "file": "assets/account-CP4QiV0z.js",
+    "file": "assets/account-BZ0plsfj.js",
     "name": "account",
     "src": "assets/account/index.js",
     "isEntry": true,
@@ -31,7 +31,7 @@
     ]
   },
   "assets/bank-transfer/index.js": {
-    "file": "assets/bank-transfer-CWk4Mh5z.js",
+    "file": "assets/bank-transfer-C84-0YqW.js",
     "name": "bank-transfer",
     "src": "assets/bank-transfer/index.js",
     "isEntry": true,
@@ -40,8 +40,17 @@
       "assets/storefront-foundation-BSY9g9DU.css"
     ]
   },
+  "assets/campaign-popup/index.js": {
+    "file": "assets/campaign-popup-4caRgAza.js",
+    "name": "campaign-popup",
+    "src": "assets/campaign-popup/index.js",
+    "isEntry": true,
+    "css": [
+      "assets/campaign-popup-BjEAlXNh.css"
+    ]
+  },
   "assets/cart/index.js": {
-    "file": "assets/cart-DfZSrhhs.js",
+    "file": "assets/cart-CWNu7T7l.js",
     "name": "cart",
     "src": "assets/cart/index.js",
     "isEntry": true,
@@ -52,7 +61,7 @@
     ]
   },
   "assets/catalog/index.js": {
-    "file": "assets/catalog-C2GlUcBY.js",
+    "file": "assets/catalog-CVduCRdD.js",
     "name": "catalog",
     "src": "assets/catalog/index.js",
     "isEntry": true,
@@ -73,7 +82,7 @@
     ]
   },
   "assets/delivery/index.js": {
-    "file": "assets/delivery-DPzBBnkf.js",
+    "file": "assets/delivery-UthCCUT9.js",
     "name": "delivery",
     "src": "assets/delivery/index.js",
     "isEntry": true,
@@ -97,7 +106,7 @@
     "src": "assets/fonts/RozetkaWeb/RozetkaWeb-Regular.woff2"
   },
   "assets/footer/index.js": {
-    "file": "assets/footer--evNzoiK.js",
+    "file": "assets/footer-CM0aIslE.js",
     "name": "footer",
     "src": "assets/footer/index.js",
     "isEntry": true,
@@ -116,12 +125,12 @@
     ]
   },
   "assets/globals/index.js": {
-    "file": "assets/globals-CnziaPXM.js",
+    "file": "assets/globals-BncEUWcP.js",
     "name": "globals",
     "src": "assets/globals/index.js",
     "isEntry": true,
     "css": [
-      "assets/globals-C8GkXM2u.css"
+      "assets/globals-14djVXlz.css"
     ],
     "assets": [
       "assets/RozetkaWeb-Regular-D9f3z7ky.woff2",
@@ -130,7 +139,7 @@
     ]
   },
   "assets/hair-analysis/index.js": {
-    "file": "assets/hair-analysis-Db4PARMr.js",
+    "file": "assets/hair-analysis-DezhckFK.js",
     "name": "hair-analysis",
     "src": "assets/hair-analysis/index.js",
     "isEntry": true,
@@ -140,7 +149,7 @@
     ]
   },
   "assets/home/index.js": {
-    "file": "assets/home-CGy853wL.js",
+    "file": "assets/home-DwirUEjD.js",
     "name": "home",
     "src": "assets/home/index.js",
     "isEntry": true,
@@ -152,7 +161,7 @@
     ]
   },
   "assets/landing-page/index.js": {
-    "file": "assets/landing-page-DKclGHOL.js",
+    "file": "assets/landing-page-D9H5c1Za.js",
     "name": "landing-page",
     "src": "assets/landing-page/index.js",
     "isEntry": true,
@@ -161,8 +170,18 @@
       "assets/storefront-foundation-BSY9g9DU.css"
     ]
   },
+  "assets/legal-document/index.js": {
+    "file": "assets/legal-document-hJZz36tZ.js",
+    "name": "legal-document",
+    "src": "assets/legal-document/index.js",
+    "isEntry": true,
+    "css": [
+      "assets/legal-document-CPjwYDKH.css",
+      "assets/storefront-foundation-BSY9g9DU.css"
+    ]
+  },
   "assets/login/index.js": {
-    "file": "assets/login-DPhRPTre.js",
+    "file": "assets/login-Bga_2f4e.js",
     "name": "login",
     "src": "assets/login/index.js",
     "isEntry": true,
@@ -172,7 +191,7 @@
     ]
   },
   "assets/payment/index.js": {
-    "file": "assets/payment-CSBZFujP.js",
+    "file": "assets/payment-Bwxa0KT2.js",
     "name": "payment",
     "src": "assets/payment/index.js",
     "isEntry": true,
@@ -184,7 +203,7 @@
     ]
   },
   "assets/product/index.js": {
-    "file": "assets/product-DLFqlAox.js",
+    "file": "assets/product-Cx7RGMLF.js",
     "name": "product",
     "src": "assets/product/index.js",
     "isEntry": true,

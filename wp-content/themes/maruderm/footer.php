@@ -21,6 +21,8 @@ if (!function_exists('elementor_theme_do_location') || !elementor_theme_do_locat
     (new \Maruderm\Layout\FooterRenderer())->render();
     do_action('martfury_after_footer');
 }
+
+(new \Maruderm\Campaign\CampaignPopupRenderer())->render();
 ?>
 </div><!-- #page -->
 <?php wp_footer(); ?>

@@ -34,6 +34,8 @@ final class Enqueue implements Registrable
         'landing-page' => 'assets/landing-page/index.js',
         'home' => 'assets/home/index.js',
         'footer' => 'assets/footer/index.js',
+        'campaign-popup' => 'assets/campaign-popup/index.js',
+        'legal-document' => 'assets/legal-document/index.js',
         'hair-analysis' => 'assets/hair-analysis/index.js',
         'login' => 'assets/login/index.js',
         'account' => 'assets/account/index.js',
@@ -109,9 +111,7 @@ final class Enqueue implements Registrable
 
             $this->registerModuleScript($script_handle);
 
-            if ($handle === 'hair-analysis') {
-                wp_localize_script($script_handle, 'marudermHairAnalysisProducts', $this->hairAnalysisProducts());
-            }
+            $this->localizeEntrypoint($handle, $script_handle);
         }
 
         return true;
@@ -172,6 +172,14 @@ final class Enqueue implements Registrable
             return true;
         }
 
+        if ($handle === 'campaign-popup') {
+            return \Maruderm\Campaign\CampaignPopupRenderer::isCurrent();
+        }
+
+        if ($handle === 'legal-document') {
+            return \Maruderm\Legal\LegalDocumentPage::isCurrent();
+        }
+
         if ($handle === 'hair-analysis') {
             return \Maruderm\HairAnalysis\HairAnalysisPage::isCurrent()
                 || is_page_template('page-hair-analysis.php')
@@ -202,9 +210,9 @@ final class Enqueue implements Registrable
         $asset = $manifest[$entrypoint];
 
         if (!empty($asset['css']) && is_array($asset['css'])) {
-            foreach ($this->cssFilesInCascadeOrder($asset['css'], $manifest) as $index => $css_file) {
+            foreach ($this->cssFilesInCascadeOrder($asset['css'], $manifest) as $css_file) {
                 wp_enqueue_style(
-                    sprintf('maruderm-%s-%d', $handle, $index),
+                    $this->stylesheetHandle($css_file),
                     Helpers::dist_uri($css_file),
                     [],
                     $this->asset_version($css_file)
@@ -228,8 +236,21 @@ final class Enqueue implements Registrable
 
         $this->registerModuleScript($script_handle);
 
+        $this->localizeEntrypoint($handle, $script_handle);
+    }
+
+    private function localizeEntrypoint(string $handle, string $script_handle): void
+    {
         if ($handle === 'hair-analysis') {
             wp_localize_script($script_handle, 'marudermHairAnalysisProducts', $this->hairAnalysisProducts());
+        }
+
+        if ($handle === 'campaign-popup') {
+            wp_localize_script(
+                $script_handle,
+                'marudermCampaignPopup',
+                \Maruderm\Campaign\CampaignSubscriptions::clientConfig()
+            );
         }
     }
 
@@ -321,6 +342,16 @@ final class Enqueue implements Registrable
         });
 
         return array_values(array_column($indexed_files, 'file'));
+    }
+
+    private function stylesheetHandle(string $css_file): string
+    {
+        $asset_path = str_ends_with(strtolower($css_file), '.css')
+            ? substr($css_file, 0, -4)
+            : $css_file;
+        $asset_handle = str_replace(['/', '.'], '-', $asset_path);
+
+        return 'maruderm-style-' . sanitize_key($asset_handle);
     }
 
     public function preload_resources(array $preloads): array

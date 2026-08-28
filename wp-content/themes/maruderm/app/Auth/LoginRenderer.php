@@ -91,7 +91,7 @@ final class LoginRenderer
             : 'Продовжуй покупки, переглядай замовлення та свою персональну добірку.';
         $privacyUrl = get_privacy_policy_url() ?: home_url('/privacy-policy/');
 
-        echo '<div class="login-form-block login-form-block--' . esc_attr($variant) . ($isRegistration ? ' is-registration' : '') . '" data-auth-mode="' . esc_attr($isRegistration ? 'register' : 'login') . '">';
+        echo '<div class="login-form-block login-form-block--' . esc_attr($variant) . ($isRegistration ? ' is-registration' : '') . '" data-auth-state="' . esc_attr($isRegistration ? 'register' : 'login') . '">';
 
         if ($registrationEnabled) {
             echo '<div class="login-auth-switcher" role="group" aria-label="Вибір способу авторизації">';

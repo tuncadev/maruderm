@@ -92,6 +92,8 @@ export default defineConfig({
         "landing-page": resolve(__dirname, "assets/landing-page/index.js"),
         home: resolve(__dirname, "assets/home/index.js"),
         footer: resolve(__dirname, "assets/footer/index.js"),
+        "campaign-popup": resolve(__dirname, "assets/campaign-popup/index.js"),
+        "legal-document": resolve(__dirname, "assets/legal-document/index.js"),
         "hair-analysis": resolve(__dirname, "assets/hair-analysis/index.js"),
         login: resolve(__dirname, "assets/login/index.js"),
         account: resolve(__dirname, "assets/account/index.js"),

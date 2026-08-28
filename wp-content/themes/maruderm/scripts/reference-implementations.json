@@ -21,6 +21,7 @@
           "assets/home/index.js",
           "assets/hair-analysis/index.js",
           "assets/landing-page/index.js",
+          "assets/legal-document/index.js",
           "assets/login/index.js",
           "assets/payment/index.js",
           "assets/product/index.js"
@@ -299,6 +300,72 @@
           "template-login-register.php"
         ],
         "routes": ["global logged-out storefront login drawer", "WooCommerce login and registration"],
+        "legacyFiles": [],
+        "blocker": ""
+      }
+    },
+    {
+      "id": "legal-document",
+      "target": "legal-document.css",
+      "kind": "page",
+      "reference": {
+        "markup": [
+          "public-offer.html",
+          "terms-and-privacy.html",
+          "components/legal-document.html"
+        ],
+        "javascript": ["assets/data/legal-documents.js"]
+      },
+      "wordpress": {
+        "status": "implemented",
+        "entries": ["assets/legal-document/index.js"],
+        "renderers": [
+          "app/Legal/LegalDocumentRepository.php",
+          "app/Legal/LegalDocumentRenderer.php",
+          "app/Legal/LegalDocumentPage.php",
+          "page-public-offer.php",
+          "page-terms-and-privacy.php"
+        ],
+        "routes": ["/public-offer/", "/terms-and-privacy/"],
+        "legacyFiles": [],
+        "blocker": ""
+      }
+    },
+    {
+      "id": "campaign-popup",
+      "target": "campaign-popup.css",
+      "kind": "component",
+      "reference": {
+        "markup": [
+          "components/campaign-popup.html",
+          "index.html",
+          "catalog.html",
+          "product.html",
+          "cart.html",
+          "delivery.html"
+        ],
+        "javascript": [
+          "assets/data/campaign-popups.js",
+          "assets/js/components/campaign-popup.js",
+          "assets/js/components/login.js"
+        ]
+      },
+      "wordpress": {
+        "status": "implemented",
+        "entries": ["assets/campaign-popup/index.js"],
+        "renderers": [
+          "app/Campaign/CampaignPopupContent.php",
+          "app/Campaign/CampaignPopupRenderer.php",
+          "app/Campaign/CampaignSubscriptions.php",
+          "footer.php"
+        ],
+        "routes": [
+          "front page",
+          "/catalog/ and product-category routes",
+          "single products",
+          "WooCommerce cart",
+          "WooCommerce checkout delivery step"
+        ],
         "legacyFiles": [],
         "blocker": ""
       }

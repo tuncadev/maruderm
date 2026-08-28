@@ -50,6 +50,10 @@
     gap: 0;
 }
 
+#site-header .header-main > .martfury-container {
+    max-width: 1320px;
+}
+
 #site-header .extras-menu > .header-cart > .header-cart__trigger {
     display: flex;
     align-items: center;
