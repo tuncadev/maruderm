@@ -13,4 +13,5 @@ final class CarrierSlug
     public const NOVA_GLOBAL = 'nova_global';
     public const MEEST = 'meest';
     public const DHL_API = 'dhl_api';
+    public const POST_NORD = 'post_nord';
 }

@@ -7,6 +7,8 @@ use kirillbdev\WCUkrShipping\Enums\CarrierSlug;
 use kirillbdev\WCUkrShipping\Foundation\NovaGlobalAddress;
 use kirillbdev\WCUkrShipping\Foundation\NovaPoshtaShipping;
 use kirillbdev\WCUkrShipping\Foundation\NovaPostShipping;
+use kirillbdev\WCUkrShipping\Foundation\PostNordAddressShipping;
+use kirillbdev\WCUkrShipping\Foundation\PostNordShipping;
 use kirillbdev\WCUkrShipping\Foundation\RozetkaDeliveryShipping;
 use kirillbdev\WCUkrShipping\Foundation\MeestShipping;
 use kirillbdev\WCUkrShipping\Foundation\MeestAddressShipping;
@@ -68,6 +70,10 @@ class ShippingMethod implements ModuleInterface
             $methods[WCUS_SHIPPING_METHOD_MEEST] = MeestShipping::class;
             $methods[WCUS_SHIPPING_METHOD_MEEST_ADDRESS] = MeestAddressShipping::class;
         }
+        if (in_array(CarrierSlug::POST_NORD, $activeCarriers)) {
+            $methods[WCUS_SHIPPING_METHOD_POST_NORD] = PostNordShipping::class;
+            $methods[WCUS_SHIPPING_METHOD_POST_NORD_ADDRESS] = PostNordAddressShipping::class;
+        }
 
         return $methods;
     }
@@ -90,6 +96,8 @@ class ShippingMethod implements ModuleInterface
             WCUS_SHIPPING_METHOD_MEEST,
             WCUS_SHIPPING_METHOD_MEEST_ADDRESS,
             WCUS_SHIPPING_METHOD_NOVA_GLOBAL_ADDRESS,
+            WCUS_SHIPPING_METHOD_POST_NORD,
+            WCUS_SHIPPING_METHOD_POST_NORD_ADDRESS,
         ];
         foreach ($packages as $key => &$package) {
             if (isset($chosenMethods[$key])

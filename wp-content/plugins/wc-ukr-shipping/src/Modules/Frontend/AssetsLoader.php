@@ -103,6 +103,7 @@ class AssetsLoader implements ModuleInterface
             'ui' => [
                 'city_placeholder' => __('Select locality', 'wc-ukr-shipping'),
                 'warehouse_placeholder' => __('Select warehouse', 'wc-ukr-shipping'),
+                'pudo_placeholder' => __('Select Service Point', 'wc-ukr-shipping'),
                 'poshtomat_placeholder' => __('Select poshtomat', 'wc-ukr-shipping'),
                 'warehouse_poshtomat_placeholder' => __('Select warehouse or poshtomat', 'wc-ukr-shipping'),
                 'custom_address_placeholder' => __('Enter address', 'wc-ukr-shipping'),
@@ -158,6 +159,8 @@ class AssetsLoader implements ModuleInterface
             WCUS_SHIPPING_METHOD_ROZETKA,
             WCUS_SHIPPING_METHOD_MEEST,
             WCUS_SHIPPING_METHOD_MEEST_ADDRESS,
+            WCUS_SHIPPING_METHOD_POST_NORD,
+            WCUS_SHIPPING_METHOD_POST_NORD_ADDRESS,
         ];
 
         // Get active shipping methods for zones
@@ -196,6 +199,10 @@ class AssetsLoader implements ModuleInterface
             return [
                 'deliveryMethods' => $method->get_option('delivery_methods'),
                 'combinePoshtomats' => $method->get_option('combine_poshtomats') === 'yes',
+            ];
+        } elseif ($method->id === WCUS_SHIPPING_METHOD_POST_NORD) {
+            return [
+                'pudoTypes' => $method->get_option('pudo_types'),
             ];
         }
 

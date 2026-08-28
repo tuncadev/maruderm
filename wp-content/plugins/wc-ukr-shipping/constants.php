@@ -13,6 +13,8 @@ define('WCUS_SHIPPING_METHOD_ROZETKA', 'wcus_rozetka_delivery_shipping');
 define('WCUS_SHIPPING_METHOD_MEEST', 'wcus_meest_shipping');
 define('WCUS_SHIPPING_METHOD_MEEST_ADDRESS', 'wcus_meest_address_shipping');
 define('WCUS_SHIPPING_METHOD_NOVA_GLOBAL_ADDRESS', 'wcus_nova_global_address');
+define('WCUS_SHIPPING_METHOD_POST_NORD', 'wcus_post_nord_shipping');
+define('WCUS_SHIPPING_METHOD_POST_NORD_ADDRESS', 'wcus_post_nord_address');
 
 // Shipping item meta
 define('WCUS_SHIPPING_META_VIEW_COST', 'wcus_view_cost');
@@ -36,3 +38,4 @@ define('WCUS_OPTION_LOADER_LAST_SYNC', 'wcus_loader_last_sync');
 define('WCUS_OPTION_SMARTY_PARCEL_API_KEY', 'wcus_smartyparcel_api_key');
 define('WCUS_OPTION_SMARTY_PARCEL_USER_STATUS', 'wcus_smartyparcel_user_status');
 define('WCUS_OPTION_SMARTY_PARCEL_CARRIERS', 'wcus_smartyparcel_carriers');
+define('WCUS_OPTION_INSTALLATION_ID', 'wcus_app_installation_id');

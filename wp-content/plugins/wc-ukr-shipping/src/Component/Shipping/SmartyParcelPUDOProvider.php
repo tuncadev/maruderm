@@ -9,6 +9,7 @@ use kirillbdev\WCUkrShipping\Contracts\Shipping\PUDOProviderInterface;
 use kirillbdev\WCUkrShipping\Dto\Shipping\City;
 use kirillbdev\WCUkrShipping\Dto\Shipping\PUDO;
 use kirillbdev\WCUkrShipping\Dto\Shipping\SearchPUDORequestDTO;
+use kirillbdev\WCUkrShipping\Enums\CarrierSlug;
 
 class SmartyParcelPUDOProvider implements PUDOProviderInterface
 {
@@ -68,7 +69,12 @@ class SmartyParcelPUDOProvider implements PUDOProviderInterface
                 'unit' => 'kg',
             ];
         }
-        if ($this->carrierSlug === 'nova_post') {
+
+        $intlCarriers = [
+            CarrierSlug::NOVA_POST,
+            CarrierSlug::POST_NORD,
+        ];
+        if (in_array($this->carrierSlug, $intlCarriers, true)) {
             $params['country_code'] = $request->cityId;
         } else {
             $params['carrier_city_id'] = $request->cityId;
@@ -83,7 +89,15 @@ class SmartyParcelPUDOProvider implements PUDOProviderInterface
                 $item['name'],
                 $item['type'] === 'parcel_locker'
                     ? PUDO::PUDO_TYPE_LOCKER
-                    : PUDO::PUDO_TYPE_WAREHOUSE
+                    : PUDO::PUDO_TYPE_WAREHOUSE,
+                [
+                    'country_code' => $item['country_code'],
+                    'city' => $item['city'],
+                    'address_1' => $item['address_1'],
+                    'postal_code' => $item['postal_code'],
+                    'lat' => $item['lat'],
+                    'lng' => $item['lng'],
+                ]
             );
         }, $response['pudo_points']);
 

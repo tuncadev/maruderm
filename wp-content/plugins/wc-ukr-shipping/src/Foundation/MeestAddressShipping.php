@@ -17,7 +17,7 @@ class MeestAddressShipping extends AbstractShippingMethod
 
         $this->id = WCUS_SHIPPING_METHOD_MEEST_ADDRESS;
         $this->method_title = __('Meest Post Address', 'wc-ukr-shipping');
-        $this->method_description = 'Meest Post Address by WC Ukraine Shipping';
+        $this->method_description = 'Meest Post Address by SmartyParcel';
 
         $this->supports = [
             'shipping-zones',

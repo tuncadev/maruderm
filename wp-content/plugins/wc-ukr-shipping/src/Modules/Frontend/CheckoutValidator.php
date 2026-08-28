@@ -6,6 +6,7 @@ use kirillbdev\WCUkrShipping\Component\Validation\CheckoutValidatorInterface;
 use kirillbdev\WCUkrShipping\Component\Validation\MeestCheckoutValidator;
 use kirillbdev\WCUkrShipping\Component\Validation\NovaPoshtaCheckoutValidator;
 use kirillbdev\WCUkrShipping\Component\Validation\NovaPostCheckoutValidator;
+use kirillbdev\WCUkrShipping\Component\Validation\PostNordCheckoutValidator;
 use kirillbdev\WCUkrShipping\Component\Validation\RozetkaDeliveryCheckoutValidator;
 use kirillbdev\WCUkrShipping\Component\Validation\UkrposhtaCheckoutValidator;
 use kirillbdev\WCUkrShipping\Helpers\WCUSHelper;
@@ -57,11 +58,9 @@ class CheckoutValidator implements ModuleInterface
 
     public function validateFields(): void
     {
-        if ($this->isPluginShippingMethodSelected()) {
-           $validator = $this->getCheckoutValidator();
-           if ($validator !== null) {
-               $validator->validate($_POST);
-           }
+        $validator = $this->getCheckoutValidator();
+        if ($validator !== null) {
+            $validator->validate($_POST);
         }
     }
 
@@ -96,6 +95,8 @@ class CheckoutValidator implements ModuleInterface
             return new RozetkaDeliveryCheckoutValidator();
         } elseif (WCUSHelper::hasChosenShippingMethod(WCUS_SHIPPING_METHOD_MEEST)) {
             return new MeestCheckoutValidator();
+        } elseif (WCUSHelper::hasChosenShippingMethod(WCUS_SHIPPING_METHOD_POST_NORD)) {
+            return new PostNordCheckoutValidator();
         }
 
         return null;

@@ -36,6 +36,7 @@ class ShippingItemDrawer implements ModuleInterface
         $keys[] = 'wcus_ukrposhta_warehouse_id';
         $keys[] = 'wcus_rozetka_city_id';
         $keys[] = 'wcus_rozetka_warehouse_id';
+        $keys[] = 'wcus_pudo_point_id';
 
         return $keys;
     }
@@ -54,6 +55,7 @@ class ShippingItemDrawer implements ModuleInterface
             'wcus_ukrposhta_service_type' => __('Service type', 'wc-ukr-shipping'),
             'wcus_rozetka_city_name' => __('City', 'wc-ukr-shipping'),
             'wcus_rozetka_warehouse_name' => __('Warehouse', 'wc-ukr-shipping'),
+            'wcus_pudo_point_name' => __('Service Point (PUDO)', 'wc-ukr-shipping'),
             WCUS_SHIPPING_META_VIEW_COST => __('Calculated shipping cost in checkout', 'wc-ukr-shipping'),
         ];
 

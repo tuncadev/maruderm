@@ -17,7 +17,7 @@ class UkrPoshtaAddressShipping extends AbstractShippingMethod
 
         $this->id = WCUS_SHIPPING_METHOD_UKRPOSHTA_ADDRESS;
         $this->method_title = __('Ukrposhta Address', 'wc-ukr-shipping');
-        $this->method_description = 'Ukrposhta by WC Ukraine Shipping';
+        $this->method_description = 'Ukrposhta by SmartyParcel';
 
         $this->supports = [
             'shipping-zones',

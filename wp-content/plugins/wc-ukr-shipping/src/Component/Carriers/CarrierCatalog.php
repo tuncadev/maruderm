@@ -173,6 +173,17 @@ final class CarrierCatalog
                     ]),
                 ]
             ),
+            new CarrierDefinition(
+                CarrierSlug::POST_NORD,
+                'PostNord',
+                'postnord-icon.png',
+                [
+                    CarrierFeature::PICKUP_POINTS,
+                    CarrierFeature::ADDRESS_DELIVERY,
+                    CarrierFeature::TRACKING,
+                ],
+                requireStoreConnection: true
+            ),
         ];
 
         $indexed = [];

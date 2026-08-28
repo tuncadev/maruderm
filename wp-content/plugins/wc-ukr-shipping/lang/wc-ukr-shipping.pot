@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-08-23T02:25:46+03:00\n"
+"POT-Creation-Date: 2026-08-26T12:49:36+03:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: wc-ukr-shipping\n"
@@ -40,6 +40,10 @@ msgid "Add tracking number for order"
 msgstr ""
 
 #: lang/frontend.php:1
+msgid "Before you go, please take 30 seconds to tell us what led you to this decision. Your feedback will be completely anonymous."
+msgstr ""
+
+#: lang/frontend.php:1
 msgid "Cancel"
 msgstr ""
 
@@ -49,6 +53,22 @@ msgstr ""
 
 #: lang/frontend.php:1
 msgid "Carrier settings"
+msgstr ""
+
+#: lang/frontend.php:1
+msgid "Could you tell us more about the reason for deactivation?"
+msgstr ""
+
+#: lang/frontend.php:1
+msgid "Deactivate"
+msgstr ""
+
+#: lang/frontend.php:1
+msgid "I found another plugin"
+msgstr ""
+
+#: lang/frontend.php:1
+msgid "I had difficulties with the setup"
 msgstr ""
 
 #: lang/frontend.php:1
@@ -65,10 +85,38 @@ msgid "No carriers available for your account"
 msgstr ""
 
 #: lang/frontend.php:1
+msgid "Other"
+msgstr ""
+
+#: lang/frontend.php:1
+msgid "Please describe the reasons for deactivation in more detail"
+msgstr ""
+
+#: lang/frontend.php:1
 #: views/automation.php:17
 #: views/settings_general.php:35
 #: views/tools.php:17
 msgid "Save"
+msgstr ""
+
+#: lang/frontend.php:1
+msgid "Skip and deactivate"
+msgstr ""
+
+#: lang/frontend.php:1
+msgid "The features I need are too expensive"
+msgstr ""
+
+#: lang/frontend.php:1
+msgid "The plugin does not have the functionality I need"
+msgstr ""
+
+#: lang/frontend.php:1
+msgid "The plugin stopped working"
+msgstr ""
+
+#: lang/frontend.php:1
+msgid "This is a temporary deactivation"
 msgstr ""
 
 #: lang/frontend.php:1
@@ -89,6 +137,10 @@ msgstr ""
 
 #: lang/frontend.php:1
 msgid "Unable to save carrier settings"
+msgstr ""
+
+#: lang/frontend.php:1
+msgid "You are deactivating the SmartyParcel plugin."
 msgstr ""
 
 #: src/Component/Carriers/CarrierCatalog.php:63

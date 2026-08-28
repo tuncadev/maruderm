@@ -17,7 +17,7 @@ class NovaGlobalAddress extends AbstractShippingMethod
 
         $this->id = WCUS_SHIPPING_METHOD_NOVA_GLOBAL_ADDRESS;
         $this->method_title = __('Nova Global Address', 'wc-ukr-shipping');
-        $this->method_description = 'Nova Global by WC Ukraine Shipping';
+        $this->method_description = 'Nova Global by SmartyParcel';
 
         $this->supports = [
             'shipping-zones',

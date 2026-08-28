@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace kirillbdev\WCUkrShipping\Modules\Core;
 
+use kirillbdev\WCUkrShipping\Http\Controllers\InstallationController;
 use kirillbdev\WCUkrShipping\Http\Controllers\JWTController;
 use kirillbdev\WCUkrShipping\Http\Controllers\OrdersController;
 use kirillbdev\WCUkrShipping\Http\Controllers\SmartyParcelController;
@@ -23,6 +24,14 @@ class Router implements ModuleInterface
             // SmartyParcel
             new Route('wcus_smartyparcel_save_label', SmartyParcelController::class, 'saveLabel'),
             new Route('wcus_smartyparcel_remove_label', SmartyParcelController::class, 'removeLabel'),
+            new Route(
+                'wcus_smartyparcel_register_installation',
+                InstallationController::class,
+                'register',
+                [
+                    'middleware' => [CheckManageWooPermission::class]
+                ]
+            ),
 
             // Authx (embedded elements)
             new Route('wcus_smartyparcel_jwt', JWTController::class, 'issueToken'),

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace kirillbdev\WCUkrShipping\Http\Controllers;
 
 use kirillbdev\WCUkrShipping\Dto\Carrier\CarrierDefinition;
+use kirillbdev\WCUkrShipping\Helpers\SmartyParcelHelper;
 use kirillbdev\WCUkrShipping\Services\CarrierService;
 use kirillbdev\WCUSCore\Http\Contracts\ResponseInterface;
 use kirillbdev\WCUSCore\Http\Controller;
@@ -26,8 +27,18 @@ class CarriersController extends Controller
     public function toggle(Request $request): ResponseInterface
     {
         $carrier = $this->resolveCarrier($request);
+
         if ($carrier === null) {
             return $this->carrierNotFound();
+        }
+
+        if ($carrier->requireStoreConnection && !SmartyParcelHelper::isConnected()) {
+            return $this->jsonResponse([
+                'success' => true,
+                'data' => [
+                    'redirect_url' => admin_url('admin.php?page=wcus_smarty_parcel'),
+                ],
+            ]);
         }
 
         $enabled = (int)$request->get('enabled') === 1;

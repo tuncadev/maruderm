@@ -15,6 +15,7 @@ use kirillbdev\WCUkrShipping\Component\Carriers\RozetkaDelivery\Order\CheckoutOr
 use kirillbdev\WCUkrShipping\Component\Carriers\NovaPost\Order\CheckoutOrderHandler as NovaPostCheckoutOrderHandler;
 use kirillbdev\WCUkrShipping\Component\Carriers\NovaPost\Order\CheckoutOrderShippingHandler as NovaPostCheckoutOrderShippingHandler;
 use kirillbdev\WCUkrShipping\Component\Carriers\Meest\Order\CheckoutOrderHandler as MeestCheckoutOrderHandler;
+use kirillbdev\WCUkrShipping\Component\Carriers\PostNord\Order\CheckoutOrderHandler as PostNordCheckoutOrderHandler;
 
 if ( ! defined('ABSPATH')) {
     exit;
@@ -27,6 +28,9 @@ class OrderCreator implements ModuleInterface
         add_action('woocommerce_thankyou', [ $this, 'handleSyncOrder' ]);
         add_action('woocommerce_checkout_create_order', [ $this, 'createOrder' ]);
         add_action('woocommerce_checkout_create_order_shipping_item', [ $this, 'saveOrderShipping' ]);
+
+        add_action('woocommerce_admin_order_data_after_shipping_address', [ $this, 'displayShippingOrderMeta' ]);
+        add_action( 'woocommerce_order_details_after_customer_address', [$this, 'displayThankYouShippingOrderMeta'], 10 ,2);
 
         if (is_admin()) {
             add_action('woocommerce_new_order', [ $this, 'handleSyncOrder' ]);
@@ -59,6 +63,24 @@ class OrderCreator implements ModuleInterface
         }
     }
 
+    public function displayThankYouShippingOrderMeta(string $group, \WC_Order $order): void
+    {
+        if ($group !== 'shipping') {
+            return;
+        }
+
+        $this->displayShippingOrderMeta($order);
+    }
+
+    public function displayShippingOrderMeta(\WC_Order $order): void
+    {
+        $metaValue = get_post_meta($order->get_id(), '_wcus_pudo_point_name', true);
+
+        if ($metaValue) {
+            echo '<p><strong>' . esc_html__('Selected service point', 'wc-ukr-shipping') . ':</strong> ' . esc_html($metaValue) . '</p>';
+        }
+    }
+
     private function createOrderHandler(\WC_Order $order): ?OrderHandlerInterface
     {
         switch (true) {
@@ -72,6 +94,8 @@ class OrderCreator implements ModuleInterface
                 return new NovaPostCheckoutOrderHandler();
             case $order->has_shipping_method(WCUS_SHIPPING_METHOD_MEEST):
                 return new MeestCheckoutOrderHandler();
+            case $order->has_shipping_method(WCUS_SHIPPING_METHOD_POST_NORD):
+                return new PostNordCheckoutOrderHandler();
             default:
                 return null;
         }

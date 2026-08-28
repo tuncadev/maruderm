@@ -5,7 +5,7 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Tags: order tracking, shipping, shipping rates, fulfillment
 Requires PHP: 8.0
 Tested up to: 7.1
-Stable tag: 1.22.0
+Stable tag: 1.22.2
 
 Pickup points and live rates at checkout, one-click shipping labels, and order tracking for 1,000+ carriers. Free plan available.
 
@@ -20,7 +20,7 @@ Connect regional and international carriers you already work with — Nova Post 
 == Features ==
 
 ### 📦 Seamless Shipping & Checkout Experience
-* **SmartyParcel Locator:** Pickup point / parcel locker and warehouse selection at checkout for Nova Post (Нова Пошта), Ukrposhta (Укрпошта), Rozetka Delivery, Meest, DHL, DPD, and PostNord.
+* **SmartyParcel Locator:** Pickup point / parcel locker and warehouse selection at checkout for Nova Post (Нова Пошта), Ukrposhta (Укрпошта), Rozetka Delivery, Meest, DHL, DPD, and PostNord (Posten Norden).
 * **Flexible Shipping Methods:** Separate shipping types into distinct checkout methods (e.g., separate options for "To Doors / Courier" vs. "To Branch / Locker").
 * **Live & Dynamic Rates:** Calculate live real-time carrier rates at checkout or configure custom shipping rules.
 * **Multilingual Ready:** Full compatibility with WPML, Polylang, and multi-currency stores.
@@ -29,8 +29,8 @@ Connect regional and international carriers you already work with — Nova Post 
 * **Multi-Carrier Label Creation:** Generate official domestic and international shipping labels directly inside WooCommerce order management.
 * **1-Click Bulk Operations:** Generate, update, and print dozens or hundreds of shipping labels in bulk to streamline high-volume fulfillment routines.
 * **Rule-Based Automation:** Automatically trigger document generation on order status updates, payment completion, or custom triggers.
-* Dynamic shipping rules allow you to create custom scenarios for label generation with different conditions.
-* Cash on Delivery (COD) & Custom Declaration Controls.
+* **Dynamic shipping rules** allow you to create custom scenarios for label generation with different conditions.
+* **Cash on Delivery** (COD) & Custom Declaration Controls.
 
 ### 🌐 Universal Order Tracking (1,000+ Carriers)
 * Real-time automated status synchronization for local and global shipments.
@@ -54,9 +54,9 @@ Connect regional and international carriers you already work with — Nova Post 
 * Rozetka Delivery
 * Nova Post (EU, International)
 * Meest
+* PostNord (Posten Norden)
 * DHL (soon)
 * DPD (soon)
-* PostNord (soon)
 
 == Order Tracking (partial list of supported carriers) ==
 
@@ -98,7 +98,7 @@ Automatic updates should work like a charm; as always though, ensure you backup 
 
 == External services ==
 
-This plugin uses SmartyParcel API to provide advanced logistic functions (like create labels, tracking etc.) and also external API to collect user feedbacks ([Privacy Policy](https://smartyparcel.com/privacy/)).
+This plugin uses SmartyParcel API to provide advanced logistic functions (like create labels, tracking etc.) and also external API to collect user feedbacks and installation telemetry, which includes the store URL and the WordPress administrator email address ([Privacy Policy](https://smartyparcel.com/privacy/)).
 
 == FAQ ==
 
@@ -119,6 +119,15 @@ Yes, absolutely. You can use SmartyParcel strictly to enhance your WooCommerce c
 Unfortunately, the plugin doesn't support checkout blocks yet, but we are working on it.
 
 == Changelog ==
+
+= Version 1.22.2 / (28.08.2026) =
+* Added PostNord Service Point delivery shipping method.
+* Added PostNord Address delivery shipping method.
+* Implemented SmartyParcel Locator (PUDO search) for PostNord carrier.
+
+= Version 1.22.1 / (26.08.2026) =
+* Improved telemetry data.
+* Improved translations for a feedback form.
 
 = Version 1.22.0 / (23.08.2026) =
 * Improved and refactored options UI.

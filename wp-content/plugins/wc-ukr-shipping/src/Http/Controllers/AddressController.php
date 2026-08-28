@@ -178,8 +178,13 @@ class AddressController extends Controller
           CarrierSlug::UKRPOSHTA,
           CarrierSlug::ROZETKA_DELIVERY,
           CarrierSlug::NOVA_POST,
+          CarrierSlug::POST_NORD,
         ];
-        if ($useLocator && SmartyParcelHelper::isConnected() && in_array($carrier, $locatorSupportedCarriers, true)) {
+
+        if (
+            $useLocator && SmartyParcelHelper::isConnected()
+            && in_array($carrier, $locatorSupportedCarriers, true)
+        ) {
             return new SmartyParcelPUDOProvider(
                 $carrier,
                 $lang,

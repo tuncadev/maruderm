@@ -30,6 +30,8 @@ final class CarrierDefinition
      */
     public array $groups;
 
+    public bool $requireStoreConnection;
+
     /**
      * @param string[] $features
      * @param CarrierOptionGroup[] $groups
@@ -39,13 +41,15 @@ final class CarrierDefinition
         string $name,
         string $icon,
         array $features = [],
-        array $groups = []
+        array $groups = [],
+        bool $requireStoreConnection = false
     ) {
         $this->slug = $slug;
         $this->name = $name;
         $this->icon = $icon;
         $this->features = $features;
         $this->groups = $groups;
+        $this->requireStoreConnection = $requireStoreConnection;
     }
 
     public function getIconUrl(): string

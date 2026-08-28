@@ -17,7 +17,7 @@ class NovaPostShipping extends AbstractShippingMethod
 
         $this->id = WCUS_SHIPPING_METHOD_NOVA_POST;
         $this->method_title = __('Nova Post', 'wc-ukr-shipping');
-        $this->method_description = 'Nova Post by WC Ukraine Shipping';
+        $this->method_description = 'Nova Post by SmartyParcel';
 
         $this->supports = [
             'shipping-zones',

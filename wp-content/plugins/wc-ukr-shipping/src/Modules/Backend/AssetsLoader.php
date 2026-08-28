@@ -57,6 +57,14 @@ class AssetsLoader implements ModuleInterface
             filemtime(WC_UKR_SHIPPING_PLUGIN_DIR . 'assets/js/tabs.js')
         );
 
+        wp_enqueue_script(
+            'wcus_installation_js',
+            WC_UKR_SHIPPING_PLUGIN_URL . 'assets/js/installation.js',
+            ['jquery'],
+            filemtime(WC_UKR_SHIPPING_PLUGIN_DIR . 'assets/js/installation.js'),
+            true
+        );
+
         if (get_current_screen() !== null && get_current_screen()->id === 'smartyparcel_page_wcus_settings') {
             wp_enqueue_script(
                 'wcus_settings_js',
@@ -192,6 +200,7 @@ class AssetsLoader implements ModuleInterface
         }
 
         $globals['smarty_parcel'] = [
+            'installationId' => get_option(WCUS_OPTION_INSTALLATION_ID) ?: null,
             'isConnected' => SmartyParcelHelper::isConnected(),
             'connectUrl' => $connectUrl,
             'account' => null,

@@ -17,7 +17,7 @@ class RozetkaDeliveryShipping extends AbstractShippingMethod
 
         $this->id = WCUS_SHIPPING_METHOD_ROZETKA;
         $this->method_title = __('Rozetka Delivery', 'wc-ukr-shipping');
-        $this->method_description = 'Rozetka Delivery by WC Ukraine Shipping';
+        $this->method_description = 'Rozetka Delivery by SmartyParcel';
 
         $this->supports = [
             'shipping-zones',

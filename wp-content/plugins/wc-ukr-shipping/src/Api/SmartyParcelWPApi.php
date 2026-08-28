@@ -23,7 +23,6 @@ final class SmartyParcelWPApi
         '/v1/batches/:id' => 'GET',
         '/v1/downloads/l5/:uuid.pdf' => 'GET',
         '/v1/downloads/b6/:uuid.pdf' => 'GET',
-        '/v1/manifest' => 'GET',
         '/v1/embedded/authx' => 'POST',
         '/v1/lookup/company' => 'GET',
         '/v1/rates/estimate' => 'POST',
@@ -37,10 +36,15 @@ final class SmartyParcelWPApi
 
         // Legacy route for migration settings
         '/v1/legacy/settings/migrate' => 'POST',
+
+        // Public routes
+        '/v1/manifest' => 'GET',
+        '/v1/app/register' => 'POST',
     ];
 
     private const PUBLIC_ROUTES = [
         '/v1/manifest',
+        '/v1/app/register',
     ];
 
     public function connectApplication(string $accessToken): array
