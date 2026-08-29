@@ -9,6 +9,7 @@ class DeliveryController {
   init() {
     if (!this.form || !this.submitButton) return;
 
+    this.bindCheckoutLifecycle();
     this.form.addEventListener('change', (event) => this.handleChange(event));
     this.form.addEventListener('input', (event) => this.clearError(event.target));
     this.form.addEventListener('submit', (event) => event.preventDefault());
@@ -16,10 +17,18 @@ class DeliveryController {
     this.syncShippingMethod();
   }
 
+  bindCheckoutLifecycle() {
+    const body = window.jQuery?.(document.body);
+    if (!body) return;
+
+    body.off('update_checkout.marudermDelivery').on('update_checkout.marudermDelivery', () => {
+      window.setTimeout(() => body.trigger('updated_checkout'), 0);
+    });
+  }
+
   handleChange(event) {
     if (event.target.matches('input[name^="shipping_method"]')) {
       this.syncShippingMethod();
-      window.jQuery?.(document.body).trigger('update_checkout');
     }
 
     this.clearError(event.target);
