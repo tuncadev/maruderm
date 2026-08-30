@@ -29,7 +29,6 @@ blocked_patterns=(
   '^wp-config\.php$'
   '^wp-admin/'
   '^wp-includes/'
-  '^wp-content/plugins/'
   '^wp-content/uploads/'
   '^wp-content/upgrade/'
   '^wp-content/languages/'

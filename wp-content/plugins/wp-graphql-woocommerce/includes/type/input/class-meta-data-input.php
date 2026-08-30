@@ -1,0 +1,50 @@
+<?php
+/**
+ * WPInputObjectType - MetaDataInput
+ *
+ * @package WPGraphQL\WooCommerce\Type\WPInputObject
+ * @since   0.2.0
+ */
+
+namespace WPGraphQL\WooCommerce\Type\WPInputObject;
+
+/**
+ * Class Meta_Data_Input
+ */
+class Meta_Data_Input {
+	/**
+	 * Registers type
+	 *
+	 * @return void
+	 */
+	public static function register() {
+		register_graphql_input_type(
+			'MetaDataInput',
+			[
+				'description' => static function () {
+					return __( 'Meta data.', 'graphql-for-ecommerce' );
+				},
+				'fields'      => [
+					'id'    => [
+						'type'        => 'String',
+						'description' => static function () {
+							return __( 'Meta ID.', 'graphql-for-ecommerce' );
+						},
+					],
+					'key'   => [
+						'type'        => [ 'non_null' => 'String' ],
+						'description' => static function () {
+							return __( 'Meta key.', 'graphql-for-ecommerce' );
+						},
+					],
+					'value' => [
+						'type'        => [ 'non_null' => 'String' ],
+						'description' => static function () {
+							return __( 'Meta value.', 'graphql-for-ecommerce' );
+						},
+					],
+				],
+			]
+		);
+	}
+}

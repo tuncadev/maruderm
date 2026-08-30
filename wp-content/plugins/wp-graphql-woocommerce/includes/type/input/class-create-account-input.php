@@ -1,0 +1,50 @@
+<?php
+/**
+ * WPInputObjectType - CreateAccountInput
+ *
+ * @package WPGraphQL\WooCommerce\Type\WPInputObject
+ * @since   0.2.0
+ */
+
+namespace WPGraphQL\WooCommerce\Type\WPInputObject;
+
+/**
+ * Class Create_Account_Input
+ */
+class Create_Account_Input {
+	/**
+	 * Registers type
+	 *
+	 * @return void
+	 */
+	public static function register() {
+		register_graphql_input_type(
+			'CreateAccountInput',
+			[
+				'description' => static function () {
+					return __( 'Customer account credentials', 'graphql-for-ecommerce' );
+				},
+				'fields'      => [
+					'username'     => [
+						'type'        => [ 'non_null' => 'String' ],
+						'description' => static function () {
+							return __( 'Customer username', 'graphql-for-ecommerce' );
+						},
+					],
+					'password'     => [
+						'type'        => [ 'non_null' => 'String' ],
+						'description' => static function () {
+							return __( 'Customer password', 'graphql-for-ecommerce' );
+						},
+					],
+					'authenticate' => [
+						'type'        => 'Boolean',
+						'description' => static function () {
+							return __( 'Set the current user to the newly created customer after checkout.', 'graphql-for-ecommerce' );
+						},
+					],
+				],
+			]
+		);
+	}
+}

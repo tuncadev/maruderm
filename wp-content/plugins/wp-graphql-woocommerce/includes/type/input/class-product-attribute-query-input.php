@@ -1,0 +1,44 @@
+<?php
+/**
+ * WPInputObjectType - ProductAttributeQueryInput
+ *
+ * @package WPGraphQL\WooCommerce\Type\WPInputObject
+ * @since   0.20.0
+ */
+
+namespace WPGraphQL\WooCommerce\Type\WPInputObject;
+
+/**
+ * Class Product_Attribute_Query_Input
+ */
+class Product_Attribute_Query_Input {
+	/**
+	 * Registers type
+	 *
+	 * @return void
+	 */
+	public static function register() {
+		register_graphql_input_type(
+			'ProductAttributeQueryInput',
+			[
+				'description' => static function () {
+					return __( 'Product filter', 'graphql-for-ecommerce' );
+				},
+				'fields'      => [
+					'queries'  => [
+						'type'        => [ 'list_of' => 'ProductAttributeFilterInput' ],
+						'description' => static function () {
+							return __( 'Limit result set to products with selected global attributes.', 'graphql-for-ecommerce' );
+						},
+					],
+					'relation' => [
+						'type'        => 'AttributeOperatorEnum',
+						'description' => static function () {
+							return __( 'The logical relationship between attributes when filtering across multiple at once.', 'graphql-for-ecommerce' );
+						},
+					],
+				],
+			]
+		);
+	}
+}

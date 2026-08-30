@@ -1,0 +1,133 @@
+<?php
+/**
+ * WPObject Type - Customer_Address_Type
+ *
+ * Registers WPObject type for WooCommerce customers address object
+ *
+ * @package WPGraphQL\WooCommerce\Type\WPObject
+ * @since   0.0.1
+ */
+
+namespace WPGraphQL\WooCommerce\Type\WPObject;
+
+/**
+ * Class Customer_Address_Type
+ */
+class Customer_Address_Type {
+	/**
+	 * Registers Customer WPObject type
+	 *
+	 * @return void
+	 */
+	public static function register() {
+		register_graphql_object_type(
+			'CustomerAddress',
+			[
+				'description' => static function () {
+					return __( 'A customer address object', 'graphql-for-ecommerce' );
+				},
+				'fields'      => [
+					'firstName' => [
+						'type'        => 'String',
+						'description' => static function () {
+							return __( 'First name', 'graphql-for-ecommerce' );
+						},
+						'resolve'     => static function ( $address ) {
+							return ! empty( $address['first_name'] ) ? $address['first_name'] : null;
+						},
+					],
+					'lastName'  => [
+						'type'        => 'String',
+						'description' => static function () {
+							return __( 'Last name', 'graphql-for-ecommerce' );
+						},
+						'resolve'     => static function ( $address ) {
+							return ! empty( $address['last_name'] ) ? $address['last_name'] : null;
+						},
+					],
+					'company'   => [
+						'type'        => 'String',
+						'description' => static function () {
+							return __( 'Company', 'graphql-for-ecommerce' );
+						},
+						'resolve'     => static function ( $address ) {
+							return ! empty( $address['company'] ) ? $address['company'] : null;
+						},
+					],
+					'address1'  => [
+						'type'        => 'String',
+						'description' => static function () {
+							return __( 'Address 1', 'graphql-for-ecommerce' );
+						},
+						'resolve'     => static function ( $address ) {
+							return ! empty( $address['address_1'] ) ? $address['address_1'] : null;
+						},
+					],
+					'address2'  => [
+						'type'        => 'String',
+						'description' => static function () {
+							return __( 'Address 2', 'graphql-for-ecommerce' );
+						},
+						'resolve'     => static function ( $address ) {
+							return ! empty( $address['address_2'] ) ? $address['address_2'] : null;
+						},
+					],
+					'city'      => [
+						'type'        => 'String',
+						'description' => static function () {
+							return __( 'City', 'graphql-for-ecommerce' );
+						},
+						'resolve'     => static function ( $address ) {
+							return ! empty( $address['city'] ) ? $address['city'] : null;
+						},
+					],
+					'state'     => [
+						'type'        => 'String',
+						'description' => static function () {
+							return __( 'State', 'graphql-for-ecommerce' );
+						},
+						'resolve'     => static function ( $address ) {
+							return ! empty( $address['state'] ) ? $address['state'] : null;
+						},
+					],
+					'postcode'  => [
+						'type'        => 'String',
+						'description' => static function () {
+							return __( 'Zip Postal Code', 'graphql-for-ecommerce' );
+						},
+						'resolve'     => static function ( $address ) {
+							return ! empty( $address['postcode'] ) ? $address['postcode'] : null;
+						},
+					],
+					'country'   => [
+						'type'        => 'CountriesEnum',
+						'description' => static function () {
+							return __( 'Country', 'graphql-for-ecommerce' );
+						},
+						'resolve'     => static function ( $address ) {
+							return ! empty( $address['country'] ) ? $address['country'] : null;
+						},
+					],
+					'email'     => [
+						'type'        => 'String',
+						'description' => static function () {
+							return __( 'E-mail', 'graphql-for-ecommerce' );
+						},
+						'resolve'     => static function ( $address ) {
+							return ! empty( $address['email'] ) ? $address['email'] : null;
+						},
+					],
+					'phone'     => [
+						'type'        => 'String',
+						'description' => static function () {
+							return __( 'Phone', 'graphql-for-ecommerce' );
+						},
+						'resolve'     => static function ( $address ) {
+							return ! empty( $address['phone'] ) ? $address['phone'] : null;
+						},
+					],
+				],
+			]
+		);
+	}
+}

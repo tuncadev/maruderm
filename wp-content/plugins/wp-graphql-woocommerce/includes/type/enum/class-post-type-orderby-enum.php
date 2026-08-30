@@ -1,0 +1,109 @@
+<?php
+/**
+ * WPEnum type - Post_Type_Orderby_Enum
+ * Defines common post-type ordering fields
+ *
+ * @package WPGraphQL\WooCommerce\Type\WPEnum
+ * @since   0.2.2
+ */
+
+namespace WPGraphQL\WooCommerce\Type\WPEnum;
+
+/**
+ * Class Post_Type_Orderby_Enum
+ */
+class Post_Type_Orderby_Enum {
+	/**
+	 * Holds ordering enumeration base name.
+	 *
+	 * @var string
+	 */
+	protected static $name = 'PostType';
+
+	/**
+	 * Defines enumeration value definitions for common post-type ordering fields
+	 *
+	 * @return array
+	 */
+	protected static function post_type_values() {
+		return [
+			'NAME'       => [
+				'value'       => 'post_title',
+				'description' => static function () {
+					return __( 'Order by name', 'graphql-for-ecommerce' );
+				},
+			],
+			'SLUG'       => [
+				'value'       => 'post_name',
+				'description' => static function () {
+					return __( 'Order by slug', 'graphql-for-ecommerce' );
+				},
+			],
+			'MODIFIED'   => [
+				'value'       => 'post_modified',
+				'description' => static function () {
+					return __( 'Order by last modified date', 'graphql-for-ecommerce' );
+				},
+			],
+			'DATE'       => [
+				'value'       => 'post_date',
+				'description' => static function () {
+					return __( 'Order by publish date', 'graphql-for-ecommerce' );
+				},
+			],
+			'PARENT'     => [
+				'value'       => 'post_parent',
+				'description' => static function () {
+					return __( 'Order by parent ID', 'graphql-for-ecommerce' );
+				},
+			],
+			'IN'         => [
+				'value'       => 'post__in',
+				'description' => static function () {
+					return __( 'Preserve the ID order given in the IN array', 'graphql-for-ecommerce' );
+				},
+			],
+			'NAME_IN'    => [
+				'value'       => 'post_name__in',
+				'description' => static function () {
+					return __( 'Preserve slug order given in the NAME_IN array', 'graphql-for-ecommerce' );
+				},
+			],
+			'MENU_ORDER' => [
+				'value'       => 'menu_order',
+				'description' => static function () {
+					return __( 'Order by the menu order value', 'graphql-for-ecommerce' );
+				},
+			],
+		];
+	}
+
+	/**
+	 * Return enumeration values.
+	 *
+	 * @return array
+	 */
+	protected static function values() {
+		return self::post_type_values();
+	}
+
+	/**
+	 * Registers type
+	 *
+	 * @return void
+	 */
+	public static function register() {
+		$name = static::$name;
+		register_graphql_enum_type(
+			$name . 'OrderByEnum',
+			[
+				'description' => static function () use ( $name ) {
+					/* translators: ordering enumeration description */
+					return sprintf( __( 'Fields to order the %s connection by', 'graphql-for-ecommerce' ), $name );
+				},
+				// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.DynamicHooknameFound
+				'values'      => apply_filters( "{$name}_orderby_enum_values", static::values() ),
+			]
+		);
+	}
+}

@@ -1,0 +1,44 @@
+<?php
+/**
+ * WPInputObjectType - CartItemQuantityInput
+ *
+ * @package WPGraphQL\WooCommerce\Type\WPInputObject
+ * @since   0.2.0
+ */
+
+namespace WPGraphQL\WooCommerce\Type\WPInputObject;
+
+/**
+ * Class Cart_Item_Quantity_Input
+ */
+class Cart_Item_Quantity_Input {
+	/**
+	 * Registers type
+	 *
+	 * @return void
+	 */
+	public static function register() {
+		register_graphql_input_type(
+			'CartItemQuantityInput',
+			[
+				'description' => static function () {
+					return __( 'Cart item quantity', 'graphql-for-ecommerce' );
+				},
+				'fields'      => [
+					'key'      => [
+						'type'        => [ 'non_null' => 'ID' ],
+						'description' => static function () {
+							return __( 'Cart item being updated', 'graphql-for-ecommerce' );
+						},
+					],
+					'quantity' => [
+						'type'        => [ 'non_null' => 'Int' ],
+						'description' => static function () {
+							return __( 'Cart item\'s new quantity', 'graphql-for-ecommerce' );
+						},
+					],
+				],
+			]
+		);
+	}
+}

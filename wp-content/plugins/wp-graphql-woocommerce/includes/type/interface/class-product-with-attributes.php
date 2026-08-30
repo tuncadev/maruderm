@@ -1,0 +1,115 @@
+<?php
+/**
+ * Defines the "ProductWithAttributes" interface.
+ *
+ * @package WPGraphQL\WooCommerce\Type\WPInterface
+ * @since   0.17.0
+ */
+
+namespace WPGraphQL\WooCommerce\Type\WPInterface;
+
+use GraphQL\Type\Definition\ResolveInfo;
+use WPGraphQL\AppContext;
+use WPGraphQL\WooCommerce\Data\Connection\Product_Attribute_Connection_Resolver;
+use WPGraphQL\WooCommerce\Data\Connection\Variation_Attribute_Connection_Resolver;
+
+/**
+ * Class Product_With_Attributes
+ */
+class Product_With_Attributes {
+	/**
+	 * Registers the "ProductWithAttributes" type
+	 *
+	 * @return void
+	 * @throws \Exception
+	 */
+	public static function register_interface(): void {
+		register_graphql_interface_type(
+			'ProductWithAttributes',
+			[
+				'description' => static function () {
+					return __( 'Products with default attributes.', 'graphql-for-ecommerce' );
+				},
+				'interfaces'  => [ 'Node' ],
+				'fields'      => self::get_fields(),
+				'connections' => self::get_connections(),
+				'resolveType' => 'wc_graphql_resolve_product_type',
+			]
+		);
+	}
+
+	/**
+	 * Defines "ProductsWithVariations" fields.
+	 *
+	 * @return array
+	 */
+	public static function get_fields() {
+		return [
+			'id'         => [
+				'type'        => [ 'non_null' => 'ID' ],
+				'description' => static function () {
+					return __( 'Product or variation global ID', 'graphql-for-ecommerce' );
+				},
+			],
+			'databaseId' => [
+				'type'        => [ 'non_null' => 'Int' ],
+				'description' => static function () {
+					return __( 'Product or variation ID', 'graphql-for-ecommerce' );
+				},
+			],
+		];
+	}
+
+	/**
+	 * Defines "ProductsWithVariations" connections.
+	 *
+	 * @return array
+	 */
+	public static function get_connections() {
+		return [
+			'defaultAttributes' => [
+				'toType'        => 'VariationAttribute',
+				'fromFieldName' => 'defaultAttributes',
+				'resolve'       => static function ( $source, array $args, AppContext $context, ResolveInfo $info ) {
+					$resolver = new Variation_Attribute_Connection_Resolver();
+
+					return $resolver->resolve( $source, $args, $context, $info );
+				},
+			],
+			'attributes'        => [
+				'toType'         => 'ProductAttribute',
+				'fromFieldName'  => 'attributes',
+				'connectionArgs' => [
+					'type' => [
+						'type'        => 'ProductAttributeTypesEnum',
+						'description' => static function () {
+							return __( 'Filter results by attribute scope.', 'graphql-for-ecommerce' );
+						},
+					],
+				],
+				'resolve'        => static function ( $source, array $args, AppContext $context, ResolveInfo $info ) {
+					$resolver = new Product_Attribute_Connection_Resolver( $source, $args, $context, $info );
+					return $resolver->get_connection();
+				},
+			],
+			'localAttributes'   => [
+				'toType'         => 'LocalProductAttribute',
+				'fromFieldName'  => 'localAttributes',
+				'connectionArgs' => [],
+				'resolve'        => static function ( $source, array $args, AppContext $context, ResolveInfo $info ) {
+					$resolver = new Product_Attribute_Connection_Resolver( $source, $args, $context, $info, 'local' );
+					return $resolver->get_connection();
+				},
+			],
+			'globalAttributes'  => [
+				'toType'         => 'GlobalProductAttribute',
+				'fromFieldName'  => 'globalAttributes',
+				'connectionArgs' => [],
+				'resolve'        => static function ( $source, array $args, AppContext $context, ResolveInfo $info ) {
+					$resolver = new Product_Attribute_Connection_Resolver( $source, $args, $context, $info, 'global' );
+					return $resolver->get_connection();
+				},
+			],
+		];
+	}
+}
