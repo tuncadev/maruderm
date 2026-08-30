@@ -94,6 +94,17 @@ metric() {
     awk -F '\t' -v wanted="$key" '$1 == wanted {sub(/^[^\t]*\t/, ""); print; exit}' <<< "$inventory"
 }
 
+encode_ssh_argument() {
+    local value="$1"
+
+    if [[ -z "$value" ]]; then
+        printf '__MARUDERM_EMPTY_VALUE__'
+        return
+    fi
+
+    printf '%s' "$value"
+}
+
 collect_local_inventory() {
     local prefix
 
@@ -286,13 +297,13 @@ replace_production_database() {
         "$(metric "$LOCAL_INVENTORY" products)" \
         "$(metric "$LOCAL_INVENTORY" users)" \
         "$(metric "$LOCAL_INVENTORY" max_user_id)" \
-        "$(metric "$LOCAL_INVENTORY" latest_user_registered_gmt)" \
+        "$(encode_ssh_argument "$(metric "$LOCAL_INVENTORY" latest_user_registered_gmt)")" \
         "$(metric "$LOCAL_INVENTORY" legacy_orders)" \
         "$(metric "$LOCAL_INVENTORY" legacy_max_order_id)" \
-        "$(metric "$LOCAL_INVENTORY" legacy_latest_modified_gmt)" \
+        "$(encode_ssh_argument "$(metric "$LOCAL_INVENTORY" legacy_latest_modified_gmt)")" \
         "$(metric "$LOCAL_INVENTORY" hpos_orders)" \
         "$(metric "$LOCAL_INVENTORY" hpos_max_order_id)" \
-        "$(metric "$LOCAL_INVENTORY" hpos_latest_updated_gmt)" \
+        "$(encode_ssh_argument "$(metric "$LOCAL_INVENTORY" hpos_latest_updated_gmt)")" \
         "$(metric "$LOCAL_INVENTORY" good_for_products)" <<'REMOTE'
 set -Eeuo pipefail
 
@@ -321,6 +332,12 @@ import_sql="$temp_dir/local-import.sql"
 rollback_sql="$temp_dir/production-rollback.sql"
 import_started=0
 maintenance_was_active=0
+
+for expected_variable in expected_latest_user expected_legacy_latest expected_hpos_latest; do
+    if [[ "${!expected_variable}" == '__MARUDERM_EMPTY_VALUE__' ]]; then
+        printf -v "$expected_variable" '%s' ''
+    fi
+done
 
 wp_cmd=("$php_bin" "$wp_file" "--path=$wp_path" --skip-plugins --skip-themes)
 prefix="$("${wp_cmd[@]}" db prefix)"
