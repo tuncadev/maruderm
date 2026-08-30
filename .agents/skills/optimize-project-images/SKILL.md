@@ -28,6 +28,7 @@ Use `scripts/optimize_images.py`. It scans recursively, backs up the complete ta
 
 - `--output-format webp|avif|jpeg|jpg|png`
 - `--max-width PIXELS`
+- `--max-height PIXELS` to constrain portrait images as well as width (use both for marketplace bounding-box limits)
 - `--quality 1..100`
 - `--keep-originals` to retain source files beside converted outputs
 - `--existing error|skip|replace` for pre-existing destination files; keep `error` unless replacement is explicitly intended

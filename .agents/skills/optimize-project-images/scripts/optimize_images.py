@@ -108,6 +108,7 @@ class Options:
     backup_root: Path
     output_format: str
     max_width: int
+    max_height: int | None
     quality: int
     remove_original: bool
     recursive: bool
@@ -171,7 +172,11 @@ class ImageMagick:
             "-colorspace",
             "sRGB",
             "-resize",
-            f"{options.max_width}x>",
+            (
+                f"{options.max_width}x{options.max_height}>"
+                if options.max_height is not None
+                else f"{options.max_width}x>"
+            ),
             "-strip",
         ]
 
@@ -393,6 +398,10 @@ class ImageOptimizationRun:
         print(f"Backup root:     {self.options.backup_root}")
         print(f"Output format:   {self.options.output_format}")
         print(f"Maximum width:   {self.options.max_width}px")
+        print(
+            "Maximum height:  "
+            + (f"{self.options.max_height}px" if self.options.max_height is not None else "unbounded")
+        )
         print(f"Quality:         {self.options.quality}")
         print(f"Remove original: {'yes' if self.options.remove_original else 'no'}")
         print(f"Images found:    {len(self.plan)}")
@@ -435,7 +444,8 @@ class ImageOptimizationRun:
                 raise OptimizationError(
                     f"Expected {self.options.output_format}, but {temporary} identifies as {detected_format}."
                 )
-            if width <= 0 or height <= 0 or width > self.options.max_width:
+            exceeds_height = self.options.max_height is not None and height > self.options.max_height
+            if width <= 0 or height <= 0 or width > self.options.max_width or exceeds_height:
                 raise OptimizationError(
                     f"Invalid output dimensions for {item.source}: {width}x{height}."
                 )
@@ -497,6 +507,7 @@ class ImageOptimizationRun:
             "options": {
                 "output_format": self.options.output_format,
                 "max_width": self.options.max_width,
+                "max_height": self.options.max_height,
                 "quality": self.options.quality,
                 "remove_original": self.options.remove_original,
                 "recursive": self.options.recursive,
@@ -554,6 +565,11 @@ def parse_options(arguments: Sequence[str]) -> Options:
         type=positive_integer,
         default=1024,
         help="Maximum output width without upscaling (default: 1024).",
+    )
+    parser.add_argument(
+        "--max-height",
+        type=positive_integer,
+        help="Optional maximum output height without upscaling.",
     )
     parser.add_argument(
         "--quality",
@@ -628,6 +644,7 @@ def parse_options(arguments: Sequence[str]) -> Options:
         backup_root=backup_root,
         output_format=output_format,
         max_width=parsed.max_width,
+        max_height=parsed.max_height,
         quality=parsed.quality,
         remove_original=parsed.remove_original,
         recursive=parsed.recursive,
