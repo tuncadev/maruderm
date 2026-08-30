@@ -67,6 +67,7 @@
 
 - For any WordPress page, section, component, style, token, or behavior based on `/home/pardus/Hosting/maruderm.html`, first read the root `AGENTS.md`, then use `.agents/skills/implement-maruderm-html-reference/SKILL.md` and run the reference status audit. CSS copied into the snapshot or marked pending is not a completed live implementation.
 - For any custom catalog, `/catalog/` route, product-category archive, catalog filter, product-card visibility, badge, or filter-panel task, use `.agents/skills/maintain-maruderm-catalog/SKILL.md` before making changes. Its local contract and validation script are authoritative; do not search the internet for the established Maruderm catalog workflow.
+- For any Prom.ua product import, bilingual content, category mapping, image transfer, or price/stock synchronization task, use `.agents/skills/sync-maruderm-prom-catalog/SKILL.md` and preserve its guarded dry-run/import/read-back workflow.
 
 ---
 

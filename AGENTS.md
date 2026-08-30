@@ -33,6 +33,15 @@ Load the global rules from `/home/pardus/.codex/AGENTS.md` first. These rules ar
 - Routine WooCommerce-to-KeyCRM reconciliation must match products by unique SKU/barcode and must never send or copy the WooCommerce product name into KeyCRM.
 - A KeyCRM `name` write is allowed only for an explicit English-name correction or initial creation using a verified English value from the canonical workbook. If the English value is missing or the SKU/barcode match is not unique, stop or skip instead of using the WooCommerce title.
 
+## Prom.ua Catalog Synchronization
+
+- For every Prom.ua product import, update, category mapping, image synchronization, or stock/price synchronization task, use `.agents/skills/sync-maruderm-prom-catalog/SKILL.md`.
+- WordPress/WooCommerce is the authoritative Prom product source. Synchronize only published products that are in stock and have a valid positive price.
+- Every Prom product must include both Russian and Ukrainian content. Use the Prom base fields for Russian (`name`, `description`, and matching translatable fields) and the `_ua` fields for Ukrainian (`name_ua`, `description_ua`, and matching translatable fields). Stop or skip when either required language is missing; never silently duplicate one language into the other or invent a translation.
+- Synchronize all usable product images from the WooCommerce featured image and gallery, deduplicated and limited only by Prom's documented per-product maximum. Verify that every submitted image URL is public and successfully retrievable before import, then verify imported image counts after Prom finishes processing them.
+- Map WooCommerce categories to explicit Prom marketplace category IDs or URLs through a reviewed project mapping. Do not rely on automatic category detection for publication and do not import a product whose deepest applicable category is unmapped or ambiguous.
+- Use stable WooCommerce product/variation IDs as external import IDs and unique SKU/barcode for reconciliation. Store every import ID, poll the import to a terminal state, and read products back before allowing another import or enabling periodic synchronization.
+
 ## Image Optimization
 
 - For product or other project raster-image resizing, format conversion, or metadata reduction, use `.agents/skills/optimize-project-images/SKILL.md`.
