@@ -17,6 +17,13 @@ add_action('graphql_register_types', 'maruderm_register_catalog_graphql');
 
 function maruderm_register_catalog_graphql(): void
 {
+    register_graphql_object_type('MarudermProductBadge', [
+        'fields' => [
+            'tone' => ['type' => 'String'],
+            'label' => ['type' => 'String'],
+        ],
+    ]);
+
     register_graphql_object_type('MarudermCatalogProduct', [
         'fields' => [
             'databaseId' => ['type' => 'Int'],
@@ -35,6 +42,8 @@ function maruderm_register_catalog_graphql(): void
             'popularity' => ['type' => 'Int'],
             'createdTimestamp' => ['type' => 'Int'],
             'inStock' => ['type' => 'Boolean'],
+            'purchasable' => ['type' => 'Boolean'],
+            'badge' => ['type' => 'MarudermProductBadge'],
         ],
     ]);
 
@@ -108,7 +117,7 @@ function maruderm_resolve_product_search(string $term, int $limit): array
     $repository = new \Maruderm\Catalog\CatalogRepository();
     $matches = [];
 
-    foreach ($repository->products() as $product) {
+    foreach (maruderm_headless_catalog_products() as $product) {
         if (mb_stripos($product->get_name(), $term) !== false) {
             $matches[] = maruderm_map_catalog_product($repository, $product);
 
@@ -124,7 +133,7 @@ function maruderm_resolve_product_search(string $term, int $limit): array
 function maruderm_resolve_catalog(): array
 {
     $repository = new \Maruderm\Catalog\CatalogRepository();
-    $products = $repository->products();
+    $products = maruderm_headless_catalog_products();
 
     return [
         'products' => array_map(
@@ -146,6 +155,24 @@ function maruderm_resolve_catalog(): array
             $repository->navigationCategories()
         ),
     ];
+}
+
+/** @return \WC_Product[] */
+function maruderm_headless_catalog_products(): array
+{
+    $products = wc_get_products([
+        'status' => 'publish',
+        'limit' => -1,
+        'orderby' => 'date',
+        'order' => 'DESC',
+        'return' => 'objects',
+    ]);
+
+    return array_values(array_filter(
+        $products,
+        static fn ($product): bool => $product instanceof \WC_Product
+            && $product->get_catalog_visibility() !== 'hidden'
+    ));
 }
 
 function maruderm_map_catalog_product(\Maruderm\Catalog\CatalogRepository $repository, \WC_Product $product): array
@@ -173,7 +200,15 @@ function maruderm_map_catalog_product(\Maruderm\Catalog\CatalogRepository $repos
         'popularity' => $product->get_total_sales(),
         'createdTimestamp' => $createdAt !== null ? $createdAt->getTimestamp() : 0,
         'inStock' => $product->is_in_stock(),
+        'purchasable' => $product->is_purchasable(),
+        'badge' => maruderm_resolve_product_badge($product),
     ];
+}
+
+/** @return array{tone: string, label: string}|null */
+function maruderm_resolve_product_badge(\WC_Product $product): ?array
+{
+    return (new \Maruderm\WooCommerce\ProductBadges())->resolve($product);
 }
 
 /** @param int[] $ids @return array<int, array<string, mixed>> */

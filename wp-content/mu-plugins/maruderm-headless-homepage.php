@@ -72,6 +72,8 @@ function maruderm_register_homepage_graphql(): void
             'priceHtml' => ['type' => 'String'],
             'categoryLabel' => ['type' => 'String'],
             'inStock' => ['type' => 'Boolean'],
+            'purchasable' => ['type' => 'Boolean'],
+            'badge' => ['type' => 'MarudermProductBadge'],
         ],
     ]);
 
@@ -204,6 +206,8 @@ function maruderm_map_product_card(\WC_Product $product): array
         'priceHtml' => $product->get_price_html(),
         'categoryLabel' => $categoryLabel,
         'inStock' => $product->is_in_stock(),
+        'purchasable' => $product->is_purchasable(),
+        'badge' => maruderm_resolve_product_badge($product),
     ];
 }
 
