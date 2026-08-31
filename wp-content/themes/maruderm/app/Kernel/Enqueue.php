@@ -177,7 +177,8 @@ final class Enqueue implements Registrable
         }
 
         if ($handle === 'legal-document') {
-            return \Maruderm\Legal\LegalDocumentPage::isCurrent();
+            return \Maruderm\Legal\LegalDocumentPage::isCurrent()
+                || \Maruderm\Support\SupportPage::isCurrent();
         }
 
         if ($handle === 'hair-analysis') {

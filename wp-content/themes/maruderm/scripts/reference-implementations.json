@@ -323,10 +323,21 @@
           "app/Legal/LegalDocumentRepository.php",
           "app/Legal/LegalDocumentRenderer.php",
           "app/Legal/LegalDocumentPage.php",
+          "app/Support/SupportPageRepository.php",
+          "app/Support/SupportPageRenderer.php",
+          "app/Support/SupportPage.php",
           "page-public-offer.php",
-          "page-terms-and-privacy.php"
+          "page-terms-and-privacy.php",
+          "page-support.php"
         ],
-        "routes": ["/public-offer/", "/terms-and-privacy/"],
+        "routes": [
+          "/public-offer/",
+          "/terms-and-privacy/",
+          "/dostavka-i-oplata/",
+          "/povernennya/",
+          "/kontakty/",
+          "/faq/"
+        ],
         "legacyFiles": [],
         "blocker": ""
       }
