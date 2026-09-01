@@ -1,6 +1,7 @@
 <?php
 /**
  * Keeps the WordPress frontend private while preserving headless integrations.
+ * The versioned filename guarantees immediate discovery when OPcache does not revalidate files.
  *
  * @package Maruderm
  */

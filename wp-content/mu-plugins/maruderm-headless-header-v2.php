@@ -2,6 +2,7 @@
 /**
  * Exposes the maruderm.dev header (logo, search, account/wishlist/cart links,
  * and the mega menu) through WPGraphQL for the headless Next.js frontend.
+ * The versioned filename guarantees immediate discovery when OPcache does not revalidate files.
  *
  * Reuses the same category/ACF logic as
  * wp-content/themes/maruderm/components/menu/menu.php so the headless mega
