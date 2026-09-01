@@ -17,6 +17,16 @@ final class Maruderm_Headless_Access_Gate
     private const LOGIN_SLUG = 'orangejuice';
 
     /** @var list<string> */
+    private const HEADLESS_CONTENT_PATHS = [
+        '/dostavka-i-oplata',
+        '/povernennya',
+        '/kontakty',
+        '/faq',
+        '/terms-and-privacy',
+        '/public-offer',
+    ];
+
+    /** @var list<string> */
     private const PUBLIC_SYSTEM_PATHS = [
         '/graphql',
         '/index.php/graphql',
@@ -80,7 +90,10 @@ final class Maruderm_Headless_Access_Gate
 
     public function redirectPublicFrontend(): void
     {
-        if (is_user_logged_in() || $this->isPublicSystemRequest()) {
+        if (is_user_logged_in()
+            || $this->isPublicSystemRequest()
+            || $this->isHeadlessContentSourceRequest()
+        ) {
             return;
         }
 
@@ -148,6 +161,28 @@ final class Maruderm_Headless_Access_Gate
         }
 
         return false;
+    }
+
+    private function isHeadlessContentSourceRequest(): bool
+    {
+        $source_marker = isset($_GET['maruderm_headless_source'])
+            ? sanitize_text_field(wp_unslash((string) $_GET['maruderm_headless_source']))
+            : '';
+        $source_header = isset($_SERVER['HTTP_X_MARUDERM_CONTENT_SOURCE'])
+            ? sanitize_text_field(wp_unslash((string) $_SERVER['HTTP_X_MARUDERM_CONTENT_SOURCE']))
+            : '';
+
+        if ($source_marker !== '1' || $source_header !== '1') {
+            return false;
+        }
+
+        if (! in_array($this->requestPath(), self::HEADLESS_CONTENT_PATHS, true)) {
+            return false;
+        }
+
+        header('X-Robots-Tag: noindex, nofollow', true);
+
+        return true;
     }
 
     private function requestPath(): string
