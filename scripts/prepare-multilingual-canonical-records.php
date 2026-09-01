@@ -7,8 +7,6 @@
  *   MARUDERM_TRANSLATION_MODE=execute wp eval-file scripts/prepare-multilingual-canonical-records.php
  */
 
-declare(strict_types=1);
-
 final class MarudermCanonicalLanguagePreparer
 {
     private const TARGET_LANGUAGE = 'uk';
