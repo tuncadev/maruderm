@@ -14,6 +14,21 @@ if (! defined('ABSPATH')) {
 
 add_action('rest_api_init', 'maruderm_register_payment_routes');
 add_filter('woocommerce_get_return_url', 'maruderm_hutko_return_url', 10, 2);
+add_filter('wc_gateway_oplata_payment_params', 'maruderm_hutko_payment_params', 10, 2);
+
+function maruderm_hutko_payment_params(array $params, WC_Order $order): array
+{
+    $requested_language = isset($_POST['maruderm_language'])
+        ? sanitize_key(wp_unslash((string) $_POST['maruderm_language']))
+        : '';
+    $language = in_array($requested_language, ['uk', 'ru'], true) ? $requested_language : 'uk';
+
+    $params['lang'] = $language;
+    $order->update_meta_data('_maruderm_checkout_language', $language);
+    $order->save();
+
+    return $params;
+}
 
 function maruderm_register_payment_routes(): void
 {
@@ -53,11 +68,11 @@ function maruderm_hutko_return_url(string $return_url, $order): string
         return $return_url;
     }
 
-    $total = number_format((float) $order->get_total(), 2, ',', '') . ' ₴';
+    $language = (string) $order->get_meta('_maruderm_checkout_language');
+    $prefix = $language === 'ru' ? '/ru' : '';
 
-    return $frontend_url . '/checkout/success?' . http_build_query([
+    return $frontend_url . $prefix . '/checkout/payment/success?' . http_build_query([
         'orderNumber' => $order->get_order_number(),
-        'total' => $total,
     ]);
 }
 
