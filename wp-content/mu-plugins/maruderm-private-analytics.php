@@ -10,6 +10,7 @@ if (! defined('ABSPATH')) {
 }
 
 require_once __DIR__ . '/maruderm-private-analytics/class-analytics-repository.php';
+require_once __DIR__ . '/maruderm-private-analytics/class-analytics-exclusion-policy.php';
 require_once __DIR__ . '/maruderm-private-analytics/class-analytics-rest-controller.php';
 require_once __DIR__ . '/maruderm-private-analytics/class-analytics-admin-page.php';
 require_once __DIR__ . '/maruderm-private-analytics/class-analytics-plugin.php';

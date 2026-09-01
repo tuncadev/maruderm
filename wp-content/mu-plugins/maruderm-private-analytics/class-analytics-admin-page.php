@@ -4,8 +4,10 @@ namespace Maruderm\Analytics;
 
 final class AnalyticsAdminPage
 {
-    public function __construct(private readonly AnalyticsRepository $repository)
-    {
+    public function __construct(
+        private readonly AnalyticsRepository $repository,
+        private readonly AnalyticsExclusionPolicy $exclusionPolicy
+    ) {
     }
 
     public function register(): void
@@ -36,6 +38,10 @@ final class AnalyticsAdminPage
         <div class="wrap maruderm-analytics">
             <h1>Maruderm Analytics</h1>
             <p>Aggregated statistics without names, email addresses, account IDs, IP addresses, or fingerprints. Raw events are retained for 90 days.</p>
+            <?php if (isset($_GET['settings-updated'])) : ?>
+                <div class="notice notice-success is-dismissible"><p>Tracking exclusions saved.</p></div>
+            <?php endif; ?>
+            <?php $this->renderExclusions(); ?>
             <nav class="nav-tab-wrapper">
                 <?php foreach ([7, 30, 90] as $period) : ?>
                     <a class="nav-tab <?php echo $days === $period ? 'nav-tab-active' : ''; ?>" href="<?php echo esc_url(admin_url('admin.php?page=maruderm-analytics&days=' . $period)); ?>"><?php echo esc_html($period . ' days'); ?></a>
@@ -72,8 +78,59 @@ final class AnalyticsAdminPage
             <?php endif; ?>
         </div>
         <style>
-            .maruderm-analytics__cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin:22px 0}.maruderm-analytics__cards article,.maruderm-analytics__panel{background:#fff;border:1px solid #dcdcde;border-radius:8px;padding:18px}.maruderm-analytics__cards span{display:block;color:#646970;margin-bottom:8px}.maruderm-analytics__cards strong{font-size:28px}.maruderm-analytics__grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.maruderm-analytics__panel{margin-top:16px}.maruderm-analytics__grid .maruderm-analytics__panel{margin-top:0}.maruderm-analytics__panel h2{margin-top:0}.maruderm-analytics__panel table{width:100%;border-collapse:collapse}.maruderm-analytics__panel th{text-align:left}.maruderm-analytics__panel td{padding:8px;border-top:1px solid #eee}.maruderm-analytics__panel td:last-child{text-align:right;font-weight:600}.maruderm-analytics__journey td:last-child{text-align:left;font-weight:400}.maruderm-analytics__journey-sequence{width:48px;color:#646970}.maruderm-analytics__muted{color:#646970;font-size:12px}@media(max-width:782px){.maruderm-analytics__grid{grid-template-columns:1fr}.maruderm-analytics__panel{overflow-x:auto}}
+            .maruderm-analytics__cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin:22px 0}.maruderm-analytics__cards article,.maruderm-analytics__panel{background:#fff;border:1px solid #dcdcde;border-radius:8px;padding:18px}.maruderm-analytics__cards span{display:block;color:#646970;margin-bottom:8px}.maruderm-analytics__cards strong{font-size:28px}.maruderm-analytics__grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.maruderm-analytics__panel{margin-top:16px}.maruderm-analytics__grid .maruderm-analytics__panel{margin-top:0}.maruderm-analytics__panel h2{margin-top:0}.maruderm-analytics__panel table{width:100%;border-collapse:collapse}.maruderm-analytics__panel th{text-align:left}.maruderm-analytics__panel td{padding:8px;border-top:1px solid #eee}.maruderm-analytics__panel td:last-child{text-align:right;font-weight:600}.maruderm-analytics__journey td:last-child{text-align:left;font-weight:400}.maruderm-analytics__journey-sequence{width:48px;color:#646970}.maruderm-analytics__muted{color:#646970;font-size:12px}.maruderm-analytics__settings{margin:20px 0}.maruderm-analytics__settings-grid{display:grid;grid-template-columns:minmax(260px,1fr) minmax(260px,1fr);gap:24px}.maruderm-analytics__settings textarea{width:100%;min-height:112px}.maruderm-analytics__roles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}@media(max-width:782px){.maruderm-analytics__grid,.maruderm-analytics__settings-grid{grid-template-columns:1fr}.maruderm-analytics__panel{overflow-x:auto}}
         </style>
+        <?php
+    }
+
+    public function saveExclusions(): void
+    {
+        if (! current_user_can('manage_woocommerce')) {
+            wp_die(esc_html__('You do not have permission to perform this action.'));
+        }
+
+        check_admin_referer('maruderm_analytics_save_exclusions');
+        $ipInput = isset($_POST['excluded_ips']) ? sanitize_textarea_field(wp_unslash($_POST['excluded_ips'])) : '';
+        $roles = isset($_POST['excluded_roles']) && is_array($_POST['excluded_roles'])
+            ? array_map('sanitize_key', wp_unslash($_POST['excluded_roles']))
+            : [];
+        $this->exclusionPolicy->update($this->exclusionPolicy->parseIpInput($ipInput), $roles);
+
+        wp_safe_redirect(admin_url('admin.php?page=maruderm-analytics&settings-updated=1'));
+        exit;
+    }
+
+    private function renderExclusions(): void
+    {
+        $excludedIps = $this->exclusionPolicy->excludedIps();
+        $excludedRoles = $this->exclusionPolicy->excludedRoles();
+        $roles = wp_roles()->roles;
+        ?>
+        <section class="maruderm-analytics__panel maruderm-analytics__settings">
+            <h2>Tracking exclusions</h2>
+            <p>Matching visits are rejected before an analytics event is stored. IP addresses are used only for comparison and are never added to event records.</p>
+            <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
+                <input type="hidden" name="action" value="maruderm_analytics_save_exclusions">
+                <?php wp_nonce_field('maruderm_analytics_save_exclusions'); ?>
+                <div class="maruderm-analytics__settings-grid">
+                    <div>
+                        <label for="maruderm-analytics-excluded-ips"><strong>Excluded IP addresses</strong></label>
+                        <p class="description">Enter one exact IPv4 or IPv6 address per line. Current request IP: <code><?php echo esc_html($this->exclusionPolicy->currentRequestIp() ?: 'Unavailable'); ?></code></p>
+                        <textarea id="maruderm-analytics-excluded-ips" name="excluded_ips" spellcheck="false"><?php echo esc_textarea(implode("\n", $excludedIps)); ?></textarea>
+                    </div>
+                    <div>
+                        <strong>Excluded user roles</strong>
+                        <p class="description">Logged-in storefront sessions with any selected WordPress role are not tracked.</p>
+                        <div class="maruderm-analytics__roles">
+                            <?php foreach ($roles as $role => $details) : ?>
+                                <label><input type="checkbox" name="excluded_roles[]" value="<?php echo esc_attr($role); ?>" <?php checked(in_array($role, $excludedRoles, true)); ?>> <?php echo esc_html(translate_user_role((string) $details['name'])); ?></label>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                </div>
+                <?php submit_button('Save exclusions'); ?>
+            </form>
+        </section>
         <?php
     }
 

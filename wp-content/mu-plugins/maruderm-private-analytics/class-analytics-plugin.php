@@ -12,8 +12,9 @@ final class AnalyticsPlugin
     {
         global $wpdb;
         $repository = new AnalyticsRepository($wpdb);
-        $restController = new AnalyticsRestController($repository);
-        $adminPage = new AnalyticsAdminPage($repository);
+        $exclusionPolicy = new AnalyticsExclusionPolicy();
+        $restController = new AnalyticsRestController($repository, $exclusionPolicy);
+        $adminPage = new AnalyticsAdminPage($repository, $exclusionPolicy);
 
         add_action('init', function () use ($repository): void {
             if (get_option(self::DATABASE_VERSION_OPTION) !== self::DATABASE_VERSION) {
@@ -27,6 +28,7 @@ final class AnalyticsPlugin
         });
         add_action('rest_api_init', [$restController, 'registerRoutes']);
         add_action('admin_menu', [$adminPage, 'register']);
+        add_action('admin_post_maruderm_analytics_save_exclusions', [$adminPage, 'saveExclusions']);
         add_action(self::CLEANUP_HOOK, static fn () => $repository->purgeExpired());
     }
 }

@@ -20,8 +20,10 @@ final class AnalyticsRestController
         'checkout_completed',
     ];
 
-    public function __construct(private readonly AnalyticsRepository $repository)
-    {
+    public function __construct(
+        private readonly AnalyticsRepository $repository,
+        private readonly AnalyticsExclusionPolicy $exclusionPolicy
+    ) {
     }
 
     public function registerRoutes(): void
@@ -41,6 +43,10 @@ final class AnalyticsRestController
 
     public function record(WP_REST_Request $request): WP_REST_Response|WP_Error
     {
+        if ($this->exclusionPolicy->isCurrentRequestExcluded()) {
+            return new WP_REST_Response(['recorded' => false, 'excluded' => true], 200);
+        }
+
         $event = $request->get_json_params();
         if (! is_array($event)) {
             return new WP_Error('invalid_event', 'Invalid analytics event.', ['status' => 400]);
