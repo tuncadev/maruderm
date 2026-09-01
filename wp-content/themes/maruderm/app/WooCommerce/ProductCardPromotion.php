@@ -14,6 +14,7 @@ final class ProductCardPromotion
     private const CATEGORY_TONES = [
         'zasoby-dlya-doglyadu-za-volossyam' => 'hair',
         'zasoby-dlya-doglyadu-za-tilom' => 'body',
+        'sonczezahysnyj-doglyad' => 'sun',
         'gunes-bakim-urunleri' => 'sun',
         'makiyazh' => 'makeup',
         'zasoby-dlya-doglyadu-za-shkiroyu' => 'skin',

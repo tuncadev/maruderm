@@ -14,6 +14,7 @@ final class CatalogRepository
         'zasoby-dlya-doglyadu-za-shkiroyu' => 'skin',
         'makiyazh' => 'makeup',
         'zasoby-dlya-doglyadu-za-volossyam' => 'hair',
+        'sonczezahysnyj-doglyad' => 'sun',
         'gunes-bakim-urunleri' => 'sun',
         'zasoby-dlya-doglyadu-za-tilom' => 'body',
     ];
@@ -224,7 +225,7 @@ final class CatalogRepository
             $url = get_term_link($term);
             $thumbnail_id = (int) get_term_meta($term->term_id, 'thumbnail_id', true);
             $image = $thumbnail_id > 0
-                ? wp_get_attachment_image_url($thumbnail_id, 'woocommerce_thumbnail')
+                ? wp_get_attachment_image_url($thumbnail_id, 'medium_large')
                 : wc_placeholder_img_src('woocommerce_thumbnail');
 
             if (is_wp_error($url) || !is_string($image) || $image === '') {

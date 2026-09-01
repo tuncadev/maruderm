@@ -47,7 +47,8 @@ final class HomepageHeroRenderer
         [
             'theme' => 'sun',
             'image_position' => 'right',
-            'category_slug' => 'gunes-bakim-urunleri',
+            'category_slug' => 'sonczezahysnyj-doglyad',
+            'legacy_category_slug' => 'gunes-bakim-urunleri',
             'preferred_product_id' => 6027,
             'eyebrow' => 'Сонцезахисний догляд',
             'heading' => 'SPF щодня. <em>Легко і без компромісів.</em>',
@@ -191,7 +192,15 @@ final class HomepageHeroRenderer
             }
         }
 
-        return $this->catalog->categoryBySlug((string) $campaign['category_slug']);
+        $category = $this->catalog->categoryBySlug((string) $campaign['category_slug']);
+
+        if ($category instanceof \WP_Term) {
+            return $category;
+        }
+
+        $legacyCategorySlug = (string) ($campaign['legacy_category_slug'] ?? '');
+
+        return $legacyCategorySlug !== '' ? $this->catalog->categoryBySlug($legacyCategorySlug) : null;
     }
 
     /** @param array<string, mixed> $slide @param \WP_Term[] $categories */
