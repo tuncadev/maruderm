@@ -65,6 +65,8 @@ jobs:
               fi
             done
 
+            printf 'matching_checkout=%s\n' "${matches[@]}"
+
             if [ "${#matches[@]}" -ne 1 ]; then
               echo "Expected exactly one production Maruderm checkout; found ${#matches[@]}." >&2
               exit 1
