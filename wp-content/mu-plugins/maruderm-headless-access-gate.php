@@ -165,19 +165,25 @@ final class Maruderm_Headless_Access_Gate
 
     private function frontendUrl(): string
     {
-        if (! function_exists('maruderm_headless_frontend_url')) {
-            return '';
-        }
-
-        $url = maruderm_headless_frontend_url();
+        $url = function_exists('maruderm_headless_frontend_url')
+            ? maruderm_headless_frontend_url()
+            : '';
         $scheme = wp_parse_url($url, PHP_URL_SCHEME);
         $host = wp_parse_url($url, PHP_URL_HOST);
 
-        if (! in_array($scheme, ['http', 'https'], true) || ! is_string($host) || $host === '') {
-            return '';
+        if (in_array($scheme, ['http', 'https'], true) && is_string($host) && $host !== '') {
+            return rtrim($url, '/');
         }
 
-        return rtrim($url, '/');
+        $request_host = isset($_SERVER['HTTP_HOST'])
+            ? strtolower(preg_replace('/:\d+$/', '', wp_unslash((string) $_SERVER['HTTP_HOST'])))
+            : '';
+
+        return match ($request_host) {
+            'wp.maruderm.com.ua' => 'https://www.maruderm.com.ua',
+            'maruderm.dev', 'www.maruderm.dev' => 'https://maruderm.next',
+            default => '',
+        };
     }
 
     private function renderTransitionScreen(int $status): void
