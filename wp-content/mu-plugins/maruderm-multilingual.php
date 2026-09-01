@@ -13,6 +13,7 @@ if (! defined('ABSPATH')) {
 require_once __DIR__ . '/maruderm-multilingual/class-product-identity-resolver.php';
 require_once __DIR__ . '/maruderm-multilingual/class-russian-slugger.php';
 require_once __DIR__ . '/maruderm-multilingual/class-taxonomy-presentation-resolver.php';
+require_once __DIR__ . '/maruderm-multilingual/class-product-detail-translator.php';
 require_once __DIR__ . '/maruderm-multilingual/class-graphql-controller.php';
 
 add_action('plugins_loaded', static function (): void {

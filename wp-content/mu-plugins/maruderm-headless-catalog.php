@@ -229,6 +229,11 @@ function maruderm_map_catalog_product(
         $categoryLabel = $taxonomyResolver->translateTerm($topCategories[0], $language)->name;
     }
     $createdAt = $product->get_date_created();
+    $translator = new \Maruderm\Multilingual\ProductDetailTranslator();
+    $badge = maruderm_resolve_product_badge($product);
+    if (is_array($badge)) {
+        $badge['label'] = $translator->text((string) $badge['label'], $language);
+    }
 
     return [
         'databaseId' => $product->get_id(),
@@ -241,7 +246,7 @@ function maruderm_map_catalog_product(
         'imageAlt' => wp_strip_all_tags(
             $presentation instanceof \WP_Post ? $presentation->post_title : $product->get_name()
         ),
-        'priceHtml' => $product->get_price_html(),
+        'priceHtml' => $translator->html($product->get_price_html(), $language),
         'price' => $product->is_in_stock() ? (float) $product->get_price() : null,
         'categoryLabel' => $categoryLabel,
         'categorySlugs' => $taxonomyResolver->productTermSlugs($product, 'product_cat', $language),
@@ -252,7 +257,7 @@ function maruderm_map_catalog_product(
         'createdTimestamp' => $createdAt !== null ? $createdAt->getTimestamp() : 0,
         'inStock' => $product->is_in_stock(),
         'purchasable' => $product->is_purchasable(),
-        'badge' => maruderm_resolve_product_badge($product),
+        'badge' => $badge,
     ];
 }
 
