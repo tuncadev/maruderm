@@ -77,33 +77,49 @@ function maruderm_register_product_graphql(): void
         'type' => 'MarudermProductDetail',
         'args' => [
             'slug' => ['type' => ['non_null' => 'String']],
+            'language' => ['type' => 'String'],
         ],
-        'resolve' => static fn ($root, array $args) => maruderm_resolve_product((string) $args['slug']),
+        'resolve' => static fn ($root, array $args) => maruderm_resolve_product(
+            (string) $args['slug'],
+            (string) ($args['language'] ?? 'uk')
+        ),
     ]);
 }
 
-function maruderm_resolve_product(string $slug): ?array
+function maruderm_resolve_product(string $slug, string $language = 'uk'): ?array
 {
     if ($slug === '') {
         return null;
     }
 
-    $post = get_page_by_path($slug, OBJECT, 'product');
-    $product = $post instanceof WP_Post && $post->post_status === 'publish'
-        ? wc_get_product($post->ID)
-        : null;
+    $identityResolver = new \Maruderm\Multilingual\ProductIdentityResolver();
+    $identity = $identityResolver->resolveBySlug($slug, $language);
+    $product = $identity !== null ? wc_get_product($identity['canonicalDatabaseId']) : null;
 
     if (! $product instanceof WC_Product) {
+        return null;
+    }
+
+    $presentation = $identityResolver->presentationPost($product->get_id(), $language);
+
+    if (! $presentation instanceof WP_Post) {
         return null;
     }
 
     $content = new \Maruderm\WooCommerce\SingleProductContent();
     $imageRepository = new \Maruderm\WooCommerce\ProductImageRepository();
     $catalogRepository = new \Maruderm\Catalog\CatalogRepository();
+    $taxonomyResolver = new \Maruderm\Multilingual\TaxonomyPresentationResolver();
 
     $category = $content->category($product);
+    $localizedCategory = $category instanceof WP_Term
+        ? $taxonomyResolver->translateTerm($category, $language)
+        : null;
     $categoryUrl = $category instanceof WP_Term ? get_term_link($category) : wc_get_page_permalink('shop');
     $categoryUrl = is_wp_error($categoryUrl) ? wc_get_page_permalink('shop') : $categoryUrl;
+    if ($localizedCategory instanceof WP_Term && $language === 'ru') {
+        $categoryUrl = home_url('/ru/catalog/' . $localizedCategory->slug . '/');
+    }
 
     $images = array_map(static function (array $image): array {
         return [
@@ -124,22 +140,29 @@ function maruderm_resolve_product(string $slug): ?array
         ? ['authorName' => $comment->comment_author, 'content' => wp_strip_all_tags($comment->comment_content)]
         : null;
 
-    $description = $product->get_description() !== '' ? $product->get_description() : $content->lead($product);
+    $description = trim($presentation->post_content) !== ''
+        ? $presentation->post_content
+        : $product->get_description();
+    $lead = trim($presentation->post_excerpt) !== ''
+        ? $presentation->post_excerpt
+        : wp_trim_words(wp_strip_all_tags($description), 32);
 
     return [
         'databaseId' => $product->get_id(),
-        'name' => $product->get_name(),
-        'slug' => $product->get_slug(),
-        'url' => $product->get_permalink(),
+        'name' => $presentation->post_title,
+        'slug' => $presentation->post_name,
+        'url' => $identity['resolvedLanguage'] === 'ru'
+            ? home_url('/ru/tovar/' . $presentation->post_name . '/')
+            : $product->get_permalink(),
         'sku' => trim($product->get_sku()),
         'priceHtml' => $product->get_price_html(),
-        'lead' => $content->lead($product),
+        'lead' => $lead,
         'descriptionHtml' => wpautop($description),
         'inStock' => $product->is_in_stock(),
         'purchasable' => $product->is_purchasable(),
         'ratingAverage' => (float) $product->get_average_rating(),
         'reviewCount' => $product->get_review_count(),
-        'categoryName' => $category->name ?? 'Maruderm',
+        'categoryName' => $localizedCategory->name ?? $category->name ?? 'Maruderm',
         'categoryUrl' => $categoryUrl,
         'images' => $images,
         'highlights' => $content->highlights($product),
@@ -154,7 +177,11 @@ function maruderm_resolve_product(string $slug): ?array
         'routine' => $content->routine($product),
         'review' => $review,
         'related' => array_map(
-            static fn (WC_Product $related): array => maruderm_map_catalog_product($catalogRepository, $related),
+            static fn (WC_Product $related): array => maruderm_map_catalog_product(
+                $catalogRepository,
+                $related,
+                $language
+            ),
             $content->related($product)
         ),
     ];

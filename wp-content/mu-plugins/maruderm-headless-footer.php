@@ -44,45 +44,69 @@ function maruderm_register_footer_graphql(): void
     register_graphql_field('RootQuery', 'marudermFooter', [
         'type' => 'MarudermFooter',
         'description' => 'Resolved footer content for the headless frontend.',
-        'resolve' => static function () {
-            return maruderm_resolve_footer_graphql();
+        'args' => ['language' => ['type' => 'String']],
+        'resolve' => static function ($root, array $args) {
+            return maruderm_resolve_footer_graphql((string) ($args['language'] ?? 'uk'));
         },
     ]);
 }
 
-function maruderm_resolve_footer_graphql(): array
+function maruderm_resolve_footer_graphql(string $language = 'uk'): array
 {
     $catalog = new \Maruderm\LandingPage\LandingPageCatalog();
+    $taxonomyResolver = new \Maruderm\Multilingual\TaxonomyPresentationResolver();
+    $russian = $language === 'ru';
 
     return [
         'tagline' => 'nature embraces science',
-        'description' => 'Дієві формули для щоденного догляду. Зрозуміло, красиво й без зайвого.',
-        'catalogHeading' => 'Каталог',
-        'catalogLinks' => array_map(static function (\WP_Term $category) use ($catalog): array {
-            return ['label' => $category->name, 'url' => $catalog->categoryUrl($category)];
+        'description' => $russian
+            ? 'Действенные формулы для ежедневного ухода. Понятно, красиво и без лишнего.'
+            : 'Дієві формули для щоденного догляду. Зрозуміло, красиво й без зайвого.',
+        'catalogHeading' => $russian ? 'Каталог' : 'Каталог',
+        'catalogLinks' => array_map(static function (\WP_Term $category) use ($catalog, $taxonomyResolver, $language): array {
+            $localized = $taxonomyResolver->translateTerm($category, $language);
+            $url = $language === 'ru'
+                ? home_url('/ru/catalog/' . $localized->slug . '/')
+                : $catalog->categoryUrl($category);
+
+            return ['label' => $localized->name, 'url' => $url];
         }, $catalog->categories(4)),
-        'helpHeading' => 'Допомога',
-        'helpLinks' => maruderm_footer_help_links(),
-        'subscribeHeading' => 'Новини без шуму',
-        'subscribeDescription' => 'Новинки, поради й спеціальні пропозиції — тільки корисне.',
-        'legalLinks' => [
-            ['label' => 'Політика конфіденційності', 'url' => maruderm_footer_page_url(['terms-and-privacy'])],
-            ['label' => 'Публічна оферта', 'url' => maruderm_footer_page_url(['public-offer'])],
-        ],
-        'copyrightText' => 'Maruderm Україна',
+        'helpHeading' => $russian ? 'Помощь' : 'Допомога',
+        'helpLinks' => maruderm_footer_help_links($language),
+        'subscribeHeading' => $russian ? 'Новости без шума' : 'Новини без шуму',
+        'subscribeDescription' => $russian
+            ? 'Новинки, советы и специальные предложения — только полезное.'
+            : 'Новинки, поради й спеціальні пропозиції — тільки корисне.',
+        'legalLinks' => $russian
+            ? [
+                ['label' => 'Политика конфиденциальности', 'url' => maruderm_footer_page_url(['terms-and-privacy'])],
+                ['label' => 'Публичная оферта', 'url' => maruderm_footer_page_url(['public-offer'])],
+            ]
+            : [
+                ['label' => 'Політика конфіденційності', 'url' => maruderm_footer_page_url(['terms-and-privacy'])],
+                ['label' => 'Публічна оферта', 'url' => maruderm_footer_page_url(['public-offer'])],
+            ],
+        'copyrightText' => $russian ? 'Maruderm Украина' : 'Maruderm Україна',
         'copyrightYear' => (int) wp_date('Y'),
     ];
 }
 
 /** @return array<int, array<string, string>> */
-function maruderm_footer_help_links(): array
+function maruderm_footer_help_links(string $language = 'uk'): array
 {
-    $links = [
-        'Доставка й оплата' => ['dostavka-i-oplata', 'delivery-payment'],
-        'Повернення' => ['povernennya', 'returns'],
-        'Контакти' => ['kontakty', 'contacts'],
-        'FAQ' => ['faq'],
-    ];
+    $links = $language === 'ru'
+        ? [
+            'Доставка и оплата' => ['dostavka-i-oplata', 'delivery-payment'],
+            'Возврат' => ['povernennya', 'returns'],
+            'Контакты' => ['kontakty', 'contacts'],
+            'FAQ' => ['faq'],
+        ]
+        : [
+            'Доставка й оплата' => ['dostavka-i-oplata', 'delivery-payment'],
+            'Повернення' => ['povernennya', 'returns'],
+            'Контакти' => ['kontakty', 'contacts'],
+            'FAQ' => ['faq'],
+        ];
 
     $resolved = [];
 

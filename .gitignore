@@ -38,6 +38,23 @@
 !wp-content/themes/**
 !wp-content/plugins/
 !wp-content/plugins/**
+
+# Multilingual migration sources and guarded import tooling.
+!scripts/
+scripts/*
+!scripts/migrate-sunscreen-category-slugs.php
+!scripts/import-russian-product-translations.php
+!scripts/import-russian-product-categories.php
+!scripts/import-russian-product-attributes.php
+!scripts/generate-russian-product-translations.mjs
+!products/
+products/*
+!products/prom-product-translations-ru.json
+!products/prom-group-translations.json
+!products/generated-product-translations-ru-missing.json
+!products/product-translations-ru-full.json
+!products/product-category-translations-ru.json
+!products/product-attribute-translations-ru.json
 # macOS
 .DS_Store
 .AppleDouble

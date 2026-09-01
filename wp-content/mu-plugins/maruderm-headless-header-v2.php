@@ -72,21 +72,30 @@ function maruderm_register_header_graphql(): void
 
     register_graphql_field('RootQuery', 'marudermSiteChrome', [
         'type' => 'MarudermSiteChrome',
-        'resolve' => static fn () => maruderm_resolve_site_chrome(),
+        'args' => ['language' => ['type' => 'String']],
+        'resolve' => static fn ($root, array $args) => maruderm_resolve_site_chrome(
+            (string) ($args['language'] ?? 'uk')
+        ),
     ]);
 
     register_graphql_field('RootQuery', 'marudermSearchCategories', [
         'type' => ['list_of' => 'MarudermSearchCategory'],
-        'resolve' => static fn () => maruderm_resolve_search_categories(),
+        'args' => ['language' => ['type' => 'String']],
+        'resolve' => static fn ($root, array $args) => maruderm_resolve_search_categories(
+            (string) ($args['language'] ?? 'uk')
+        ),
     ]);
 
     register_graphql_field('RootQuery', 'marudermMegaMenu', [
         'type' => ['list_of' => 'MarudermMegaMenuItem'],
-        'resolve' => static fn () => maruderm_resolve_mega_menu(),
+        'args' => ['language' => ['type' => 'String']],
+        'resolve' => static fn ($root, array $args) => maruderm_resolve_mega_menu(
+            (string) ($args['language'] ?? 'uk')
+        ),
     ]);
 }
 
-function maruderm_resolve_site_chrome(): array
+function maruderm_resolve_site_chrome(string $language = 'uk'): array
 {
     $accountUrl = function_exists('wc_get_page_permalink')
         ? wc_get_page_permalink('myaccount')
@@ -133,8 +142,9 @@ function maruderm_header_source_categories(): array
 }
 
 /** @return array<int, array<string, mixed>> */
-function maruderm_resolve_search_categories(): array
+function maruderm_resolve_search_categories(string $language = 'uk'): array
 {
+    $taxonomyResolver = new \Maruderm\Multilingual\TaxonomyPresentationResolver();
     $topLevel = maruderm_header_source_categories();
 
     if ($topLevel === []) {
@@ -144,10 +154,11 @@ function maruderm_resolve_search_categories(): array
     $rows = [];
 
     foreach ($topLevel as $parent) {
+        $localizedParent = $taxonomyResolver->translateTerm($parent, $language);
         $rows[] = [
             'databaseId' => $parent->term_id,
-            'name' => $parent->name,
-            'slug' => $parent->slug,
+            'name' => $localizedParent->name,
+            'slug' => $localizedParent->slug,
             'depth' => 0,
         ];
 
@@ -164,10 +175,11 @@ function maruderm_resolve_search_categories(): array
         }
 
         foreach ($children as $child) {
+            $localizedChild = $taxonomyResolver->translateTerm($child, $language);
             $rows[] = [
                 'databaseId' => $child->term_id,
-                'name' => $child->name,
-                'slug' => $child->slug,
+                'name' => $localizedChild->name,
+                'slug' => $localizedChild->slug,
                 'depth' => 1,
             ];
         }
@@ -177,8 +189,9 @@ function maruderm_resolve_search_categories(): array
 }
 
 /** @return array<int, array<string, mixed>> */
-function maruderm_resolve_mega_menu(): array
+function maruderm_resolve_mega_menu(string $language = 'uk'): array
 {
+    $taxonomyResolver = new \Maruderm\Multilingual\TaxonomyPresentationResolver();
     $topLevel = maruderm_header_source_categories();
 
     if ($topLevel === []) {
@@ -187,13 +200,19 @@ function maruderm_resolve_mega_menu(): array
 
     $topLevel = array_values($topLevel);
     $tones = ['coral', 'yellow', 'mint', 'lilac', 'blue'];
-    $groupLabels = ['Категорії', 'Обирають часто', 'Ще більше'];
+    $groupLabels = $language === 'ru'
+        ? ['Категории', 'Часто выбирают', 'Еще больше']
+        : ['Категорії', 'Обирають часто', 'Ще більше'];
     $shopUrl = function_exists('wc_get_page_permalink') ? wc_get_page_permalink('shop') : home_url('/shop/');
     $items = [];
 
     foreach ($topLevel as $index => $term) {
+        $localizedTerm = $taxonomyResolver->translateTerm($term, $language);
         $termUrl = get_term_link($term);
         $termUrl = is_wp_error($termUrl) ? $shopUrl : $termUrl;
+        if ($language === 'ru') {
+            $termUrl = home_url('/ru/catalog/' . $localizedTerm->slug . '/');
+        }
 
         $children = get_terms([
             'taxonomy' => 'product_cat',
@@ -213,6 +232,10 @@ function maruderm_resolve_mega_menu(): array
             ? $customText
             : ($description !== '' ? wp_trim_words($description, 9, '…') : $term->name);
         $eyebrow = $customEyebrow !== '' ? $customEyebrow : number_format_i18n($term->count) . ' товарів';
+        if ($language === 'ru') {
+            $title = $localizedTerm->name;
+            $eyebrow = number_format_i18n($term->count) . ' товаров';
+        }
 
         $imageId = $customImageId > 0 ? $customImageId : (int) get_term_meta($term->term_id, 'thumbnail_id', true);
         $imageUrl = $imageId > 0 ? wp_get_attachment_image_url($imageId, 'medium') : false;
@@ -240,11 +263,15 @@ function maruderm_resolve_mega_menu(): array
             foreach ($chunks as $groupIndex => $chunk) {
                 $groups[] = [
                     'label' => $groupLabels[$groupIndex] ?? 'Категорії',
-                    'items' => array_map(static function (\WP_Term $child) use ($shopUrl): array {
+                    'items' => array_map(static function (\WP_Term $child) use ($shopUrl, $taxonomyResolver, $language): array {
+                        $localizedChild = $taxonomyResolver->translateTerm($child, $language);
                         $childUrl = get_term_link($child);
+                        if ($language === 'ru') {
+                            $childUrl = home_url('/ru/catalog/' . $localizedChild->slug . '/');
+                        }
 
                         return [
-                            'name' => $child->name,
+                            'name' => $localizedChild->name,
                             'url' => is_wp_error($childUrl) ? $shopUrl : $childUrl,
                         ];
                     }, $chunk),
@@ -253,8 +280,8 @@ function maruderm_resolve_mega_menu(): array
         }
 
         $items[] = [
-            'name' => $term->name,
-            'slug' => $term->slug,
+            'name' => $localizedTerm->name,
+            'slug' => $localizedTerm->slug,
             'url' => $termUrl,
             'tone' => $tones[$index % count($tones)],
             'eyebrow' => $eyebrow,

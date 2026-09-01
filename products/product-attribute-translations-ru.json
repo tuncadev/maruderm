@@ -1,0 +1,173 @@
+[
+  {
+    "term_id": 535,
+    "taxonomy": "pa_country_of_origin",
+    "name_uk": "Туреччина",
+    "slug_uk": "turechchyna",
+    "description_uk": "",
+    "count": 149,
+    "name_ru": "Турция"
+  },
+  {
+    "term_id": 502,
+    "taxonomy": "pa_hair_need",
+    "name_uk": "Відновлення та зміцнення",
+    "slug_uk": "vidnovlennya-ta-zmicznennya",
+    "description_uk": "",
+    "count": 9,
+    "name_ru": "Восстановление и укрепление"
+  },
+  {
+    "term_id": 500,
+    "taxonomy": "pa_hair_need",
+    "name_uk": "Проти випадіння",
+    "slug_uk": "proty-vypadinnya",
+    "description_uk": "",
+    "count": 3,
+    "name_ru": "Против выпадения"
+  },
+  {
+    "term_id": 501,
+    "taxonomy": "pa_hair_need",
+    "name_uk": "Проти лупи",
+    "slug_uk": "proty-lupy",
+    "description_uk": "",
+    "count": 2,
+    "name_ru": "Против перхоти"
+  },
+  {
+    "term_id": 511,
+    "taxonomy": "pa_skin_problem",
+    "name_uk": "Акне та висипання",
+    "slug_uk": "akne-ta-vysypannya",
+    "description_uk": "",
+    "count": 18,
+    "name_ru": "Акне и высыпания"
+  },
+  {
+    "term_id": 505,
+    "taxonomy": "pa_skin_problem",
+    "name_uk": "Зморшки",
+    "slug_uk": "zmorshky",
+    "description_uk": "",
+    "count": 20,
+    "name_ru": "Морщины"
+  },
+  {
+    "term_id": 509,
+    "taxonomy": "pa_skin_problem",
+    "name_uk": "Нерівний тон шкіри",
+    "slug_uk": "nerivnyj-ton-shkiry",
+    "description_uk": "",
+    "count": 33,
+    "name_ru": "Неровный тон кожи"
+  },
+  {
+    "term_id": 508,
+    "taxonomy": "pa_skin_problem",
+    "name_uk": "Пігментація",
+    "slug_uk": "pigmentacziya",
+    "description_uk": "",
+    "count": 36,
+    "name_ru": "Пигментация"
+  },
+  {
+    "term_id": 506,
+    "taxonomy": "pa_skin_problem",
+    "name_uk": "Почервоніння",
+    "slug_uk": "pochervoninnya",
+    "description_uk": "",
+    "count": 8,
+    "name_ru": "Покраснения"
+  },
+  {
+    "term_id": 504,
+    "taxonomy": "pa_skin_problem",
+    "name_uk": "Розширені пори",
+    "slug_uk": "rozshyreni-pory",
+    "description_uk": "",
+    "count": 13,
+    "name_ru": "Расширенные поры"
+  },
+  {
+    "term_id": 507,
+    "taxonomy": "pa_skin_problem",
+    "name_uk": "Сухість",
+    "slug_uk": "suhist",
+    "description_uk": "",
+    "count": 23,
+    "name_ru": "Сухость"
+  },
+  {
+    "term_id": 503,
+    "taxonomy": "pa_skin_problem",
+    "name_uk": "Темні кола під очима",
+    "slug_uk": "temni-kola-pid-ochyma",
+    "description_uk": "",
+    "count": 4,
+    "name_ru": "Темные круги под глазами"
+  },
+  {
+    "term_id": 510,
+    "taxonomy": "pa_skin_problem",
+    "name_uk": "Целюліт і розтяжки",
+    "slug_uk": "czelyulit-i-roztyazhky",
+    "description_uk": "",
+    "count": 1,
+    "name_ru": "Целлюлит и растяжки"
+  },
+  {
+    "term_id": 512,
+    "taxonomy": "pa_skin_problem",
+    "name_uk": "Чорні цятки",
+    "slug_uk": "chorni-czyatky",
+    "description_uk": "",
+    "count": 13,
+    "name_ru": "Черные точки"
+  },
+  {
+    "term_id": 517,
+    "taxonomy": "pa_skin_type",
+    "name_uk": "Жирна шкіра",
+    "slug_uk": "zhyrna-shkira",
+    "description_uk": "",
+    "count": 52,
+    "name_ru": "Жирная кожа"
+  },
+  {
+    "term_id": 514,
+    "taxonomy": "pa_skin_type",
+    "name_uk": "Комбінована шкіра",
+    "slug_uk": "kombinovana-shkira",
+    "description_uk": "",
+    "count": 61,
+    "name_ru": "Комбинированная кожа"
+  },
+  {
+    "term_id": 516,
+    "taxonomy": "pa_skin_type",
+    "name_uk": "Нормальна шкіра",
+    "slug_uk": "normalna-shkira",
+    "description_uk": "",
+    "count": 61,
+    "name_ru": "Нормальная кожа"
+  },
+  {
+    "term_id": 515,
+    "taxonomy": "pa_skin_type",
+    "name_uk": "Суха шкіра",
+    "slug_uk": "suha-shkira",
+    "description_uk": "",
+    "count": 42,
+    "name_ru": "Сухая кожа"
+  },
+  {
+    "term_id": 513,
+    "taxonomy": "pa_skin_type",
+    "name_uk": "Чутлива шкіра",
+    "slug_uk": "chutlyva-shkira",
+    "description_uk": "",
+    "count": 21,
+    "name_ru": "Чувствительная кожа"
+  }
+]

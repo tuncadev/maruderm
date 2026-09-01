@@ -50,6 +50,7 @@ function maruderm_register_catalog_graphql(): void
     register_graphql_object_type('MarudermCatalogFilterOption', [
         'fields' => [
             'value' => ['type' => 'String'],
+            'canonicalValue' => ['type' => 'String'],
             'label' => ['type' => 'String'],
             'count' => ['type' => 'Int'],
             'depth' => ['type' => 'Int'],
@@ -61,6 +62,7 @@ function maruderm_register_catalog_graphql(): void
     register_graphql_object_type('MarudermCatalogNavCategory', [
         'fields' => [
             'value' => ['type' => 'String'],
+            'canonicalValue' => ['type' => 'String'],
             'label' => ['type' => 'String'],
             'url' => ['type' => 'String'],
             'imageUrl' => ['type' => 'String'],
@@ -81,15 +83,24 @@ function maruderm_register_catalog_graphql(): void
 
     register_graphql_field('RootQuery', 'marudermCatalog', [
         'type' => 'MarudermCatalog',
-        'resolve' => static fn () => maruderm_resolve_catalog(),
+        'args' => [
+            'language' => ['type' => 'String'],
+        ],
+        'resolve' => static fn ($root, array $args) => maruderm_resolve_catalog(
+            (string) ($args['language'] ?? 'uk')
+        ),
     ]);
 
     register_graphql_field('RootQuery', 'marudermProductsByIds', [
         'type' => ['list_of' => 'MarudermCatalogProduct'],
         'args' => [
             'ids' => ['type' => ['non_null' => ['list_of' => 'Int']]],
+            'language' => ['type' => 'String'],
         ],
-        'resolve' => static fn ($root, array $args) => maruderm_resolve_products_by_ids($args['ids']),
+        'resolve' => static fn ($root, array $args) => maruderm_resolve_products_by_ids(
+            $args['ids'],
+            (string) ($args['language'] ?? 'uk')
+        ),
     ]);
 
     register_graphql_field('RootQuery', 'marudermProductSearch', [
@@ -97,16 +108,18 @@ function maruderm_register_catalog_graphql(): void
         'args' => [
             'term' => ['type' => ['non_null' => 'String']],
             'limit' => ['type' => 'Int'],
+            'language' => ['type' => 'String'],
         ],
         'resolve' => static fn ($root, array $args) => maruderm_resolve_product_search(
             (string) $args['term'],
-            isset($args['limit']) ? (int) $args['limit'] : 6
+            isset($args['limit']) ? (int) $args['limit'] : 6,
+            (string) ($args['language'] ?? 'uk')
         ),
     ]);
 }
 
 /** @return array<int, array<string, mixed>> */
-function maruderm_resolve_product_search(string $term, int $limit): array
+function maruderm_resolve_product_search(string $term, int $limit, string $language = 'uk'): array
 {
     $term = trim($term);
 
@@ -118,8 +131,10 @@ function maruderm_resolve_product_search(string $term, int $limit): array
     $matches = [];
 
     foreach (maruderm_headless_catalog_products() as $product) {
-        if (mb_stripos($product->get_name(), $term) !== false) {
-            $matches[] = maruderm_map_catalog_product($repository, $product);
+        $mappedProduct = maruderm_map_catalog_product($repository, $product, $language);
+
+        if (mb_stripos($mappedProduct['name'], $term) !== false) {
+            $matches[] = $mappedProduct;
 
             if (count($matches) >= $limit) {
                 break;
@@ -130,29 +145,51 @@ function maruderm_resolve_product_search(string $term, int $limit): array
     return $matches;
 }
 
-function maruderm_resolve_catalog(): array
+function maruderm_resolve_catalog(string $language = 'uk'): array
 {
     $repository = new \Maruderm\Catalog\CatalogRepository();
+    $taxonomyResolver = new \Maruderm\Multilingual\TaxonomyPresentationResolver();
     $products = maruderm_headless_catalog_products();
 
     return [
         'products' => array_map(
-            static fn (\WC_Product $product): array => maruderm_map_catalog_product($repository, $product),
+            static fn (\WC_Product $product): array => maruderm_map_catalog_product(
+                $repository,
+                $product,
+                $language
+            ),
             $products
         ),
-        'categoryOptions' => $repository->categoryOptions($products),
-        'skinTypeOptions' => $repository->attributeOptions($products, 'pa_skin_type'),
-        'concernOptions' => $repository->attributeOptions($products, 'pa_skin_problem'),
-        'hairNeedOptions' => $repository->attributeOptions($products, 'pa_hair_need'),
+        'categoryOptions' => $taxonomyResolver->localizeOptions(
+            $repository->categoryOptions($products),
+            'product_cat',
+            $language
+        ),
+        'skinTypeOptions' => $taxonomyResolver->localizeOptions(
+            $repository->attributeOptions($products, 'pa_skin_type'),
+            'pa_skin_type',
+            $language
+        ),
+        'concernOptions' => $taxonomyResolver->localizeOptions(
+            $repository->attributeOptions($products, 'pa_skin_problem'),
+            'pa_skin_problem',
+            $language
+        ),
+        'hairNeedOptions' => $taxonomyResolver->localizeOptions(
+            $repository->attributeOptions($products, 'pa_hair_need'),
+            'pa_hair_need',
+            $language
+        ),
         'navigationCategories' => array_map(
             static fn (array $category): array => [
                 'value' => $category['value'],
+                'canonicalValue' => $category['canonicalValue'] ?? $category['value'],
                 'label' => $category['label'],
                 'url' => $category['url'],
                 'imageUrl' => $category['image'],
                 'tone' => $category['tone'],
             ],
-            $repository->navigationCategories()
+            $taxonomyResolver->localizeNavigation($repository->navigationCategories(), $language)
         ),
     ];
 }
@@ -175,28 +212,42 @@ function maruderm_headless_catalog_products(): array
     ));
 }
 
-function maruderm_map_catalog_product(\Maruderm\Catalog\CatalogRepository $repository, \WC_Product $product): array
+function maruderm_map_catalog_product(
+    \Maruderm\Catalog\CatalogRepository $repository,
+    \WC_Product $product,
+    string $language = 'uk'
+): array
 {
+    $identityResolver = new \Maruderm\Multilingual\ProductIdentityResolver();
+    $taxonomyResolver = new \Maruderm\Multilingual\TaxonomyPresentationResolver();
+    $presentation = $identityResolver->presentationPost($product->get_id(), $language);
     $imageId = $product->get_image_id();
     $imageUrl = $imageId ? wp_get_attachment_image_url($imageId, 'woocommerce_thumbnail') : false;
     $topCategories = $repository->topCategories($product);
     $categoryLabel = $topCategories[0]->name ?? 'Maruderm';
+    if (isset($topCategories[0]) && $topCategories[0] instanceof \WP_Term) {
+        $categoryLabel = $taxonomyResolver->translateTerm($topCategories[0], $language)->name;
+    }
     $createdAt = $product->get_date_created();
 
     return [
         'databaseId' => $product->get_id(),
-        'name' => $product->get_name(),
-        'slug' => $product->get_slug(),
-        'url' => $product->get_permalink(),
+        'name' => $presentation instanceof \WP_Post ? $presentation->post_title : $product->get_name(),
+        'slug' => $presentation instanceof \WP_Post ? $presentation->post_name : $product->get_slug(),
+        'url' => $presentation instanceof \WP_Post && $language === 'ru'
+            ? home_url('/ru/tovar/' . $presentation->post_name . '/')
+            : $product->get_permalink(),
         'imageUrl' => is_string($imageUrl) ? $imageUrl : wc_placeholder_img_src('woocommerce_thumbnail'),
-        'imageAlt' => wp_strip_all_tags($product->get_name()),
+        'imageAlt' => wp_strip_all_tags(
+            $presentation instanceof \WP_Post ? $presentation->post_title : $product->get_name()
+        ),
         'priceHtml' => $product->get_price_html(),
         'price' => $product->is_in_stock() ? (float) $product->get_price() : null,
         'categoryLabel' => $categoryLabel,
-        'categorySlugs' => $repository->categorySlugs($product),
-        'skinTypeSlugs' => $repository->termSlugs($product, 'pa_skin_type'),
-        'concernSlugs' => $repository->termSlugs($product, 'pa_skin_problem'),
-        'hairNeedSlugs' => $repository->termSlugs($product, 'pa_hair_need'),
+        'categorySlugs' => $taxonomyResolver->productTermSlugs($product, 'product_cat', $language),
+        'skinTypeSlugs' => $taxonomyResolver->productTermSlugs($product, 'pa_skin_type', $language),
+        'concernSlugs' => $taxonomyResolver->productTermSlugs($product, 'pa_skin_problem', $language),
+        'hairNeedSlugs' => $taxonomyResolver->productTermSlugs($product, 'pa_hair_need', $language),
         'popularity' => $product->get_total_sales(),
         'createdTimestamp' => $createdAt !== null ? $createdAt->getTimestamp() : 0,
         'inStock' => $product->is_in_stock(),
@@ -212,7 +263,7 @@ function maruderm_resolve_product_badge(\WC_Product $product): ?array
 }
 
 /** @param int[] $ids @return array<int, array<string, mixed>> */
-function maruderm_resolve_products_by_ids(array $ids): array
+function maruderm_resolve_products_by_ids(array $ids, string $language = 'uk'): array
 {
     $ids = array_values(array_unique(array_filter(array_map('absint', $ids))));
 
@@ -224,7 +275,11 @@ function maruderm_resolve_products_by_ids(array $ids): array
     $products = array_filter(array_map('wc_get_product', $ids), static fn ($product): bool => $product instanceof \WC_Product);
 
     return array_map(
-        static fn (\WC_Product $product): array => maruderm_map_catalog_product($repository, $product),
+        static fn (\WC_Product $product): array => maruderm_map_catalog_product(
+            $repository,
+            $product,
+            $language
+        ),
         $products
     );
 }

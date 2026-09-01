@@ -1,0 +1,371 @@
+[
+  {
+    "term_id": 533,
+    "name_uk": "Uncategorized",
+    "slug_uk": "uncategorized",
+    "description_uk": "",
+    "parent": 0,
+    "count": 0,
+    "name_ru": "Без категории"
+  },
+  {
+    "term_id": 482,
+    "name_uk": "Бальзами для губ",
+    "slug_uk": "balzamy-dlya-gub",
+    "description_uk": "",
+    "parent": 462,
+    "count": 3,
+    "name_ru": "Бальзамы для губ"
+  },
+  {
+    "term_id": 484,
+    "name_uk": "Блиски для губ",
+    "slug_uk": "blysky-dlya-gub",
+    "description_uk": "",
+    "parent": 462,
+    "count": 4,
+    "name_ru": "Блески для губ"
+  },
+  {
+    "term_id": 488,
+    "name_uk": "Блиски для губ з ефектом об’єму",
+    "slug_uk": "blysky-dlya-gub-z-efektom-obyemu",
+    "description_uk": "",
+    "parent": 462,
+    "count": 4,
+    "name_ru": "Блески для увеличения объема губ"
+  },
+  {
+    "term_id": 478,
+    "name_uk": "Бронзери",
+    "slug_uk": "bronzer",
+    "description_uk": "",
+    "parent": 462,
+    "count": 2,
+    "name_ru": "Бронзеры"
+  },
+  {
+    "term_id": 496,
+    "name_uk": "Гелі для душу",
+    "slug_uk": "geli-dlya-dushu",
+    "description_uk": "",
+    "parent": 464,
+    "count": 4,
+    "name_ru": "Гели для душа"
+  },
+  {
+    "term_id": 474,
+    "name_uk": "Дитячі сонцезахисні креми",
+    "slug_uk": "dytyachi-sonczezahysni-kremy",
+    "description_uk": "",
+    "parent": 461,
+    "count": 1,
+    "name_ru": "Детские солнцезащитные средства"
+  },
+  {
+    "term_id": 470,
+    "name_uk": "Догляд за бровами та віями",
+    "slug_uk": "kas-kirpik-bakimi",
+    "description_uk": "",
+    "parent": 460,
+    "count": 1,
+    "name_ru": "Уход за бровями и ресницами"
+  },
+  {
+    "term_id": 469,
+    "name_uk": "Догляд за шкірою навколо очей",
+    "slug_uk": "doglyad-za-shkiroyu-navkolo-ochej",
+    "description_uk": "",
+    "parent": 460,
+    "count": 3,
+    "name_ru": "Уход за кожей вокруг глаз"
+  },
+  {
+    "term_id": 475,
+    "name_uk": "Догляд після засмаги",
+    "slug_uk": "doglyad-pislya-zasmagy",
+    "description_uk": "",
+    "parent": 461,
+    "count": 5,
+    "name_ru": "Уход после загара"
+  },
+  {
+    "term_id": 495,
+    "name_uk": "Дорожній формат",
+    "slug_uk": "dorozhnij-format",
+    "description_uk": "",
+    "parent": 463,
+    "count": 12,
+    "name_ru": "Дорожный формат"
+  },
+  {
+    "term_id": 463,
+    "name_uk": "Засоби для догляду за волоссям",
+    "slug_uk": "zasoby-dlya-doglyadu-za-volossyam",
+    "description_uk": "",
+    "parent": 0,
+    "count": 28,
+    "name_ru": "Средства по уходу за волосами"
+  },
+  {
+    "term_id": 464,
+    "name_uk": "Засоби для догляду за тілом",
+    "slug_uk": "zasoby-dlya-doglyadu-za-tilom",
+    "description_uk": "",
+    "parent": 0,
+    "count": 12,
+    "name_ru": "Средства по уходу за телом"
+  },
+  {
+    "term_id": 460,
+    "name_uk": "Засоби для догляду за шкірою",
+    "slug_uk": "zasoby-dlya-doglyadu-za-shkiroyu",
+    "description_uk": "",
+    "parent": 0,
+    "count": 49,
+    "name_ru": "Средства по уходу за кожей"
+  },
+  {
+    "term_id": 473,
+    "name_uk": "Засоби для засмаги",
+    "slug_uk": "zasoby-dlya-zasmagy",
+    "description_uk": "",
+    "parent": 461,
+    "count": 2,
+    "name_ru": "Средства для загара"
+  },
+  {
+    "term_id": 472,
+    "name_uk": "Засоби для очищення обличчя",
+    "slug_uk": "zasoby-dlya-ochyshhennya-oblychchya",
+    "description_uk": "",
+    "parent": 460,
+    "count": 8,
+    "name_ru": "Средства для очищения лица"
+  },
+  {
+    "term_id": 491,
+    "name_uk": "Кондиціонери для волосся",
+    "slug_uk": "kondyczionery-dlya-volossya",
+    "description_uk": "",
+    "parent": 463,
+    "count": 2,
+    "name_ru": "Кондиционеры для волос"
+  },
+  {
+    "term_id": 479,
+    "name_uk": "Консилери",
+    "slug_uk": "concealer-kapatici",
+    "description_uk": "",
+    "parent": 462,
+    "count": 4,
+    "name_ru": "Консилеры"
+  },
+  {
+    "term_id": 465,
+    "name_uk": "Креми для догляду за шкірою",
+    "slug_uk": "kremy-dlya-doglyadu-za-shkiroyu",
+    "description_uk": "",
+    "parent": 460,
+    "count": 12,
+    "name_ru": "Кремы для ухода за кожей"
+  },
+  {
+    "term_id": 498,
+    "name_uk": "Креми для тіла",
+    "slug_uk": "kremy-dlya-tila",
+    "description_uk": "",
+    "parent": 464,
+    "count": 4,
+    "name_ru": "Кремы для тела"
+  },
+  {
+    "term_id": 497,
+    "name_uk": "Креми проти целюліту",
+    "slug_uk": "kremy-proty-czelyulitu",
+    "description_uk": "",
+    "parent": 464,
+    "count": 1,
+    "name_ru": "Антицеллюлитные кремы"
+  },
+  {
+    "term_id": 462,
+    "name_uk": "Макіяж",
+    "slug_uk": "makiyazh",
+    "description_uk": "",
+    "parent": 0,
+    "count": 46,
+    "name_ru": "Макияж"
+  },
+  {
+    "term_id": 492,
+    "name_uk": "Маски для волосся",
+    "slug_uk": "masky-dlya-volossya",
+    "description_uk": "",
+    "parent": 463,
+    "count": 6,
+    "name_ru": "Маски для волос"
+  },
+  {
+    "term_id": 466,
+    "name_uk": "Маски для догляду за шкірою",
+    "slug_uk": "masky-dlya-doglyadu-za-shkiroyu",
+    "description_uk": "",
+    "parent": 460,
+    "count": 2,
+    "name_ru": "Маски для ухода за кожей"
+  },
+  {
+    "term_id": 471,
+    "name_uk": "Пілінги",
+    "slug_uk": "pilingy",
+    "description_uk": "",
+    "parent": 460,
+    "count": 3,
+    "name_ru": "Пилинги"
+  },
+  {
+    "term_id": 489,
+    "name_uk": "Праймери",
+    "slug_uk": "primer-makyaj-bazi-sabitleyici",
+    "description_uk": "",
+    "parent": 462,
+    "count": 2,
+    "name_ru": "Праймеры"
+  },
+  {
+    "term_id": 486,
+    "name_uk": "Рідкі матові помади",
+    "slug_uk": "liquid-matte-rouge-likit-mat-ruj",
+    "description_uk": "",
+    "parent": 462,
+    "count": 4,
+    "name_ru": "Жидкие матовые помады"
+  },
+  {
+    "term_id": 485,
+    "name_uk": "Рідкі рум’яна",
+    "slug_uk": "liquid-blusher-likit-allik",
+    "description_uk": "",
+    "parent": 462,
+    "count": 3,
+    "name_ru": "Жидкие румяна"
+  },
+  {
+    "term_id": 467,
+    "name_uk": "Сироватки для догляду за шкірою",
+    "slug_uk": "syrovatky-dlya-doglyadu-za-shkiroyu",
+    "description_uk": "",
+    "parent": 460,
+    "count": 12,
+    "name_ru": "Сыворотки для ухода за кожей"
+  },
+  {
+    "term_id": 499,
+    "name_uk": "Скраби для тіла",
+    "slug_uk": "skraby-dlya-tila",
+    "description_uk": "",
+    "parent": 464,
+    "count": 3,
+    "name_ru": "Скрабы для тела"
+  },
+  {
+    "term_id": 461,
+    "name_uk": "Сонцезахисний догляд",
+    "slug_uk": "sonczezahysnyj-doglyad",
+    "description_uk": "",
+    "parent": 0,
+    "count": 18,
+    "name_ru": "Солнцезащитный уход"
+  },
+  {
+    "term_id": 477,
+    "name_uk": "Сонцезахисні креми для обличчя",
+    "slug_uk": "sonczezahysni-kremy-dlya-oblychchya",
+    "description_uk": "",
+    "parent": 461,
+    "count": 7,
+    "name_ru": "Солнцезащитные кремы для лица"
+  },
+  {
+    "term_id": 476,
+    "name_uk": "Сонцезахисні креми для тіла",
+    "slug_uk": "sonczezahysni-kremy-dlya-tila",
+    "description_uk": "",
+    "parent": 461,
+    "count": 4,
+    "name_ru": "Солнцезащитные кремы для тела"
+  },
+  {
+    "term_id": 490,
+    "name_uk": "Стайлінг, термозахист і олії для волосся",
+    "slug_uk": "stajling-termozahyst-i-oliyi-dlya-volossya",
+    "description_uk": "",
+    "parent": 463,
+    "count": 7,
+    "name_ru": "Стайлинг, термозащита и масла для волос"
+  },
+  {
+    "term_id": 483,
+    "name_uk": "Тінти для губ і щік",
+    "slug_uk": "lip-cheek-tint-dudak-yanak-renklendirici",
+    "description_uk": "",
+    "parent": 462,
+    "count": 1,
+    "name_ru": "Тинты для губ и щек"
+  },
+  {
+    "term_id": 480,
+    "name_uk": "Тональні основи",
+    "slug_uk": "fondoten",
+    "description_uk": "",
+    "parent": 462,
+    "count": 10,
+    "name_ru": "Тональные основы"
+  },
+  {
+    "term_id": 468,
+    "name_uk": "Тоніки для догляду за шкірою",
+    "slug_uk": "toniky-dlya-doglyadu-za-shkiroyu",
+    "description_uk": "",
+    "parent": 460,
+    "count": 10,
+    "name_ru": "Тоники для ухода за кожей"
+  },
+  {
+    "term_id": 493,
+    "name_uk": "Тоніки для шкіри голови",
+    "slug_uk": "toniky-dlya-shkiry-golovy",
+    "description_uk": "",
+    "parent": 463,
+    "count": 2,
+    "name_ru": "Тоники для кожи головы"
+  },
+  {
+    "term_id": 487,
+    "name_uk": "Туш для вій",
+    "slug_uk": "mascara-maskara",
+    "description_uk": "",
+    "parent": 462,
+    "count": 7,
+    "name_ru": "Тушь для ресниц"
+  },
+  {
+    "term_id": 481,
+    "name_uk": "Хайлайтери",
+    "slug_uk": "highlighter-aydinlatici",
+    "description_uk": "",
+    "parent": 462,
+    "count": 2,
+    "name_ru": "Хайлайтеры"
+  },
+  {
+    "term_id": 494,
+    "name_uk": "Шампуні",
+    "slug_uk": "shampuni",
+    "description_uk": "",
+    "parent": 463,
+    "count": 4,
+    "name_ru": "Шампуни"
+  }
+]
