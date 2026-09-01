@@ -58,7 +58,7 @@ jobs:
             for git_dir in $(find /home/citymody -maxdepth 6 -type d -name .git -print); do
               candidate=${git_dir%/.git}
               case "${candidate}" in
-                */.codex-backups/*|*/next-releases/*|*/deploy-incoming/*) continue ;;
+                */.codex-backups/*|*/next-releases/*|*/deploy-incoming/*|*/wordpress-www-before-next-*) continue ;;
               esac
               if [ "$(git -C "${candidate}" remote get-url origin 2>/dev/null || true)" = "https://github.com/tuncadev/maruderm.git" ]; then
                 matches+=("${candidate}")
