@@ -15,19 +15,19 @@ final class Maruderm_Hutko_Env_Config
 {
     private const SETTINGS_OPTION = 'woocommerce_hutko_settings';
 
-    /** @var array<string, string> */
+    /** @var array<string, list<string>> */
     private const SETTING_ENV_KEYS = [
-        'enabled' => 'HUTKO_ENABLED',
-        'test_mode' => 'HUTKO_TEST_MODE',
-        'merchant_id' => 'HUTKO_MERCHANT_ID',
-        'secret_key' => 'HUTKO_SECRET_KEY',
-        'integration_type' => 'HUTKO_INTEGRATION_TYPE',
-        'title' => 'HUTKO_TITLE',
-        'description' => 'HUTKO_DESCRIPTION',
-        'completed_order_status' => 'HUTKO_COMPLETED_ORDER_STATUS',
-        'expired_order_status' => 'HUTKO_EXPIRED_ORDER_STATUS',
-        'declined_order_status' => 'HUTKO_DECLINED_ORDER_STATUS',
-        'recurrent_payment' => 'HUTKO_RECURRENT_PAYMENT',
+        'enabled' => ['HUTKO_ENABLED'],
+        'test_mode' => ['HUTKO_TEST_MODE'],
+        'merchant_id' => ['HUTKO_MERCHANT_ID'],
+        'secret_key' => ['HUTKO_SECRET_KEY', 'HUTKO_PAYMENT_KEY'],
+        'integration_type' => ['HUTKO_INTEGRATION_TYPE'],
+        'title' => ['HUTKO_TITLE'],
+        'description' => ['HUTKO_DESCRIPTION'],
+        'completed_order_status' => ['HUTKO_COMPLETED_ORDER_STATUS'],
+        'expired_order_status' => ['HUTKO_EXPIRED_ORDER_STATUS'],
+        'declined_order_status' => ['HUTKO_DECLINED_ORDER_STATUS'],
+        'recurrent_payment' => ['HUTKO_RECURRENT_PAYMENT'],
     ];
 
     /** @var array<string, string>|null */
@@ -49,9 +49,9 @@ final class Maruderm_Hutko_Env_Config
     {
         $settings = is_array($settings) ? $settings : [];
 
-        foreach (self::SETTING_ENV_KEYS as $setting_key => $env_key) {
+        foreach (self::SETTING_ENV_KEYS as $setting_key => $env_keys) {
             $found = false;
-            $value = $this->environmentValue($env_key, $found);
+            $value = $this->settingEnvironmentValue($env_keys, $found);
 
             if (! $found) {
                 continue;
@@ -74,8 +74,13 @@ final class Maruderm_Hutko_Env_Config
     {
         $new_settings = is_array($new_settings) ? $new_settings : [];
 
-        foreach (array_keys(self::SETTING_ENV_KEYS) as $setting_key) {
-            unset($new_settings[$setting_key]);
+        foreach (self::SETTING_ENV_KEYS as $setting_key => $env_keys) {
+            $found = false;
+            $this->settingEnvironmentValue($env_keys, $found);
+
+            if ($found) {
+                unset($new_settings[$setting_key]);
+            }
         }
 
         return $new_settings;
@@ -123,6 +128,27 @@ final class Maruderm_Hutko_Env_Config
         if (array_key_exists($key, $file_values)) {
             $found = true;
             return $file_values[$key];
+        }
+
+        $found = false;
+        return '';
+    }
+
+    /**
+     * Return the first configured environment alias for a gateway setting.
+     *
+     * @param list<string> $keys
+     */
+    private function settingEnvironmentValue(array $keys, bool &$found): string
+    {
+        foreach ($keys as $key) {
+            $key_found = false;
+            $value = $this->environmentValue($key, $key_found);
+
+            if ($key_found) {
+                $found = true;
+                return $value;
+            }
         }
 
         $found = false;
