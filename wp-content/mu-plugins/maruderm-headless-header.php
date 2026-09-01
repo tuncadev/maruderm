@@ -106,10 +106,10 @@ function maruderm_resolve_site_chrome(): array
     ];
 }
 
-/** @return array<int, array<string, mixed>> */
-function maruderm_resolve_search_categories(): array
+/** @return array<int, \WP_Term> */
+function maruderm_header_source_categories(): array
 {
-    $topLevel = get_terms([
+    $terms = get_terms([
         'taxonomy' => 'product_cat',
         'parent' => 0,
         'hide_empty' => true,
@@ -117,7 +117,26 @@ function maruderm_resolve_search_categories(): array
         'order' => 'ASC',
     ]);
 
-    if (is_wp_error($topLevel) || $topLevel === []) {
+    if (is_wp_error($terms) || $terms === []) {
+        return [];
+    }
+
+    return array_values(array_filter(
+        $terms,
+        static fn (\WP_Term $term): bool => get_term_meta(
+            $term->term_id,
+            '_maruderm_translation_presentation',
+            true
+        ) !== '1'
+    ));
+}
+
+/** @return array<int, array<string, mixed>> */
+function maruderm_resolve_search_categories(): array
+{
+    $topLevel = maruderm_header_source_categories();
+
+    if ($topLevel === []) {
         return [];
     }
 
@@ -159,15 +178,9 @@ function maruderm_resolve_search_categories(): array
 /** @return array<int, array<string, mixed>> */
 function maruderm_resolve_mega_menu(): array
 {
-    $topLevel = get_terms([
-        'taxonomy' => 'product_cat',
-        'parent' => 0,
-        'hide_empty' => true,
-        'orderby' => 'menu_order',
-        'order' => 'ASC',
-    ]);
+    $topLevel = maruderm_header_source_categories();
 
-    if (is_wp_error($topLevel) || $topLevel === []) {
+    if ($topLevel === []) {
         return [];
     }
 
