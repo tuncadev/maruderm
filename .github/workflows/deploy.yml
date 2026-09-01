@@ -53,6 +53,27 @@ jobs:
             "DEPLOY_PATH=${remote_path} bash -s" <<'REMOTE'
           set -euo pipefail
 
+          if ! git -C "${DEPLOY_PATH}" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+            matches=()
+            while IFS= read -r git_dir; do
+              candidate=${git_dir%/.git}
+              case "${candidate}" in
+                */.codex-backups/*|*/next-releases/*|*/deploy-incoming/*) continue ;;
+              esac
+              if [ "$(git -C "${candidate}" remote get-url origin 2>/dev/null || true)" = "https://github.com/tuncadev/maruderm.git" ]; then
+                matches+=("${candidate}")
+              fi
+            done < <(find /home/citymody -maxdepth 6 -type d -name .git -print)
+
+            if [ "${#matches[@]}" -ne 1 ]; then
+              echo "Expected exactly one production Maruderm checkout; found ${#matches[@]}." >&2
+              exit 1
+            fi
+
+            DEPLOY_PATH=${matches[0]}
+            printf 'resolved_deploy_path=%s\n' "${DEPLOY_PATH}"
+          fi
+
           cd "${DEPLOY_PATH}"
 
           test "$(git branch --show-current)" = "master"
