@@ -94,7 +94,7 @@ jobs:
           printf 'before_commit=%s\n' "${before_commit}"
           printf 'after_commit=%s\n' "${after_commit}"
 
-          if command -v wp >/dev/null 2>&1; then
-            wp cache flush || true
-          fi
+          command -v wp >/dev/null 2>&1
+          wp --path="${DEPLOY_PATH}" eval-file scripts/migrate-sunscreen-category-slugs.php
+          wp --path="${DEPLOY_PATH}" cache flush
           REMOTE
