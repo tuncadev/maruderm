@@ -15,6 +15,7 @@ if (! defined('ABSPATH')) {
 final class Maruderm_Headless_Access_Gate
 {
     private const LOGIN_SLUG = 'orangejuice';
+    private const ROBOTS_POLICY = 'noindex, nofollow, noarchive, nosnippet, noimageindex';
 
     /** @var list<string> */
     private const HEADLESS_CONTENT_PATHS = [
@@ -42,6 +43,8 @@ final class Maruderm_Headless_Access_Gate
 
     public function register(): void
     {
+        add_action('init', [$this, 'sendRobotsPolicy'], -2000);
+        add_action('init', [$this, 'serveRobotsFile'], -1900);
         add_action('init', [$this, 'serveLoginEntry'], -1000);
         add_action('init', [$this, 'concealGuestAdmin'], -900);
         add_action('login_init', [$this, 'concealDefaultLogin'], -1000);
@@ -49,6 +52,25 @@ final class Maruderm_Headless_Access_Gate
         add_action('template_redirect', [$this, 'redirectPublicFrontend'], -1000);
         add_filter('site_url', [$this, 'rewriteSiteLoginUrl'], 10, 4);
         add_filter('network_site_url', [$this, 'rewriteNetworkLoginUrl'], 10, 3);
+    }
+
+    public function sendRobotsPolicy(): void
+    {
+        header('X-Robots-Tag: ' . self::ROBOTS_POLICY, true);
+    }
+
+    public function serveRobotsFile(): void
+    {
+        if ($this->requestPath() !== '/robots.txt') {
+            return;
+        }
+
+        status_header(200);
+        nocache_headers();
+        header('Content-Type: text/plain; charset=utf-8');
+
+        echo "User-agent: *\nDisallow: /\n";
+        exit;
     }
 
     public function serveLoginEntry(): void
@@ -180,7 +202,7 @@ final class Maruderm_Headless_Access_Gate
             return false;
         }
 
-        header('X-Robots-Tag: noindex, nofollow', true);
+        header('X-Robots-Tag: ' . self::ROBOTS_POLICY, true);
 
         return true;
     }
@@ -230,11 +252,11 @@ final class Maruderm_Headless_Access_Gate
         status_header($status);
         nocache_headers();
         header('Content-Type: text/html; charset=utf-8');
-        header('X-Robots-Tag: noindex, nofollow', true);
+        header('X-Robots-Tag: ' . self::ROBOTS_POLICY, true);
 
         echo '<!doctype html><html lang="uk"><head><meta charset="utf-8">';
         echo '<meta name="viewport" content="width=device-width,initial-scale=1">';
-        echo '<meta name="robots" content="noindex,nofollow">';
+        echo '<meta name="robots" content="noindex,nofollow,noarchive,nosnippet,noimageindex">';
         echo '<meta http-equiv="refresh" content="4;url=' . esc_url($target) . '">';
         echo '<title>Maruderm</title><style>';
         echo '*,*::before,*::after{box-sizing:border-box}html,body{min-height:100%;margin:0}';
