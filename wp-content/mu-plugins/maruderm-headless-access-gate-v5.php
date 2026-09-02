@@ -69,7 +69,7 @@ final class Maruderm_Headless_Access_Gate
         nocache_headers();
         header('Content-Type: text/plain; charset=utf-8');
 
-        echo "User-agent: *\nDisallow: /\n";
+        echo "User-agent: *\nDisallow: /\nDisallow: /*\n";
         exit;
     }
 
