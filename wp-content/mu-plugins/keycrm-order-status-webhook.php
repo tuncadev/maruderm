@@ -206,16 +206,27 @@ final class Maruderm_KeyCRM_Order_Status_Webhook
         }
 
         $previous_status = $order->get_status();
+        $suspended_callbacks = [];
 
         try {
             if ($previous_status !== $target_status) {
-                $order->update_status(
-                    $target_status,
-                    $status_id > 0
-                        ? sprintf('KeyCRM status %d synchronized.', $status_id)
-                        : sprintf('KeyCRM status group %d synchronized.', $status_group_id),
-                    true
-                );
+                $order->update_meta_data(self::SYNC_ORIGIN_META, 'keycrm');
+                $order->save_meta_data();
+                $suspended_callbacks = $this->suspend_vendor_reverse_sync();
+
+                try {
+                    $order->update_status(
+                        $target_status,
+                        $status_id > 0
+                            ? sprintf('KeyCRM status %d synchronized.', $status_id)
+                            : sprintf('KeyCRM status group %d synchronized.', $status_group_id),
+                        true
+                    );
+                } finally {
+                    $this->restore_callbacks($suspended_callbacks);
+                    $suspended_callbacks = [];
+                }
+
                 $order = wc_get_order($order_id);
             }
 
@@ -236,6 +247,8 @@ final class Maruderm_KeyCRM_Order_Status_Webhook
                 'WooCommerce status synchronization failed.',
                 ['status' => 500]
             );
+        } finally {
+            $this->restore_callbacks($suspended_callbacks);
         }
 
         $result = $previous_status === $target_status ? 'unchanged' : 'updated';
@@ -249,6 +262,46 @@ final class Maruderm_KeyCRM_Order_Status_Webhook
             'status' => $target_status,
             'keycrm_status_id' => $status_id,
         ], 200);
+    }
+
+    private function suspend_vendor_reverse_sync(): array
+    {
+        global $wp_filter;
+
+        $hook = $wp_filter['woocommerce_order_status_changed'] ?? null;
+
+        if (! $hook instanceof WP_Hook) {
+            return [];
+        }
+
+        $suspended = [];
+
+        foreach ($hook->callbacks as $priority => $callbacks) {
+            foreach ($callbacks as $callback_data) {
+                $callback = $callback_data['function'] ?? null;
+
+                if (! is_array($callback)
+                    || ! is_object($callback[0] ?? null)
+                    || ($callback[1] ?? '') !== 'update_order_status'
+                    || ! is_a($callback[0], 'WC_Keycrm_Base')) {
+                    continue;
+                }
+
+                $accepted_args = absint($callback_data['accepted_args'] ?? 1);
+                remove_action('woocommerce_order_status_changed', $callback, (int) $priority);
+                $suspended[] = [$callback, (int) $priority, max(1, $accepted_args)];
+            }
+        }
+
+        return $suspended;
+    }
+
+    private function restore_callbacks(array $callbacks): void
+    {
+        foreach ($callbacks as $callback_data) {
+            [$callback, $priority, $accepted_args] = $callback_data;
+            add_action('woocommerce_order_status_changed', $callback, $priority, $accepted_args);
+        }
     }
 
     private function remote_status_id(int $remote_order_id, int $order_id, int $status_group_id): int
