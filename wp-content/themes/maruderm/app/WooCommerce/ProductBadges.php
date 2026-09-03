@@ -51,7 +51,7 @@ final class ProductBadges implements Registrable
             return $this->badge('out', $product);
         }
 
-        if ($product->is_on_sale() && $this->salePercentage($product) > 0) {
+        if ($product->is_on_sale() && $this->saleAmount($product) > 0) {
             return $this->badge('sale', $product);
         }
 
@@ -162,18 +162,18 @@ final class ProductBadges implements Registrable
         $label = self::BADGES[$tone];
 
         if ($tone === 'sale') {
-            $percentage = $this->salePercentage($product);
-            $label = $percentage > 0 ? '−' . $percentage . '%' : $label;
-            $tone = $percentage > 20 ? 'sale-strong' : 'sale';
+            $amount = $this->saleAmount($product);
+            $label = $amount > 0 ? '−' . wc_format_localized_price($amount) . ' грн' : $label;
+            $tone = 'sale-strong';
         }
 
         return ['tone' => $tone, 'label' => $label];
     }
 
-    private function salePercentage(\WC_Product $product): int
+    private function saleAmount(\WC_Product $product): float
     {
         if ($product->is_type('variable')) {
-            $percentages = [];
+            $amounts = [];
 
             foreach ($product->get_children() as $variation_id) {
                 $variation = wc_get_product($variation_id);
@@ -182,25 +182,25 @@ final class ProductBadges implements Registrable
                     continue;
                 }
 
-                $percentages[] = $this->priceDiscountPercentage($variation);
+                $amounts[] = $this->priceDiscountAmount($variation);
             }
 
-            return $percentages === [] ? 0 : max($percentages);
+            return $amounts === [] ? 0.0 : max($amounts);
         }
 
-        return $this->priceDiscountPercentage($product);
+        return $this->priceDiscountAmount($product);
     }
 
-    private function priceDiscountPercentage(\WC_Product $product): int
+    private function priceDiscountAmount(\WC_Product $product): float
     {
         $regular_price = (float) $product->get_regular_price();
         $sale_price = (float) $product->get_sale_price();
 
         if ($regular_price <= 0 || $sale_price <= 0 || $sale_price >= $regular_price) {
-            return 0;
+            return 0.0;
         }
 
-        return (int) round((($regular_price - $sale_price) / $regular_price) * 100);
+        return $regular_price - $sale_price;
     }
 
     private function hasLowStock(\WC_Product $product): bool

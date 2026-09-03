@@ -92,13 +92,12 @@ class WC_Keycrm_Request
 
         $parameters = globalConvert_kcrm($path, $parameters);
         $apiKey = $this->defaultParameters['apiKey'];
-        unset($parameters['apiKey'], $parameters['url'], $parameters['source']);
 
         if (isset($parameters['url'])){
             $urlArr = explode('/api/', $this->url);
             $url = trim($urlArr[0], '/api').$parameters['url'];
-
         }
+        unset($parameters['apiKey'], $parameters['url'], $parameters['source']);
         if (isset ($parameters['order'])) {
             $parameters = $parameters['order'];
         }
@@ -128,8 +127,8 @@ class WC_Keycrm_Request
         curl_setopt($curlHandler, CURLOPT_URL, $url);
         curl_setopt($curlHandler, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($curlHandler, CURLOPT_FAILONERROR, false);
-        curl_setopt($curlHandler, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($curlHandler, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($curlHandler, CURLOPT_SSL_VERIFYPEER, true);
+        curl_setopt($curlHandler, CURLOPT_SSL_VERIFYHOST, 2);
         curl_setopt($curlHandler, CURLOPT_TIMEOUT, 30);
         curl_setopt($curlHandler, CURLOPT_CONNECTTIMEOUT, 30);
 

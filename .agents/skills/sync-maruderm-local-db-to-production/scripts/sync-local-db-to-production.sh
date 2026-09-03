@@ -607,9 +607,9 @@ load_project_env
 
 readonly LOCAL_WP_BIN="${MARUDERM_DB_SYNC_LOCAL_WP_BIN:-/usr/local/bin/wp}"
 readonly LOCAL_URL="${MARUDERM_DB_SYNC_LOCAL_URL:-https://maruderm.dev}"
-readonly PRODUCTION_URL="${MARUDERM_DB_SYNC_PRODUCTION_URL:-https://www.maruderm.com.ua}"
+readonly PRODUCTION_URL="${MARUDERM_DB_SYNC_PRODUCTION_URL:-https://wp.maruderm.com.ua}"
 readonly REMOTE_ALIAS="${MARUDERM_DB_SYNC_SSH_ALIAS:-citymody}"
-readonly REMOTE_WP_PATH="${MARUDERM_DB_SYNC_REMOTE_PATH:-${DEPLOY_PATH:-/home/citymody/maruderm.com.ua/www}}"
+readonly REMOTE_WP_PATH="${MARUDERM_DB_SYNC_REMOTE_PATH:-/home/citymody/maruderm.com.ua/wp}"
 readonly REMOTE_PHP_BIN="${MARUDERM_DB_SYNC_REMOTE_PHP_BIN:-/usr/bin/php8.4}"
 readonly REMOTE_WP_BIN="${MARUDERM_DB_SYNC_REMOTE_WP_BIN:-/usr/local/bin/wp}"
 readonly -a SSH_OPTIONS=(-o BatchMode=yes -o ConnectTimeout=15 -o ServerAliveInterval=15 -o ServerAliveCountMax=2 -o IdentitiesOnly=no -o PreferredAuthentications=publickey)

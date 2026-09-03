@@ -100,15 +100,11 @@ function covertOrder_kcrm ($order, $source)
 
     $order = json_decode($order, JSON_OBJECT_AS_ARRAY);
     $wcOrder = wc_get_order($order['externalId']);
-    WC_Keycrm_Logger::add(sprintf("order data: \n\n%s\n", json_encode($order, JSON_UNESCAPED_UNICODE)));
-    WC_Keycrm_Logger::add(sprintf("wcOrder data: \n\n%s\n", json_encode($wcOrder->get_data(), JSON_UNESCAPED_UNICODE)));
     $wcItems = [];
     foreach ($wcOrder->get_items() as $item_id => $item) {
         $wcItems[$item_id] = $item;
         // prevent combined properties for products with the same SKU
         $usedItems[$item_id] = false;
-        WC_Keycrm_Logger::add(sprintf("wcOrderItem data: \n\n%s\n", json_encode($item->get_data(), JSON_UNESCAPED_UNICODE)));
-        WC_Keycrm_Logger::add(sprintf("wcOrderItemProduct data: \n\n%s\n", json_encode(wc_get_product($item->get_product())->get_data(), JSON_UNESCAPED_UNICODE)));
     }
 
 
@@ -237,7 +233,13 @@ function covertOrder_kcrm ($order, $source)
     if ($order['payments'][0]['type'] == null){
         $k_order['payments'] = [];
     }
-    WC_Keycrm_Logger::add(sprintf("KeyCRM Order data: %s", json_encode($k_order, JSON_UNESCAPED_UNICODE)));
+    WC_Keycrm_Logger::add(sprintf(
+        'KeyCRM order prepared: source_uuid=%s, products=%d, shipping=%s, payment=%s',
+        (string) $k_order['source_uuid'],
+        count($kItems),
+        !empty($k_order['shipping']) ? 'yes' : 'no',
+        !empty($k_order['payments']) ? 'yes' : 'no'
+    ));
     return json_encode($k_order);
 }
 

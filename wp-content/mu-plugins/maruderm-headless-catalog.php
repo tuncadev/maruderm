@@ -24,6 +24,16 @@ function maruderm_register_catalog_graphql(): void
         ],
     ]);
 
+    register_graphql_object_type('MarudermProductCardPromotion', [
+        'fields' => [
+            'heading' => ['type' => 'String'],
+            'items' => ['type' => ['list_of' => 'String']],
+            'imageUrl' => ['type' => 'String'],
+            'imageSource' => ['type' => 'String'],
+            'tone' => ['type' => 'String'],
+        ],
+    ]);
+
     register_graphql_object_type('MarudermCatalogProduct', [
         'fields' => [
             'databaseId' => ['type' => 'Int'],
@@ -44,6 +54,7 @@ function maruderm_register_catalog_graphql(): void
             'inStock' => ['type' => 'Boolean'],
             'purchasable' => ['type' => 'Boolean'],
             'badge' => ['type' => 'MarudermProductBadge'],
+            'promotion' => ['type' => 'MarudermProductCardPromotion'],
         ],
     ]);
 
@@ -231,6 +242,7 @@ function maruderm_map_catalog_product(
     $createdAt = $product->get_date_created();
     $translator = new \Maruderm\Multilingual\ProductDetailTranslator();
     $badge = maruderm_resolve_product_badge($product);
+    $promotion = maruderm_resolve_product_card_promotion($repository, $product, $language);
     if (is_array($badge)) {
         $badge['label'] = $translator->text((string) $badge['label'], $language);
     }
@@ -258,6 +270,7 @@ function maruderm_map_catalog_product(
         'inStock' => $product->is_in_stock(),
         'purchasable' => $product->is_purchasable(),
         'badge' => $badge,
+        'promotion' => $promotion,
     ];
 }
 
@@ -265,6 +278,51 @@ function maruderm_map_catalog_product(
 function maruderm_resolve_product_badge(\WC_Product $product): ?array
 {
     return (new \Maruderm\WooCommerce\ProductBadges())->resolve($product);
+}
+
+/** @return array{heading: string, items: string[], imageUrl: string, imageSource: string, tone: string}|null */
+function maruderm_resolve_product_card_promotion(
+    \Maruderm\Catalog\CatalogRepository $repository,
+    \WC_Product $product,
+    string $language
+): ?array {
+    $promotion = (new \Maruderm\WooCommerce\ProductCardPromotion())->resolve(
+        $product,
+        $repository->categorySlugs($product)
+    );
+
+    if (! is_array($promotion)) {
+        return null;
+    }
+
+    $tone = (string) $promotion['tone'];
+    $items = array_values(array_map('strval', (array) $promotion['items']));
+
+    if ($language === 'ru') {
+        $items = maruderm_russian_product_card_promotion_items($tone);
+    }
+
+    return [
+        'heading' => $language === 'ru' ? 'Кому и когда рекомендуем?' : (string) $promotion['heading'],
+        'items' => $items,
+        'imageUrl' => (string) $promotion['image_url'],
+        'imageSource' => (string) $promotion['image_source'],
+        'tone' => $tone,
+    ];
+}
+
+/** @return string[] */
+function maruderm_russian_product_card_promotion_items(string $tone): array
+{
+    $items = [
+        'body' => ['Для ежедневного ухода за телом', 'Когда коже нужны мягкость и комфорт', 'Легко добавить в привычную рутину'],
+        'hair' => ['Для регулярного ухода за волосами', 'Когда волосам нужна дополнительная забота', 'Легко сочетать с привычной укладкой'],
+        'sun' => ['Для ежедневной защиты от солнца', 'Для комфортного ухода в солнечные дни', 'Завершающий этап утренней рутины'],
+        'makeup' => ['Для комфортного ежедневного макияжа', 'Когда нужен аккуратный стойкий результат', 'Легко сочетать с любимыми средствами'],
+        'skin' => ['Для регулярного ухода за кожей', 'Когда нужен целевой этап рутины', 'Легко сочетать с другими средствами'],
+    ];
+
+    return $items[$tone] ?? $items['skin'];
 }
 
 /** @param int[] $ids @return array<int, array<string, mixed>> */
