@@ -88,6 +88,7 @@ if (!class_exists('WC_Keycrm_Base')) {
             add_filter('woocommerce_settings_api_sanitized_fields_' . $this->id, array($this, 'api_sanitized'));
             add_action('admin_bar_menu', array($this, 'add_keycrm_button'), 100 );
             add_action('woocommerce_checkout_order_processed', array($this, 'keycrm_process_order'), 10, 1);
+            add_action('woocommerce_store_api_checkout_order_processed', array($this, 'keycrm_process_store_api_order'), 10, 1);
             add_action('keycrm_history', array($this, 'keycrm_history_get'));
             add_action('keycrm_icml', array($this, 'generate_icml'));
             add_action('keycrm_inventories', array($this, 'load_stocks'));
@@ -294,6 +295,20 @@ if (!class_exists('WC_Keycrm_Base')) {
          */
         public function keycrm_process_order($order_id) {
             $this->orders->orderCreate($order_id);
+        }
+
+        /**
+         * Send orders created by the Checkout Block or Store API to KeyCRM.
+         *
+         * @param WC_Order $order Processed WooCommerce order.
+         * @throws Exception
+         */
+        public function keycrm_process_store_api_order($order) {
+            if (!$order instanceof WC_Order || $order->get_meta('_keycrm_order_id')) {
+                return;
+            }
+
+            $this->keycrm_process_order($order->get_id());
         }
 
         /**
