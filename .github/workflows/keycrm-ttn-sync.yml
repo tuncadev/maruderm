@@ -1,6 +1,11 @@
 name: Sync KeyCRM TTN statuses
 
 on:
+  push:
+    branches:
+      - master
+    paths:
+      - .github/workflows/keycrm-ttn-sync.yml
   schedule:
     - cron: '*/5 * * * *'
   workflow_dispatch:
