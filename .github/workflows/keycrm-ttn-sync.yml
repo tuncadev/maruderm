@@ -1,0 +1,79 @@
+name: Sync KeyCRM TTN statuses
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: keycrm-ttn-status-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    name: Run production TTN synchronizer
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Configure SSH
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_PORT: ${{ secrets.DEPLOY_PORT || '22' }}
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          DEPLOY_KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+        run: |
+          set -euo pipefail
+
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "${DEPLOY_SSH_KEY}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+
+          if [ -n "${DEPLOY_KNOWN_HOSTS}" ]; then
+            printf '%s\n' "${DEPLOY_KNOWN_HOSTS}" > ~/.ssh/known_hosts
+          else
+            ssh-keyscan -p "${DEPLOY_PORT}" "${DEPLOY_HOST}" > ~/.ssh/known_hosts
+          fi
+
+      - name: Run TTN status synchronization
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_PORT: ${{ secrets.DEPLOY_PORT || '22' }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+        run: |
+          set -euo pipefail
+
+          remote_path=$(printf '%q' "${DEPLOY_PATH}")
+          ssh \
+            -i ~/.ssh/deploy_key \
+            -p "${DEPLOY_PORT}" \
+            "${DEPLOY_USER}@${DEPLOY_HOST}" \
+            "DEPLOY_PATH=${remote_path} bash -s" <<'REMOTE'
+          set -euo pipefail
+
+          if ! git -C "${DEPLOY_PATH}" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+            matches=()
+            for git_dir in $(find /home/citymody -maxdepth 6 -type d -name .git -print); do
+              candidate=${git_dir%/.git}
+              case "${candidate}" in
+                */.codex-backups/*|*/next-releases/*|*/deploy-incoming/*|*/wordpress-www-before-next-*) continue ;;
+              esac
+              if [ "$(git -C "${candidate}" remote get-url origin 2>/dev/null || true)" = "https://github.com/tuncadev/maruderm.git" ]; then
+                matches+=("${candidate}")
+              fi
+            done
+
+            if [ "${#matches[@]}" -ne 1 ]; then
+              echo "Expected exactly one production Maruderm checkout; found ${#matches[@]}." >&2
+              exit 1
+            fi
+
+            DEPLOY_PATH=${matches[0]}
+          fi
+
+          test "$(git -C "${DEPLOY_PATH}" branch --show-current)" = "master"
+          test -z "$(git -C "${DEPLOY_PATH}" status --porcelain)"
+          command -v wp >/dev/null 2>&1
+          wp --path="${DEPLOY_PATH}" cron event run maruderm_keycrm_sync_new_ttn_statuses --quiet
+          REMOTE
