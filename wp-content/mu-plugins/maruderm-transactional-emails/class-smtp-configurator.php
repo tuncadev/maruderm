@@ -32,6 +32,17 @@ final class Maruderm_SMTP_Configurator
         $mailer->Password = (string) constant('MARUDERM_SMTP_PASSWORD');
         $mailer->SMTPSecure = 'ssl';
         $mailer->SMTPAutoTLS = true;
+        $mailer->CharSet = 'UTF-8';
+
+        $from_email = $this->from_email((string) $mailer->From);
+
+        if ($from_email !== '') {
+            $mailer->Sender = $from_email;
+        }
+
+        if ($mailer->ContentType === 'text/html' && trim((string) $mailer->AltBody) === '') {
+            $mailer->AltBody = $this->plain_text((string) $mailer->Body);
+        }
     }
 
     public function from_email(string $email): string
@@ -57,5 +68,16 @@ final class Maruderm_SMTP_Configurator
         }
 
         return true;
+    }
+
+    private function plain_text(string $html): string
+    {
+        $text = preg_replace('/<\s*br\s*\/?\s*>/i', "\n", $html);
+        $text = preg_replace('/<\/(p|div|tr|li|h[1-6])>/i', "\n", (string) $text);
+        $text = html_entity_decode(wp_strip_all_tags((string) $text), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $text = preg_replace('/[\t ]+/', ' ', $text);
+        $text = preg_replace('/\n{3,}/', "\n\n", (string) $text);
+
+        return trim((string) $text);
     }
 }
