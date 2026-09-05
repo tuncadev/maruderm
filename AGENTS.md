@@ -47,13 +47,6 @@ Load the global rules from `/home/pardus/.codex/AGENTS.md` first. These rules ar
 - For product or other project raster-image resizing, format conversion, or metadata reduction, use `.agents/skills/optimize-project-images/SKILL.md`.
 - Run its dry-run mode before mutating a real image folder. Runtime backups and manifests belong under `arch/backups/` and must not be deleted automatically.
 
-## Daily Production Database Sync
-
-- Before the first substantive Maruderm task on each Europe/Kyiv calendar day, use `.agents/skills/sync-maruderm-production-db/SKILL.md` and run its default daily sync command.
-- The successful state marker at `.agents/state/daily-production-db-sync.json` is authoritative for whether that Kyiv day has already been synchronized. A successful same-day run is a no-op; do not use `--force` unless the user explicitly requests another same-day refresh or the saved state is invalid.
-- The daily gate must finish successfully before continuing with the day's first task. If production SSH, export, local backup, import, URL migration, or validation fails, report the blocked gate and preserve the rollback/source artifacts; do not treat a failed attempt as completed.
-- This workflow is production-to-local database only. It must not deploy code, upload media, mutate the production database, or run a local-to-production synchronization.
-
 ## Local Database to Production
 
 - When the user explicitly requests replacing the production database from local, use `.agents/skills/sync-maruderm-local-db-to-production/SKILL.md`.

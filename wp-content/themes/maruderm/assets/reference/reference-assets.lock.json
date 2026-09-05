@@ -1,7 +1,7 @@
 {
   "version": 1,
   "manifest": "src/reference-assets.json",
-  "manifestSha256": "c0ebe1be25bcebffa3fd44847dde113eacc55fcadce0d51b53e4bb027f793864",
+  "manifestSha256": "082665f6c61494f3f54b3b838abd59a5dc7e105a3a8085923c5145044163f5b7",
   "sourceRepository": "maruderm.html",
   "styles": [
     {
@@ -83,6 +83,36 @@
       "source": "assets/styles/components/payment.css",
       "target": "payment.css",
       "sha256": "fd77b11bdc57ef1f894a5bede5fdc5d0c9cc2eb34dd62e47668cfa1045c6c691"
+    },
+    {
+      "source": "assets/styles/components/error-page.css",
+      "target": "error-page.css",
+      "sha256": "d799e3f7fc4affc8f8d23d47abc31b1c248ec9b0439d04c234cc63f59f7c7190"
+    },
+    {
+      "source": "assets/styles/components/routine-products.css",
+      "target": "routine-products.css",
+      "sha256": "65664d4d2a9a1288ff1c1f9ed446c5a18d47b0ce826e9c960d28731c571aab76"
+    },
+    {
+      "source": "assets/styles/components/product-section-templates.css",
+      "target": "product-section-templates.css",
+      "sha256": "5bc14ebf844e4c4601a01e6135b1ef40da733914f1bf8fb638f6d2197f95bb7b"
+    },
+    {
+      "source": "assets/styles/components/product-section-templates-responsive.css",
+      "target": "product-section-templates-responsive.css",
+      "sha256": "35dcfdea5ee39144ad9f143f2a529523c05159684e432022f65a1177d63c181a"
+    },
+    {
+      "source": "assets/styles/components/cta-templates.css",
+      "target": "cta-templates.css",
+      "sha256": "7836046000e31505e6d593a6624291f509da1379d93ecffff9b3a036da4cda1d"
+    },
+    {
+      "source": "assets/styles/components/email-templates.css",
+      "target": "email-templates.css",
+      "sha256": "092a9f89478b554590c4f8396aa7b726dbc8892a39571a5deaad65c21871d204"
     }
   ]
 }

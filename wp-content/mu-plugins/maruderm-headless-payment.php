@@ -13,15 +13,42 @@ if (! defined('ABSPATH')) {
 }
 
 add_action('rest_api_init', 'maruderm_register_payment_routes');
+add_action('woocommerce_store_api_checkout_update_order_from_request', 'maruderm_store_checkout_language', 10, 2);
 add_filter('woocommerce_get_return_url', 'maruderm_hutko_return_url', 10, 2);
 add_filter('wc_gateway_oplata_payment_params', 'maruderm_hutko_payment_params', 10, 2);
+
+function maruderm_store_checkout_language(WC_Order $order, WP_REST_Request $request): void
+{
+    $payment_data = $request->get_param('payment_data');
+
+    if (! is_array($payment_data)) {
+        return;
+    }
+
+    foreach ($payment_data as $item) {
+        if (! is_array($item) || ($item['key'] ?? '') !== 'maruderm_language') {
+            continue;
+        }
+
+        $language = sanitize_key((string) ($item['value'] ?? ''));
+
+        if (in_array($language, ['uk', 'ru'], true)) {
+            $order->update_meta_data('_maruderm_checkout_language', $language);
+        }
+
+        return;
+    }
+}
 
 function maruderm_hutko_payment_params(array $params, WC_Order $order): array
 {
     $requested_language = isset($_POST['maruderm_language'])
         ? sanitize_key(wp_unslash((string) $_POST['maruderm_language']))
         : '';
-    $language = in_array($requested_language, ['uk', 'ru'], true) ? $requested_language : 'uk';
+    $stored_language = sanitize_key((string) $order->get_meta('_maruderm_checkout_language'));
+    $language = in_array($requested_language, ['uk', 'ru'], true)
+        ? $requested_language
+        : (in_array($stored_language, ['uk', 'ru'], true) ? $stored_language : 'uk');
 
     $params['lang'] = $language;
     $order->update_meta_data('_maruderm_checkout_language', $language);
@@ -103,5 +130,15 @@ function maruderm_headless_frontend_url(): string
         }
     }
 
-    return is_string($value) ? rtrim($value, '/') : '';
+    if (is_string($value) && $value !== '') {
+        return rtrim($value, '/');
+    }
+
+    $host = wp_parse_url(home_url('/'), PHP_URL_HOST);
+
+    return match ($host) {
+        'wp.maruderm.com.ua' => 'https://www.maruderm.com.ua',
+        'maruderm.dev', 'www.maruderm.dev' => 'https://maruderm.next',
+        default => '',
+    };
 }

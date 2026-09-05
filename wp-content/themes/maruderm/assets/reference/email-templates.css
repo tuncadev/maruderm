@@ -1,0 +1,432 @@
+.email-preview {
+  min-height: 100vh;
+  padding: 24px 20px 70px;
+  color: #202023;
+  background: #f3f1f6;
+}
+.email-preview__toolbar {
+  display: flex;
+  max-width: 720px;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 auto 18px;
+  color: #6e6874;
+  font-size: 10px;
+}
+.email-preview__toolbar a {
+  color: inherit;
+  font-weight: 600;
+  text-decoration: none;
+}
+.email-card {
+  max-width: 720px;
+  overflow: hidden;
+  margin: 0 auto;
+  border: 1px solid rgba(32, 32, 35, 0.08);
+  border-radius: 24px;
+  background: #fff;
+  box-shadow: 0 24px 70px rgba(52, 40, 67, 0.1);
+}
+.email-card__brand {
+  display: flex;
+  min-height: 86px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 38px;
+  border-bottom: 1px solid #ece9ee;
+}
+.email-card__brand .brand-logo {
+  width: 125px;
+}
+.email-card__brand > span {
+  color: #77717e;
+  font-size: 9px;
+}
+.email-card__hero {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  align-items: start;
+  gap: 25px;
+  padding: 46px 38px;
+  background: #e8ddff;
+}
+.email-preview--mint .email-card__hero {
+  background: #d7f4e7;
+}
+.email-preview--aqua .email-card__hero,
+.email-preview--blue .email-card__hero {
+  background: #dceff7;
+}
+.email-preview--yellow .email-card__hero {
+  background: #fff0a6;
+}
+.email-preview--green .email-card__hero {
+  background: #d5f0db;
+}
+.email-preview--peach .email-card__hero {
+  background: #ffdfd2;
+}
+.email-preview--rose .email-card__hero {
+  background: #ffdce7;
+}
+.email-card__mark {
+  display: grid;
+  width: 78px;
+  height: 78px;
+  border: 1px solid rgba(32, 32, 35, 0.12);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.7);
+  font-family: var(--display);
+  font-size: 25px;
+  font-weight: 600;
+  place-items: center;
+  transform: rotate(-4deg);
+}
+.email-card__hero small,
+.email-card__status span,
+.email-card__details span,
+.email-card__tracking span {
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+.email-card__hero h1 {
+  margin: 10px 0 15px;
+  font-family: var(--display);
+  font-size: 38px;
+  font-weight: 600;
+  letter-spacing: -0.045em;
+  line-height: 1.02;
+}
+.email-card__hero p {
+  max-width: 490px;
+  margin: 0;
+  color: rgba(32, 32, 35, 0.7);
+  font-size: 13px;
+  line-height: 1.65;
+}
+.email-card__status {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: #ece9ee;
+}
+.email-card__status > div {
+  display: grid;
+  gap: 7px;
+  padding: 20px 28px;
+  background: #fff;
+}
+.email-card__status span,
+.email-card__details span,
+.email-card__tracking span {
+  color: #817b87;
+}
+.email-card__status strong {
+  font-size: 11px;
+}
+.email-card__tracking {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin: 30px 38px 0;
+  padding: 20px;
+  border-radius: 16px;
+  background: #fff7ca;
+}
+.email-card__tracking div {
+  display: grid;
+  gap: 6px;
+}
+.email-card__tracking a {
+  color: inherit;
+  font-size: 10px;
+  font-weight: 600;
+}
+.email-card__section {
+  padding: 38px;
+}
+.email-card__section-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+.email-card__section-heading h2 {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 23px;
+}
+.email-card__section-heading span {
+  color: #817b87;
+  font-size: 9px;
+}
+.email-items {
+  border-top: 1px solid #ece9ee;
+}
+.email-item {
+  display: grid;
+  grid-template-columns: 76px 1fr auto;
+  align-items: center;
+  gap: 18px;
+  padding: 18px 0;
+  border-bottom: 1px solid #ece9ee;
+}
+.email-item img {
+  width: 76px;
+  height: 76px;
+  padding: 7px;
+  border-radius: 14px;
+  background: #faf9f7;
+  object-fit: contain;
+}
+.email-item div {
+  display: grid;
+  gap: 7px;
+}
+.email-item strong {
+  max-width: 370px;
+  font-size: 11px;
+  line-height: 1.45;
+}
+.email-item small {
+  color: #817b87;
+  font-size: 9px;
+}
+.email-item > span {
+  font-size: 11px;
+  font-weight: 600;
+}
+.email-totals {
+  display: grid;
+  gap: 11px;
+  width: min(100%, 310px);
+  margin: 24px 0 0 auto;
+}
+.email-totals div {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  color: #6e6874;
+  font-size: 10px;
+}
+.email-totals dt,
+.email-totals dd {
+  margin: 0;
+}
+.email-totals div:last-child {
+  padding-top: 12px;
+  border-top: 1px solid #dcd8df;
+  color: #202023;
+  font-size: 14px;
+  font-weight: 700;
+}
+.email-card__details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding: 0 38px 38px;
+}
+.email-card__details > div {
+  padding: 20px;
+  border-radius: 16px;
+  background: #f7f5f8;
+}
+.email-card__details strong {
+  display: block;
+  margin: 11px 0 7px;
+  font-size: 11px;
+}
+.email-card__details p {
+  margin: 0;
+  color: #77717e;
+  font-size: 9px;
+  line-height: 1.5;
+}
+.email-card__action {
+  padding: 30px 38px;
+  background: #f0ebfa;
+  text-align: center;
+}
+.email-card__action p {
+  margin: 0 0 18px;
+  color: #625d69;
+  font-size: 11px;
+}
+.email-card__action > a {
+  display: inline-block;
+  padding: 15px 24px;
+  border-radius: 999px;
+  color: #fff;
+  background: #7547e8;
+  font-size: 10px;
+  font-weight: 600;
+  text-decoration: none;
+}
+.email-card__footer {
+  padding: 34px 38px;
+  color: #716b77;
+  background: #faf9fb;
+  text-align: center;
+}
+.email-card__footer > strong {
+  color: #202023;
+  font-size: 11px;
+}
+.email-card__footer p,
+.email-card__footer small {
+  font-size: 9px;
+  line-height: 1.6;
+}
+.email-card__footer a {
+  color: inherit;
+}
+.email-card__footer div {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  margin: 25px 0;
+  font-size: 9px;
+}
+.email-index {
+  padding: 90px 0 120px;
+  background: #f5f2f8;
+}
+.email-index__hero {
+  max-width: 900px;
+  margin-bottom: 55px;
+}
+.email-index__hero h1 {
+  margin: 15px 0 22px;
+  font-family: var(--display);
+  font-size: clamp(48px, 6vw, 82px);
+  font-weight: 500;
+  letter-spacing: -0.06em;
+  line-height: 0.95;
+}
+.email-index__hero h1 em {
+  color: #7547e8;
+  font-style: normal;
+}
+.email-index__hero p {
+  color: #716b77;
+}
+.email-index__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+.email-index-card {
+  display: flex;
+  min-height: 310px;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 30px;
+  border: 1px solid rgba(32, 32, 35, 0.07);
+  border-radius: 24px;
+  color: #202023;
+  background: #e8ddff;
+  text-decoration: none;
+}
+.email-index-card--mint,
+.email-index-card--green {
+  background: #d8f3e5;
+}
+.email-index-card--aqua,
+.email-index-card--blue {
+  background: #dceff7;
+}
+.email-index-card--yellow {
+  background: #fff0a6;
+}
+.email-index-card--peach {
+  background: #ffdfd2;
+}
+.email-index-card--rose {
+  background: #ffdce7;
+}
+.email-index-card > span,
+.email-index-card small {
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+.email-index-card h2 {
+  margin: 12px 0;
+  font-family: var(--display);
+  font-size: 29px;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+}
+.email-index-card p {
+  margin: 0;
+  color: #625d69;
+  font-size: 10px;
+}
+.email-index-card > strong {
+  align-self: flex-end;
+  font-size: 10px;
+}
+@media (max-width: 767px) {
+  .email-preview {
+    padding-inline: 10px;
+  }
+  .email-preview__toolbar {
+    padding-inline: 5px;
+  }
+  .email-card {
+    border-radius: 18px;
+  }
+  .email-card__brand,
+  .email-card__section,
+  .email-card__footer {
+    padding-inline: 20px;
+  }
+  .email-card__brand > span {
+    display: none;
+  }
+  .email-card__hero {
+    grid-template-columns: 1fr;
+    padding: 32px 20px;
+  }
+  .email-card__hero h1 {
+    font-size: 32px;
+  }
+  .email-card__status {
+    grid-template-columns: 1fr;
+  }
+  .email-card__status > div {
+    padding-inline: 20px;
+  }
+  .email-card__tracking {
+    align-items: flex-start;
+    flex-direction: column;
+    margin-inline: 20px;
+  }
+  .email-item {
+    grid-template-columns: 62px 1fr;
+  }
+  .email-item img {
+    width: 62px;
+    height: 62px;
+  }
+  .email-item > span {
+    grid-column: 2;
+  }
+  .email-card__details {
+    grid-template-columns: 1fr;
+    padding-inline: 20px;
+  }
+  .email-card__action {
+    padding-inline: 20px;
+  }
+  .email-index {
+    padding-top: 65px;
+  }
+  .email-index__grid {
+    grid-template-columns: 1fr;
+  }
+}

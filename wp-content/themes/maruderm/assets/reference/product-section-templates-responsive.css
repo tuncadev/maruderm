@@ -1,0 +1,353 @@
+/*
+ * Scoped to `--responsive` modifier classes only, so these rules never
+ * affect the canonical product-section-templates.html / routine-products.html
+ * pages, which keep the original desktop and breakpoint behavior untouched.
+ * Desktop styling still comes from the shared base classes; this file only
+ * adds a unified tablet band (768–1099px) and refines the existing mobile
+ * carousels, replacing layouts that got cramped or diagonally offset at
+ * mid-size viewports with the same touch-friendly scroll-snap pattern
+ * already used on mobile.
+ *
+ * Every carousel gets a hidden native scrollbar and a pair of circular
+ * prev/next buttons; the auto-looping "ribbon" track (template-ribbon__track)
+ * is intentionally never wrapped in `[data-carousel-nav]`, so it keeps
+ * scrolling on its own with no buttons and no scrollbar, as requested.
+ */
+
+.carousel-nav {
+  position: relative;
+}
+.carousel-nav__btn {
+  position: absolute;
+  top: 50%;
+  z-index: 5;
+  display: none;
+  width: 42px;
+  height: 42px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(32, 32, 35, 0.12);
+  border-radius: 50%;
+  background: #fff;
+  color: var(--ink);
+  box-shadow: 0 10px 26px rgba(32, 32, 35, 0.18);
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+.carousel-nav__btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+  pointer-events: none;
+}
+.carousel-nav__btn--prev {
+  left: 8px;
+}
+.carousel-nav__btn--next {
+  right: 8px;
+}
+.carousel-nav__btn svg {
+  display: block;
+}
+
+[data-carousel-track] {
+  scrollbar-width: none;
+}
+[data-carousel-track]::-webkit-scrollbar {
+  display: none;
+}
+
+@media (min-width: 768px) and (max-width: 1099px) {
+  .product-templates--responsive .template-intro {
+    min-height: 520px;
+  }
+  .product-templates--responsive .template-intro__inner {
+    padding-block: 96px 64px;
+  }
+  .product-templates--responsive .template-intro h1 {
+    font-size: clamp(46px, 9vw, 78px);
+  }
+  .product-templates--responsive .template-intro__inner::after {
+    top: -60px;
+    right: -90px;
+    width: 340px;
+    height: 340px;
+  }
+
+  .product-templates--responsive .template-orbit__stage {
+    display: flex;
+    min-height: 0;
+    gap: 22px;
+    margin-inline: -24px;
+    padding: 46px 24px 28px;
+    overflow-x: auto;
+    scroll-padding-left: 24px;
+    scroll-snap-type: x mandatory;
+  }
+  .product-templates--responsive .template-orbit__ring,
+  .product-templates--responsive .template-orbit__stage > p {
+    display: none;
+  }
+  .product-templates--responsive .template-orbit__card,
+  .product-templates--responsive .template-orbit__card--one,
+  .product-templates--responsive .template-orbit__card--two,
+  .product-templates--responsive .template-orbit__card--three {
+    position: static;
+    width: min(42vw, 300px);
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+    transform: none;
+  }
+
+  .product-templates--responsive .template-ribbon__set {
+    padding-left: 24px;
+  }
+  .product-templates--responsive .template-ribbon__set .template-card {
+    width: min(46vw, 300px);
+  }
+
+  .product-templates--responsive .template-spotlight {
+    min-height: 0;
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .product-templates--responsive .template-spotlight__visual {
+    min-height: 420px;
+  }
+
+  .product-templates--responsive .template-steps {
+    gap: 16px;
+    margin-inline: -24px;
+    padding: 12px 24px 26px;
+    overflow-x: auto;
+    scroll-padding-left: 24px;
+    scroll-snap-type: x mandatory;
+  }
+  .product-templates--responsive .template-steps > article,
+  .product-templates--responsive .template-steps > article:nth-child(2),
+  .product-templates--responsive .template-steps > article:nth-child(3),
+  .product-templates--responsive .template-steps > article:nth-child(4) {
+    width: min(44vw, 300px);
+    flex: 0 0 auto;
+    margin-top: 0;
+    scroll-snap-align: start;
+  }
+
+  .product-templates--responsive .template-blocks {
+    min-height: 0;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(2, minmax(230px, auto));
+  }
+  .product-templates--responsive .template-blocks__panel {
+    padding: 30px;
+  }
+  .product-templates--responsive .template-blocks__panel--sun {
+    grid-column: 1 / 3;
+    grid-row: auto;
+  }
+
+  .product-templates--responsive .template-duel {
+    gap: 40px;
+  }
+  .product-templates--responsive .template-duel__products {
+    gap: 28px;
+  }
+
+  .product-templates--responsive .template-lab {
+    min-height: 0;
+    grid-template-columns: 1fr;
+  }
+  .product-templates--responsive .template-lab__formula,
+  .product-templates--responsive .template-lab__copy {
+    min-height: 320px;
+  }
+  .product-templates--responsive .template-lab__product {
+    min-height: 420px;
+  }
+
+  .product-templates--responsive .template-fan {
+    justify-content: flex-start;
+    margin-inline: -24px;
+    padding: 46px 24px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+  }
+  .product-templates--responsive .template-fan .template-card,
+  .product-templates--responsive .template-fan .template-card:first-child,
+  .product-templates--responsive .template-fan .template-card:nth-child(2),
+  .product-templates--responsive .template-fan .template-card:nth-child(3),
+  .product-templates--responsive .template-fan .template-card:nth-child(4),
+  .product-templates--responsive .template-fan .template-card:nth-child(5) {
+    width: 240px;
+    flex: 0 0 auto;
+    margin-left: 16px;
+    transform: none;
+    scroll-snap-align: start;
+  }
+  .product-templates--responsive .template-fan .template-card:first-child {
+    margin-left: 0;
+  }
+
+  .product-templates--responsive .template-runway {
+    display: flex;
+    gap: 22px;
+    margin-inline: -24px;
+    padding-inline: 24px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+  }
+  .product-templates--responsive .template-runway article {
+    width: min(58vw, 320px);
+    min-height: 460px;
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+  }
+  .product-templates--responsive .template-runway article img {
+    height: 240px;
+  }
+
+  .product-templates--responsive .template-mosaic {
+    min-height: 0;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto repeat(2, minmax(220px, auto));
+  }
+  .product-templates--responsive .template-mosaic__headline {
+    grid-column: 1 / 3;
+    grid-row: auto;
+    min-height: 340px;
+    padding: 40px;
+  }
+
+  .routine-products--responsive .routine-products__header {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+  .routine-products--responsive .routine-products__stage {
+    min-height: 0;
+    justify-content: flex-start;
+    gap: 20px;
+    margin-inline: -24px;
+    padding: 40px 24px 50px;
+    border-radius: 0;
+    overflow-x: auto;
+    scroll-padding-left: 24px;
+    scroll-snap-type: x mandatory;
+  }
+  .routine-products--responsive .routine-products__stage::before {
+    display: none;
+  }
+  .routine-products--responsive .routine-products__item,
+  .routine-products--responsive .routine-products__item--treat,
+  .routine-products--responsive .routine-products__item--protect {
+    width: min(58vw, 300px);
+    flex: 0 0 auto;
+    margin-top: 0;
+    scroll-snap-align: start;
+  }
+  .routine-products--responsive .routine-products__item--cleanse .product-card,
+  .routine-products--responsive .routine-products__item--treat .product-card,
+  .routine-products--responsive .routine-products__item--protect .product-card {
+    transform: none;
+  }
+  .routine-products--responsive .routine-products__script {
+    display: none;
+  }
+
+  [data-carousel-nav='orbit'] .carousel-nav__btn,
+  [data-carousel-nav='steps'] .carousel-nav__btn,
+  [data-carousel-nav='fan'] .carousel-nav__btn,
+  [data-carousel-nav='runway'] .carousel-nav__btn,
+  [data-carousel-nav='routine'] .carousel-nav__btn {
+    display: flex;
+  }
+}
+
+@media (max-width: 1099px) {
+  .product-templates--responsive .template-duel,
+  .product-templates--responsive .template-duel > .template-heading,
+  .product-templates--responsive .template-duel > .carousel-nav {
+    min-width: 0;
+  }
+  .product-templates--responsive .template-duel__products {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-inline: -24px;
+    padding: 16px 24px 30px;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scroll-padding-inline: 24px;
+    scroll-snap-type: x mandatory;
+  }
+  .product-templates--responsive .template-duel__products .template-card {
+    width: clamp(360px, 52vw, 500px);
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    transform: none;
+  }
+  .product-templates--responsive .template-duel__plus {
+    position: static;
+    display: grid;
+    width: 52px;
+    height: 52px;
+    flex: 0 0 52px;
+    font-size: 28px;
+    transform: none;
+  }
+  [data-carousel-nav='duel'] .carousel-nav__btn {
+    top: -24px;
+    display: flex;
+    transform: none;
+  }
+  [data-carousel-nav='duel'] .carousel-nav__btn--prev {
+    right: 58px;
+    left: auto;
+  }
+  [data-carousel-nav='duel'] .carousel-nav__btn--next {
+    right: 8px;
+  }
+}
+
+@media (max-width: 767px) {
+  .product-templates--responsive .template-intro h1 {
+    font-size: clamp(44px, 14vw, 64px);
+  }
+  .product-templates--responsive .template-orbit__card,
+  .product-templates--responsive .template-steps > article {
+    width: min(74vw, 280px);
+  }
+  .product-templates--responsive .template-orbit__card,
+  .product-templates--responsive .template-ribbon__set .template-card,
+  .product-templates--responsive .template-steps > article,
+  .product-templates--responsive .template-blocks__panel,
+  .product-templates--responsive .template-duel__products .template-card,
+  .product-templates--responsive .template-fan .template-card,
+  .product-templates--responsive .template-runway article,
+  .routine-products--responsive .routine-products__item {
+    scroll-snap-stop: always;
+  }
+
+  .product-templates--responsive .template-duel__products {
+    margin-inline: -15px;
+    padding-inline: 15px;
+    scroll-padding-inline: 15px;
+  }
+  .product-templates--responsive .template-duel__products .template-card {
+    width: min(76vw, 360px);
+  }
+
+  [data-carousel-nav='orbit'] .carousel-nav__btn,
+  [data-carousel-nav='steps'] .carousel-nav__btn,
+  [data-carousel-nav='blocks'] .carousel-nav__btn,
+  [data-carousel-nav='fan'] .carousel-nav__btn,
+  [data-carousel-nav='runway'] .carousel-nav__btn,
+  [data-carousel-nav='routine'] .carousel-nav__btn {
+    display: flex;
+  }
+}
+
+@media (max-width: 430px) {
+  [data-carousel-nav='duel'] .carousel-nav__btn {
+    display: flex;
+  }
+}
