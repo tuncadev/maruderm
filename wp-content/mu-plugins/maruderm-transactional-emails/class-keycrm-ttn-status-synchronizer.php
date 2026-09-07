@@ -1,6 +1,6 @@
 <?php
 /**
- * Promotes newly tracked KeyCRM orders to the TTN-created status.
+ * Reconciles KeyCRM order statuses with the carrier shipment lifecycle.
  *
  * @package Maruderm
  */
@@ -19,8 +19,12 @@ final class Maruderm_KeyCRM_TTN_Status_Synchronizer
     private const LOCK_KEY = 'maruderm_keycrm_ttn_status_sync_lock';
     private const TARGET_STATUS_ID = 8;
     private const ELIGIBLE_STATUS_IDS = [1, 2, 4, 20];
+    private const ACTIVE_STATUS_IDS = [1, 2, 4, 20, 8, 9, 10];
     private const MAX_STATE_ENTRIES = 500;
     private const LOG_SOURCE = 'maruderm-keycrm-ttn-status-sync';
+
+    private float $last_request_at = 0.0;
+    private float $deadline = 0.0;
 
     public function register(): void
     {
@@ -48,11 +52,18 @@ final class Maruderm_KeyCRM_TTN_Status_Synchronizer
 
     public function run(): void
     {
-        if (get_transient(self::LOCK_KEY) !== false) {
+        $lock = ['owner' => wp_generate_uuid4(), 'expires' => time() + 600];
+        $previous_lock = get_option(self::LOCK_KEY);
+
+        if (is_array($previous_lock) && (int) ($previous_lock['expires'] ?? 0) < time()) {
+            $this->release_lock($previous_lock);
+        }
+
+        if (! add_option(self::LOCK_KEY, $lock, '', false)) {
             return;
         }
 
-        set_transient(self::LOCK_KEY, '1', 110);
+        $this->deadline = microtime(true) + 240;
 
         try {
             $orders = $this->tracked_orders();
@@ -64,13 +75,11 @@ final class Maruderm_KeyCRM_TTN_Status_Synchronizer
 
             $state = $this->state();
 
-            if (empty($state['initialized'])) {
-                $this->save_state($this->baseline_state($orders));
-                $this->log('notice', 'Existing KeyCRM TTNs were recorded as the initial baseline.');
-                return;
-            }
+            $state['initialized'] = true;
+            $state['initialized_at'] = $state['initialized_at'] ?? gmdate('c');
 
             $seen = is_array($state['seen'] ?? null) ? $state['seen'] : [];
+            $updated = 0;
 
             foreach ($orders as $order) {
                 if (! is_array($order)) {
@@ -84,33 +93,110 @@ final class Maruderm_KeyCRM_TTN_Status_Synchronizer
                     continue;
                 }
 
-                $fingerprint = $this->fingerprint($remote_id, $tracking_code);
+                $shipment = $this->shipment_status($order);
+                $fingerprint = hash('sha256', $remote_id . ':' . $tracking_code . ':' . $shipment . ':' . $this->status_id($order));
+                $target = $this->target_status($order);
 
-                if (isset($seen[(string) $remote_id]) && hash_equals((string) $seen[(string) $remote_id], $fingerprint)) {
-                    continue;
-                }
-
-                $status_id = absint($order['status_id'] ?? ($order['status']['id'] ?? 0));
-
-                if ($status_id === self::TARGET_STATUS_ID || ! in_array($status_id, self::ELIGIBLE_STATUS_IDS, true)) {
+                if ($target === null) {
+                    if (($seen[(string) $remote_id] ?? '') !== $fingerprint
+                        && in_array($this->status_id($order), self::ACTIVE_STATUS_IDS, true)
+                        && ! in_array($shipment, ['', 'invoice', 'transit', 'pickup', 'delivered', 'cash_on_delivery', 'cash_recived', 'returned'], true)) {
+                        $this->log('warning', 'Shipment requires manual review; order and payment statuses preserved.', $remote_id);
+                    }
                     $seen[(string) $remote_id] = $fingerprint;
                     continue;
                 }
 
-                if (! $this->promote($remote_id, $tracking_code)) {
+                if (microtime(true) >= $this->deadline - 45) {
+                    $this->log('warning', 'Shipment synchronization time budget reached; remaining orders will retry.');
+                    break;
+                }
+
+                if (! $this->promote($remote_id, $tracking_code, $target)) {
                     continue;
                 }
 
                 $seen[(string) $remote_id] = $fingerprint;
-                $this->log('notice', 'KeyCRM order promoted after a new TTN was detected.', $remote_id);
+                ++$updated;
+                $this->log('notice', sprintf('Shipment status %s synchronized to KeyCRM status %d.', $shipment ?: 'invoice', $target), $remote_id);
             }
 
             $state['seen'] = array_slice($seen, -self::MAX_STATE_ENTRIES, null, true);
             $state['checked_at'] = gmdate('c');
             $this->save_state($state);
+            $this->log('info', sprintf('Shipment synchronization checked %d orders and updated %d.', count($orders), $updated));
         } finally {
-            delete_transient(self::LOCK_KEY);
+            $this->release_lock($lock);
+            $this->deadline = 0.0;
         }
+    }
+
+    /** Read-only reconciliation plan, suitable for WP-CLI diagnostics. */
+    public function preview()
+    {
+        $orders = $this->tracked_orders();
+
+        if (is_wp_error($orders)) {
+            return $orders;
+        }
+
+        return array_map(fn (array $order): array => [
+            'order_id' => absint($order['id'] ?? 0),
+            'current_status_id' => $this->status_id($order),
+            'shipment_status' => $this->shipment_status($order),
+            'target_status_id' => $this->target_status($order),
+        ], $orders);
+    }
+
+    private function release_lock(array $lock): void
+    {
+        global $wpdb;
+
+        $deleted = $wpdb->delete($wpdb->options, [
+            'option_name' => self::LOCK_KEY,
+            'option_value' => maybe_serialize($lock),
+        ], ['%s', '%s']);
+
+        if ($deleted) {
+            wp_cache_delete(self::LOCK_KEY, 'options');
+        }
+    }
+
+    private function status_id(array $order): int
+    {
+        return absint($order['status_id'] ?? ($order['status']['id'] ?? 0));
+    }
+
+    private function shipment_status(array $order): string
+    {
+        $shipping = is_array($order['shipping'] ?? null) ? $order['shipping'] : [];
+        $history = $shipping['last_history'] ?? $shipping['lastHistory'] ?? [];
+
+        if (is_array($history) && ! empty($history['tracking_code'])
+            && ! hash_equals($this->tracking_code($order), trim((string) $history['tracking_code']))) {
+            return 'tracking_mismatch';
+        }
+
+        return strtolower(trim((string) ($history['shipping_status'] ?? $shipping['shipping_status'] ?? '')));
+    }
+
+    private function target_status(array $order): ?int
+    {
+        $current = $this->status_id($order);
+
+        if ($this->tracking_code($order) === '' || ! in_array($current, self::ACTIVE_STATUS_IDS, true)) {
+            return null;
+        }
+
+        $target = match ($this->shipment_status($order)) {
+            '', 'invoice' => in_array($current, self::ELIGIBLE_STATUS_IDS, true) ? self::TARGET_STATUS_ID : null,
+            'transit', 'pickup' => 10,
+            'delivered', 'cash_on_delivery', 'cash_recived' => 12,
+            'returned' => 19,
+            default => null,
+        };
+
+        return $target === $current ? null : $target;
     }
 
     private function tracked_orders()
@@ -148,18 +234,32 @@ final class Maruderm_KeyCRM_TTN_Status_Synchronizer
         return $orders;
     }
 
-    private function promote(int $remote_id, string $tracking_code): bool
+    private function promote(int $remote_id, string $tracking_code, int $target_status): bool
     {
         $token = $this->api_token();
+        $fresh = $this->request('GET', self::API_BASE_URL . '/order/' . $remote_id . '?include=status,shipping.lastHistory', null, $token);
+
+        if (is_wp_error($fresh) || ! hash_equals($tracking_code, $this->tracking_code($fresh))) {
+            return false;
+        }
+
+        if ($this->status_id($fresh) === $target_status) {
+            return true;
+        }
+
+        if ($this->target_status($fresh) !== $target_status) {
+            return false;
+        }
+
         $updated = $this->request(
             'PUT',
             self::API_BASE_URL . '/order/' . $remote_id,
-            ['status_id' => self::TARGET_STATUS_ID],
+            ['status_id' => $target_status],
             $token
         );
 
         if (is_wp_error($updated)) {
-            $this->log('error', 'KeyCRM rejected the automatic TTN-created status update.', $remote_id);
+            $this->log('error', 'KeyCRM rejected the shipment status update.', $remote_id);
             return false;
         }
 
@@ -178,13 +278,23 @@ final class Maruderm_KeyCRM_TTN_Status_Synchronizer
         $verified_status = absint($verified['status_id'] ?? ($verified['status']['id'] ?? 0));
         $verified_tracking = $this->tracking_code($verified);
 
-        return $verified_status === self::TARGET_STATUS_ID
+        return $verified_status === $target_status
             && $verified_tracking !== ''
             && hash_equals($tracking_code, $verified_tracking);
     }
 
     private function request(string $method, string $url, ?array $body, string $token)
     {
+        if ($this->deadline > 0 && microtime(true) >= $this->deadline - 20) {
+            return new WP_Error('maruderm_keycrm_sync_deadline', 'Shipment synchronization deadline reached.');
+        }
+
+        $wait = 1.1 - (microtime(true) - $this->last_request_at);
+        if ($wait > 0) {
+            usleep((int) ceil($wait * 1000000));
+        }
+        $this->last_request_at = microtime(true);
+
         $args = [
             'method' => $method,
             'timeout' => 20,
@@ -209,6 +319,10 @@ final class Maruderm_KeyCRM_TTN_Status_Synchronizer
         $decoded = json_decode((string) wp_remote_retrieve_body($response), true);
 
         if ($status < 200 || $status >= 300 || ! is_array($decoded)) {
+            $this->log('error', sprintf('KeyCRM shipment request failed with HTTP %d.', $status));
+            if (in_array($status, [401, 403, 429], true)) {
+                $this->deadline = microtime(true);
+            }
             return new WP_Error('maruderm_keycrm_invalid_response', 'KeyCRM returned an invalid response.');
         }
 
