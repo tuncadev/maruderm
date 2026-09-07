@@ -98,6 +98,7 @@ final class Maruderm_KeyCRM_TTN_Status_Synchronizer
                 $target = $this->target_status($order);
 
                 if ($target === null) {
+                    $this->synchronize_site_order($order);
                     if (($seen[(string) $remote_id] ?? '') !== $fingerprint
                         && in_array($this->status_id($order), self::ACTIVE_STATUS_IDS, true)
                         && ! in_array($shipment, ['', 'invoice', 'transit', 'pickup', 'delivered', 'cash_on_delivery', 'cash_recived', 'returned'], true)) {
@@ -244,6 +245,7 @@ final class Maruderm_KeyCRM_TTN_Status_Synchronizer
         }
 
         if ($this->status_id($fresh) === $target_status) {
+            $this->synchronize_site_order($fresh);
             return true;
         }
 
@@ -278,9 +280,88 @@ final class Maruderm_KeyCRM_TTN_Status_Synchronizer
         $verified_status = absint($verified['status_id'] ?? ($verified['status']['id'] ?? 0));
         $verified_tracking = $this->tracking_code($verified);
 
-        return $verified_status === $target_status
+        $matches = $verified_status === $target_status
             && $verified_tracking !== ''
             && hash_equals($tracking_code, $verified_tracking);
+
+        if ($matches) {
+            $this->synchronize_site_order($verified);
+        }
+
+        return $matches;
+    }
+
+    private function synchronize_site_order(array $remote): void
+    {
+        if (absint($remote['source_id'] ?? 0) !== 2
+            || ! class_exists('Maruderm_KeyCRM_Order_Status_Webhook')
+            || ! class_exists('Maruderm_KeyCRM_Status_Config')) {
+            return;
+        }
+
+        $local_id = (string) ($remote['source_uuid'] ?? '');
+        $remote_id = absint($remote['id'] ?? 0);
+
+        if (! ctype_digit($local_id) || $remote_id <= 0) {
+            return;
+        }
+
+        $order = wc_get_order((int) $local_id);
+
+        if (! $order instanceof WC_Order || absint($order->get_meta('_keycrm_order_id')) !== $remote_id) {
+            $this->log('warning', 'Website reconciliation skipped an unlinked order.', $remote_id);
+            return;
+        }
+
+        $status_id = $this->status_id($remote);
+        $group_id = absint($remote['status']['group_id'] ?? 0);
+        $config = Maruderm_KeyCRM_Status_Config::instance();
+        $target = $config->target_status($status_id, $group_id);
+
+        if ($target === '' || $order->get_status() === $target) {
+            return;
+        }
+
+        if (in_array($order->get_status(), ['completed', 'cancelled', 'refunded'], true)) {
+            $this->log('warning', 'Website terminal status differs from KeyCRM; manual review required.', $remote_id);
+            return;
+        }
+
+        $settings = get_option(self::SETTINGS_OPTION, []);
+        $request = new WP_REST_Request('POST');
+        $request->set_header('Content-Type', 'application/json');
+        $request->set_header('X-KeyCRM-Webhook-Secret', (string) ($settings['webhook_secret_key'] ?? ''));
+        $request->set_body(wp_json_encode([
+            'event' => 'order.change_order_status',
+            'context' => [
+                'id' => $remote_id,
+                'source_uuid' => $local_id,
+                'status_group_id' => $group_id,
+            ],
+        ]));
+        $handler = new Maruderm_KeyCRM_Order_Status_Webhook($config);
+
+        if (is_wp_error($handler->authorize($request))) {
+            $this->log('error', 'Website reconciliation requires a valid configured webhook secret.', $remote_id);
+            return;
+        }
+
+        if ($this->deadline > 0 && microtime(true) >= $this->deadline - 20) {
+            return;
+        }
+
+        $wait = 1.1 - (microtime(true) - $this->last_request_at);
+        if ($wait > 0) {
+            usleep((int) ceil($wait * 1000000));
+        }
+        $this->last_request_at = microtime(true);
+        $result = $handler->handle_status_request($request);
+
+        if (is_wp_error($result)) {
+            $this->log('error', 'Website reconciliation failed; it will be retried on the next poll.', $remote_id);
+        } else {
+            $this->log('notice', 'Website order reconciled through the existing status handler.', $remote_id);
+        }
     }
 
     private function request(string $method, string $url, ?array $body, string $token)

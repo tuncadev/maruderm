@@ -196,7 +196,8 @@ final class Maruderm_KeyCRM_Order_Status_Webhook
         );
         $last_event_hash = (string) $order->get_meta(self::EVENT_HASH_META);
 
-        if ($last_event_hash !== '' && hash_equals($last_event_hash, $event_hash)) {
+        if ($last_event_hash !== '' && hash_equals($last_event_hash, $event_hash)
+            && $order->get_status() === $target_status) {
             return new WP_REST_Response([
                 'ok' => true,
                 'result' => 'duplicate',
