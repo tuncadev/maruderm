@@ -83,11 +83,17 @@ fi
 
 mapfile -t workflow_files < <(printf '%s\n' "${staged_files[@]}" | grep -E '^\.github/workflows/.*\.ya?ml$' || true)
 if [ "${#workflow_files[@]}" -gt 0 ]; then
-  command -v ruby >/dev/null 2>&1 || fail "ruby is required for workflow YAML checks"
+  if command -v ruby >/dev/null 2>&1; then
+    yaml_check=(ruby -e "require 'yaml'; YAML.load_file(ARGV.fetch(0))")
+  elif command -v python3 >/dev/null 2>&1 && python3 -c 'import yaml' >/dev/null 2>&1; then
+    yaml_check=(python3 -c 'import sys, yaml; yaml.safe_load(open(sys.argv[1], encoding="utf-8"))')
+  else
+    fail "ruby or python3 with PyYAML is required for workflow YAML checks"
+  fi
 
   section "checking GitHub workflow YAML"
   for file in "${workflow_files[@]}"; do
-    ruby -e "require 'yaml'; YAML.load_file(ARGV.fetch(0))" "$file" || fail "YAML syntax failed: $file"
+    "${yaml_check[@]}" "$file" || fail "YAML syntax failed: $file"
   done
 fi
 

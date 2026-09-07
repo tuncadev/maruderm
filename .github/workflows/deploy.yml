@@ -78,6 +78,10 @@ jobs:
 
           cd "${DEPLOY_PATH}"
 
+          # Nginx serves static files before Apache; protect their filesystem access too.
+          chmod 700 .git
+          if [ -f .env ]; then chmod 600 .env; fi
+
           test "$(git branch --show-current)" = "master"
           test "$(git remote get-url origin)" = "https://github.com/tuncadev/maruderm.git"
 
@@ -91,6 +95,18 @@ jobs:
           git pull --ff-only origin master
           after_commit=$(git rev-parse HEAD)
 
+          # Keep host-local security rules outside WordPress's generated section.
+          umask 077
+          security_backup=/home/citymody/maruderm.com.ua/shared/security-backups
+          mkdir -p "$security_backup"
+          cp -p .htaccess "$security_backup/htaccess-before-${after_commit}"
+          security_temp=$(mktemp .htaccess.security.XXXXXX)
+          cat scripts/production-security.conf > "$security_temp"
+          printf '\n' >> "$security_temp"
+          sed '/^# BEGIN Maruderm security$/,/^# END Maruderm security$/d' .htaccess >> "$security_temp"
+          chmod 644 "$security_temp"
+          mv "$security_temp" .htaccess
+
           printf 'before_commit=%s\n' "${before_commit}"
           printf 'after_commit=%s\n' "${after_commit}"
 
@@ -98,3 +114,15 @@ jobs:
           wp --path="${DEPLOY_PATH}" eval-file scripts/migrate-sunscreen-category-slugs.php
           wp --path="${DEPLOY_PATH}" cache flush
           REMOTE
+
+      - name: Reject public access to private files
+        run: |
+          set -euo pipefail
+          for path in /.env /.env.local /.git/HEAD /.git/config /.git/index; do
+            status=$(curl --silent --show-error --max-time 15 --output /dev/null \
+              --write-out '%{http_code}' "https://wp.maruderm.com.ua${path}")
+            case "$status" in
+              403|404) printf 'Private path blocked: %s (%s)\n' "$path" "$status" ;;
+              *) printf 'Private path is not blocked: %s (%s)\n' "$path" "$status" >&2; exit 1 ;;
+            esac
+          done
