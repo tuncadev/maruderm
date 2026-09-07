@@ -200,12 +200,31 @@ final class SingleProductContent
     /** @return \WC_Product[] */
     public function related(\WC_Product $product, int $limit = 4): array
     {
+        $products = [];
+
+        foreach ($product->get_cross_sell_ids() as $crossSellId) {
+            $crossSell = wc_get_product($crossSellId);
+
+            if (!$crossSell instanceof \WC_Product || !$crossSell->is_visible()) {
+                continue;
+            }
+
+            $products[] = $crossSell;
+
+            if (count($products) === $limit) {
+                return $products;
+            }
+        }
+
         $category = $this->category($product);
-        $query = new \WP_Query([
+        $queryArguments = [
             'post_type' => 'product',
             'post_status' => 'publish',
-            'posts_per_page' => $limit,
-            'post__not_in' => [$product->get_id()],
+            'posts_per_page' => $limit * 3,
+            'post__not_in' => array_merge(
+                [$product->get_id()],
+                array_map(static fn (\WC_Product $item): int => $item->get_id(), $products)
+            ),
             'orderby' => ['meta_value_num' => 'DESC', 'date' => 'DESC'],
             'meta_key' => 'total_sales',
             'tax_query' => $category instanceof \WP_Term ? [[
@@ -218,10 +237,33 @@ final class SingleProductContent
                 'key' => '_stock_status',
                 'value' => 'instock',
             ]],
-        ]);
-        $products = array_map('wc_get_product', wp_list_pluck($query->posts, 'ID'));
+        ];
 
-        return array_values(array_filter($products, static fn ($item): bool => $item instanceof \WC_Product && $item->is_visible()));
+        if (function_exists('pll_get_post_language')) {
+            $language = pll_get_post_language($product->get_id(), 'slug');
+
+            if (is_string($language) && $language !== '') {
+                $queryArguments['lang'] = $language;
+            }
+        }
+
+        $query = new \WP_Query($queryArguments);
+
+        foreach (wp_list_pluck($query->posts, 'ID') as $fallbackId) {
+            $fallback = wc_get_product($fallbackId);
+
+            if (!$fallback instanceof \WC_Product || !$fallback->is_visible()) {
+                continue;
+            }
+
+            $products[] = $fallback;
+
+            if (count($products) === $limit) {
+                break;
+            }
+        }
+
+        return $products;
     }
 
     /** @param string[] $attributeNames @param string[] $metaKeys */
