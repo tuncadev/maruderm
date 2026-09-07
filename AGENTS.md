@@ -60,3 +60,9 @@ Load the global rules from `/home/pardus/.codex/AGENTS.md` first. These rules ar
 - Run proportional PHP, JavaScript, build, reference-contract, and browser/runtime checks.
 - Append the required activity and progress logs.
 - Leave successful task-owned changes uncommitted unless the user explicitly requests a commit.
+
+## Shipment Status Synchronization
+
+- KeyCRM workspace: https://hzlglobal2026.keycrm.app/.
+- For carrier, KeyCRM, website, or Rozetka order-status work, read `docs/shipment-status-rules.md` and use the global KeyCRM core/orders skills. Inspect the production branch because active synchronizers may not be present on older development branches.
+- Reuse the existing shipment synchronizer and authenticated website status handler; preserve source identity, terminal statuses, and payment records.
