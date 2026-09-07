@@ -322,7 +322,15 @@ final class Maruderm_KeyCRM_TTN_Status_Synchronizer
             return;
         }
 
-        if (in_array($order->get_status(), ['completed', 'cancelled', 'refunded'], true)) {
+        $terminal_statuses = ['completed', 'cancelled', 'refunded'];
+        foreach ($config->mappings() as $mapping) {
+            if (! empty($mapping['include'])
+                && in_array($mapping['fallback'] ?? '', ['completed', 'cancelled', 'refunded'], true)) {
+                $terminal_statuses[] = (string) ($mapping['slug'] ?? '');
+            }
+        }
+
+        if (in_array($order->get_status(), $terminal_statuses, true)) {
             $this->log('warning', 'Website terminal status differs from KeyCRM; manual review required.', $remote_id);
             return;
         }
