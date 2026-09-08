@@ -43,13 +43,14 @@ final class Maruderm_KeyCRM_Order_Payment_Sync
             return;
         }
 
-        $this->processed_orders[$order_id] = true;
         $order = $order ?: wc_get_order($order_id);
 
-        if (! $order instanceof WC_Order || ! $order->is_paid()) {
+        // Processing also includes unpaid COD orders. Require recorded payment.
+        if (! $order instanceof WC_Order || ! $order->is_paid() || $order->get_date_paid() === null) {
             return;
         }
 
+        $this->processed_orders[$order_id] = true;
         $keycrm_order_id = absint($order->get_meta(self::ORDER_ID_META));
         $payment_method_id = $this->payment_method_id($order);
         $api_token = $this->api_token();

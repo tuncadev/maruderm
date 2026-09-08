@@ -134,135 +134,166 @@ final class Maruderm_KeyCRM_Order_Status_Webhook
 
     private function synchronize(array $payload)
     {
-        $context = isset($payload['context']) && is_array($payload['context'])
-            ? $payload['context']
-            : [];
-        $order_id = absint($context['source_uuid'] ?? 0);
-        $status_group_id = absint($context['status_group_id'] ?? 0);
-
-        if ($order_id <= 0 || $status_group_id <= 0) {
-            return new WP_Error(
-                'maruderm_keycrm_invalid_context',
-                'The webhook context is missing source_uuid or status_group_id.',
-                ['status' => 422]
-            );
-        }
-
-        $order = wc_get_order($order_id);
-
-        if (! $order instanceof WC_Order) {
-            return new WP_Error(
-                'maruderm_keycrm_order_not_found',
-                'WooCommerce order not found.',
-                ['status' => 404]
-            );
-        }
-
-        $remote_order_id = absint($context['id'] ?? ($context['order_id'] ?? 0));
-        $stored_remote_order_id = absint($order->get_meta('_keycrm_order_id'));
-
-        if ($remote_order_id > 0 && $stored_remote_order_id > 0 && $remote_order_id !== $stored_remote_order_id) {
-            return new WP_Error(
-                'maruderm_keycrm_order_identity_mismatch',
-                'The KeyCRM order identity does not match WooCommerce metadata.',
-                ['status' => 409]
-            );
-        }
-
-        $remote_order_id = $remote_order_id > 0 ? $remote_order_id : $stored_remote_order_id;
-        $status_id = $this->remote_status_id($remote_order_id, $order_id, $status_group_id);
-        $target_status = $this->config->target_status($status_id, $status_group_id);
-
-        if ($target_status === '' || ! array_key_exists('wc-' . $target_status, wc_get_order_statuses())) {
-            $this->log('warning', 'Rejected an unmapped KeyCRM status.', $order_id, $status_group_id);
-
-            return new WP_Error(
-                'maruderm_keycrm_unmapped_status',
-                'The KeyCRM status is not mapped.',
-                ['status' => 422]
-            );
-        }
-
-        $event_hash = hash(
-            'sha256',
-            wp_json_encode([
-                'event' => self::EVENT_NAME,
-                'order_id' => $order_id,
-                'remote_order_id' => $remote_order_id,
-                'status_id' => $status_id,
-                'status_group_id' => $status_group_id,
-                'target_status' => $target_status,
-            ])
-        );
-        $last_event_hash = (string) $order->get_meta(self::EVENT_HASH_META);
-
-        if ($last_event_hash !== '' && hash_equals($last_event_hash, $event_hash)
-            && $order->get_status() === $target_status) {
-            return new WP_REST_Response([
-                'ok' => true,
-                'result' => 'duplicate',
-                'order_id' => $order_id,
-                'status' => $order->get_status(),
-            ], 200);
-        }
-
-        $previous_status = $order->get_status();
-        $suspended_callbacks = [];
-
+        $lock_id = absint($payload['context']['source_uuid'] ?? 0);
+        $lock = Maruderm_KeyCRM_Order_Status_Sync::lock($lock_id);
+        if ($lock === '') return new WP_Error('maruderm_status_busy', 'Order status synchronization is busy.', ['status' => 409]);
         try {
-            if ($previous_status !== $target_status) {
-                $order->update_meta_data(self::SYNC_ORIGIN_META, 'keycrm');
-                $order->save_meta_data();
-                $suspended_callbacks = $this->suspend_vendor_reverse_sync();
+            $context = isset($payload['context']) && is_array($payload['context'])
+                ? $payload['context']
+                : [];
+            $order_id = absint($context['source_uuid'] ?? 0);
+            $status_group_id = absint($context['status_group_id'] ?? 0);
 
-                try {
-                    $order->update_status(
-                        $target_status,
-                        $status_id > 0
-                            ? sprintf('KeyCRM status %d synchronized.', $status_id)
-                            : sprintf('KeyCRM status group %d synchronized.', $status_group_id),
-                        true
-                    );
-                } finally {
-                    $this->restore_callbacks($suspended_callbacks);
-                    $suspended_callbacks = [];
-                }
-
-                $order = wc_get_order($order_id);
+            if ($order_id <= 0 || $status_group_id <= 0) {
+                return new WP_Error(
+                    'maruderm_keycrm_invalid_context',
+                    'The webhook context is missing source_uuid or status_group_id.',
+                    ['status' => 422]
+                );
             }
+
+            $order = wc_get_order($order_id);
 
             if (! $order instanceof WC_Order) {
-                throw new RuntimeException('WooCommerce order could not be reloaded after status synchronization.');
+                return new WP_Error(
+                    'maruderm_keycrm_order_not_found',
+                    'WooCommerce order not found.',
+                    ['status' => 404]
+                );
             }
 
-            $order->update_meta_data(self::EVENT_HASH_META, $event_hash);
-            $order->update_meta_data(self::STATUS_ID_META, $status_id);
-            $order->update_meta_data(self::STATUS_GROUP_META, $status_group_id);
-            $order->update_meta_data(self::SYNC_ORIGIN_META, 'keycrm');
-            $order->save_meta_data();
-        } catch (Throwable $exception) {
-            $this->log('error', 'WooCommerce status synchronization failed.', $order_id, $status_group_id);
+            $remote_order_id = absint($context['id'] ?? ($context['order_id'] ?? 0));
+            $stored_remote_order_id = absint($order->get_meta('_keycrm_order_id'));
 
-            return new WP_Error(
-                'maruderm_keycrm_status_update_failed',
-                'WooCommerce status synchronization failed.',
-                ['status' => 500]
+            if ($stored_remote_order_id <= 0 || ($remote_order_id > 0 && $remote_order_id !== $stored_remote_order_id)) {
+                return new WP_Error(
+                    'maruderm_keycrm_order_identity_mismatch',
+                    'The KeyCRM order identity does not match WooCommerce metadata.',
+                    ['status' => 409]
+                );
+            }
+
+            $remote_order_id = $remote_order_id > 0 ? $remote_order_id : $stored_remote_order_id;
+            $status_id = $this->remote_status_id($remote_order_id, $order_id, $status_group_id);
+            if ($status_id <= 0) {
+                return new WP_Error('maruderm_keycrm_lookup_failed', 'Exact KeyCRM status and source identity could not be verified.', ['status' => 503]);
+            }
+            if (! isset($this->config->mappings()[$status_id])) {
+                return new WP_Error('maruderm_keycrm_unmapped_status', 'KeyCRM status requires an explicit mapping.', ['status' => 422]);
+            }
+            // A local edit may arrive while the remote lookup is in flight.
+            $order = wc_get_order($order_id);
+            if (! $order instanceof WC_Order) {
+                return new WP_Error('maruderm_keycrm_order_not_found', 'WooCommerce order not found.', ['status' => 404]);
+            }
+            $pending = (string) $order->get_meta(Maruderm_KeyCRM_Order_Status_Sync::PENDING);
+            if ($pending !== '' && $pending === $order->get_status()
+                && Maruderm_KeyCRM_Order_Status_Sync::target($pending) !== $status_id) {
+                return new WP_Error('maruderm_local_status_pending', 'A local status change is awaiting synchronization.', ['status' => 409]);
+            }
+            if (Maruderm_KeyCRM_Order_Status_Sync::target($order->get_status()) === $status_id) {
+                return new WP_REST_Response(['ok' => true, 'result' => 'unchanged', 'order_id' => $order_id, 'status' => $order->get_status()], 200);
+            }
+            if (Maruderm_KeyCRM_Order_Status_Sync::terminal($order->get_status())) {
+                return new WP_Error('maruderm_terminal_status_conflict', 'Terminal WooCommerce status requires manual reconciliation.', ['status' => 409]);
+            }
+            $target_status = $this->config->target_status($status_id, $status_group_id);
+
+            if ($target_status === '' || ! array_key_exists('wc-' . $target_status, wc_get_order_statuses())) {
+                $this->log('warning', 'Rejected an unmapped KeyCRM status.', $order_id, $status_group_id);
+
+                return new WP_Error(
+                    'maruderm_keycrm_unmapped_status',
+                    'The KeyCRM status is not mapped.',
+                    ['status' => 422]
+                );
+            }
+
+            $event_hash = hash(
+                'sha256',
+                wp_json_encode([
+                    'event' => self::EVENT_NAME,
+                    'order_id' => $order_id,
+                    'remote_order_id' => $remote_order_id,
+                    'status_id' => $status_id,
+                    'status_group_id' => $status_group_id,
+                    'target_status' => $target_status,
+                ])
             );
+            $last_event_hash = (string) $order->get_meta(self::EVENT_HASH_META);
+
+            if ($last_event_hash !== '' && hash_equals($last_event_hash, $event_hash)
+                && $order->get_status() === $target_status) {
+                return new WP_REST_Response([
+                    'ok' => true,
+                    'result' => 'duplicate',
+                    'order_id' => $order_id,
+                    'status' => $order->get_status(),
+                ], 200);
+            }
+
+            $previous_status = $order->get_status();
+            $suspended_callbacks = [];
+
+            try {
+                if ($previous_status !== $target_status) {
+                    $order->update_meta_data(self::SYNC_ORIGIN_META, 'keycrm');
+                    $order->save_meta_data();
+                    $suspended_callbacks = $this->suspend_vendor_reverse_sync();
+
+                    Maruderm_KeyCRM_Order_Status_Sync::incoming($order_id, true);
+                    try {
+                        $order->update_status(
+                            $target_status,
+                            $status_id > 0
+                                ? sprintf('KeyCRM status %d synchronized.', $status_id)
+                                : sprintf('KeyCRM status group %d synchronized.', $status_group_id),
+                            true
+                        );
+                    } finally {
+                        Maruderm_KeyCRM_Order_Status_Sync::incoming($order_id, false);
+                        $this->restore_callbacks($suspended_callbacks);
+                        $suspended_callbacks = [];
+                    }
+
+                    $order = wc_get_order($order_id);
+                }
+
+                if (! $order instanceof WC_Order) {
+                    throw new RuntimeException('WooCommerce order could not be reloaded after status synchronization.');
+                }
+
+                $order->update_meta_data(self::EVENT_HASH_META, $event_hash);
+                $order->update_meta_data(self::STATUS_ID_META, $status_id);
+                $order->update_meta_data(self::STATUS_GROUP_META, $status_group_id);
+                $order->update_meta_data(self::SYNC_ORIGIN_META, 'keycrm');
+                $order->save_meta_data();
+            } catch (Throwable $exception) {
+                $this->log('error', 'WooCommerce status synchronization failed.', $order_id, $status_group_id);
+
+                return new WP_Error(
+                    'maruderm_keycrm_status_update_failed',
+                    'WooCommerce status synchronization failed.',
+                    ['status' => 500]
+                );
+            } finally {
+                $this->restore_callbacks($suspended_callbacks);
+            }
+
+            $result = $previous_status === $target_status ? 'unchanged' : 'updated';
+            $this->log('notice', 'KeyCRM status synchronized to WooCommerce.', $order_id, $status_group_id);
+
+            return new WP_REST_Response([
+                'ok' => true,
+                'result' => $result,
+                'order_id' => $order_id,
+                'previous_status' => $previous_status,
+                'status' => $target_status,
+                'keycrm_status_id' => $status_id,
+            ], 200);
         } finally {
-            $this->restore_callbacks($suspended_callbacks);
+            Maruderm_KeyCRM_Order_Status_Sync::unlock($lock_id, $lock);
         }
-
-        $result = $previous_status === $target_status ? 'unchanged' : 'updated';
-        $this->log('notice', 'KeyCRM status synchronized to WooCommerce.', $order_id, $status_group_id);
-
-        return new WP_REST_Response([
-            'ok' => true,
-            'result' => $result,
-            'order_id' => $order_id,
-            'previous_status' => $previous_status,
-            'status' => $target_status,
-            'keycrm_status_id' => $status_id,
-        ], 200);
     }
 
     private function suspend_vendor_reverse_sync(): array
@@ -310,7 +341,7 @@ final class Maruderm_KeyCRM_Order_Status_Webhook
         $api_token = $this->api_token();
 
         if ($remote_order_id <= 0 || $api_token === '') {
-            $this->log('warning', 'Exact KeyCRM status lookup is unavailable; using the status-group fallback.', $order_id, $status_group_id);
+            $this->log('warning', 'Exact KeyCRM status lookup is unavailable; preserving WooCommerce status.', $order_id, $status_group_id);
             return 0;
         }
 
@@ -326,7 +357,7 @@ final class Maruderm_KeyCRM_Order_Status_Webhook
         );
 
         if (is_wp_error($response)) {
-            $this->log('warning', 'Exact KeyCRM status lookup failed; using the status-group fallback.', $order_id, $status_group_id);
+            $this->log('warning', 'Exact KeyCRM status lookup failed; preserving WooCommerce status.', $order_id, $status_group_id);
             return 0;
         }
 
@@ -334,7 +365,12 @@ final class Maruderm_KeyCRM_Order_Status_Webhook
         $body = json_decode((string) wp_remote_retrieve_body($response), true);
 
         if ($status_code < 200 || $status_code >= 300 || ! is_array($body)) {
-            $this->log('warning', 'Exact KeyCRM status lookup returned an invalid response; using the status-group fallback.', $order_id, $status_group_id);
+            $this->log('warning', 'Exact KeyCRM status lookup returned an invalid response; preserving WooCommerce status.', $order_id, $status_group_id);
+            return 0;
+        }
+
+        if (absint($body['id'] ?? 0) !== $remote_order_id || absint($body['source_id'] ?? 0) !== 2
+            || (string) ($body['source_uuid'] ?? '') !== (string) $order_id) {
             return 0;
         }
 
