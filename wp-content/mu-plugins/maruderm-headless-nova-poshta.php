@@ -2,15 +2,8 @@
 /**
  * Nova Poshta branch-delivery REST endpoints for the headless Next.js frontend.
  *
- * WooCommerce's Store API (which every other headless checkout call in this
- * build goes through) never fires wc-ukr-shipping's own field-persistence
- * hooks (woocommerce_checkout_create_order_shipping_item etc) -- those only
- * run for the legacy WC_Checkout::process_checkout() flow. So a customer's
- * chosen city/warehouse can't be delivered through the normal /checkout POST
- * at all; it has to be patched onto the order's shipping line item
- * afterward, replicating exactly what
- * NovaPoshta\Order\{CheckoutOrderHandler,CheckoutOrderShippingHandler} would
- * have written (see wp-content/plugins/wc-ukr-shipping/src/Component/Carriers/NovaPoshta/Order/).
+ * Store API checkout persists validated carrier IDs before CRM transfer.
+ * The order-key endpoint remains available for older storefronts.
  *
  * City/warehouse search reuses the plugin's own DB-backed repositories
  * directly (same data the site's own admin-ajax lookup uses) rather than
@@ -30,6 +23,9 @@
 if (! defined('ABSPATH')) {
     exit;
 }
+
+require_once __DIR__ . '/maruderm-nova-poshta/class-checkout.php';
+(new Maruderm_Nova_Poshta_Checkout())->register();
 
 add_action('rest_api_init', 'maruderm_register_nova_poshta_routes');
 
@@ -86,6 +82,7 @@ function maruderm_handle_search_np_cities(WP_REST_Request $request): WP_REST_Res
             static fn (\kirillbdev\WCUkrShipping\Dto\Shipping\City $city): array => [
                 'ref' => $city->id,
                 'name' => $city->nameUa,
+                'state' => (new Maruderm_Nova_Poshta_Checkout())->stateForCity($city->id),
             ],
             array_slice($cities, 0, 15)
         ),
@@ -138,9 +135,7 @@ function maruderm_handle_apply_np_warehouse(WP_REST_Request $request): WP_REST_R
     $orderId = (int) $request->get_param('orderId');
     $orderKey = (string) $request->get_param('orderKey');
     $cityRef = (string) $request->get_param('cityRef');
-    $cityName = (string) $request->get_param('cityName');
     $warehouseRef = (string) $request->get_param('warehouseRef');
-    $warehouseName = (string) $request->get_param('warehouseName');
 
     if ($orderId <= 0 || $cityRef === '' || $warehouseRef === '') {
         return new WP_REST_Response(['error' => 'Некоректні дані відділення.'], 400);
@@ -152,36 +147,13 @@ function maruderm_handle_apply_np_warehouse(WP_REST_Request $request): WP_REST_R
         return new WP_REST_Response(['error' => 'Замовлення не знайдено.'], 404);
     }
 
-    $shippingItems = $order->get_items('shipping');
-    $shippingItem = reset($shippingItems);
-
-    if (! $shippingItem instanceof WC_Order_Item_Shipping) {
-        return new WP_REST_Response(['error' => 'У замовленні немає способу доставки.'], 400);
+    try {
+        $checkout = new Maruderm_Nova_Poshta_Checkout();
+        $checkout->apply($order, $checkout->resolve($cityRef, $warehouseRef));
+        $order->save();
+    } catch (\InvalidArgumentException $error) {
+        return new WP_REST_Response(['error' => 'Некоректні дані відділення.'], 400);
     }
-
-    // Clear any custom-address (courier) meta so the plugin's own address
-    // mapper (used for TTN/waybill generation) doesn't see a mix of both
-    // modes -- mirrors ShippingAddressMapper::mapPUDOAddress()'s own cleanup.
-    foreach (['wcus_settlement_ref', 'wcus_settlement_full', 'wcus_settlement_name', 'wcus_settlement_area', 'wcus_settlement_region', 'wcus_street_ref', 'wcus_street_name', 'wcus_street_full', 'wcus_house', 'wcus_flat', 'wcus_api_address'] as $key) {
-        $shippingItem->delete_meta_data($key);
-    }
-
-    $shippingItem->update_meta_data('wcus_city_ref', $cityRef);
-    $shippingItem->update_meta_data('wcus_city_name', $cityName !== '' ? $cityName : '-');
-    $shippingItem->update_meta_data('wcus_warehouse_ref', $warehouseRef);
-    $shippingItem->update_meta_data('wcus_warehouse_name', $warehouseName !== '' ? $warehouseName : '-');
-    $shippingItem->save();
-
-    // Also reflect the real branch on the order's own address fields (what
-    // the store owner sees in the native "Shipping address" block), on both
-    // billing and shipping since this store collects a single address for
-    // both (woocommerce_ship_to_destination = "billing").
-    $order->set_billing_city($cityName);
-    $order->set_billing_address_1($warehouseName);
-    $order->set_shipping_city($cityName);
-    $order->set_shipping_address_1($warehouseName);
-    $order->update_meta_data('wcus_data_version', '3');
-    $order->save();
 
     return new WP_REST_Response(['success' => true]);
 }
