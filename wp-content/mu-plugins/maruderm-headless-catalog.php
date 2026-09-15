@@ -37,6 +37,7 @@ function maruderm_register_catalog_graphql(): void
     register_graphql_object_type('MarudermCatalogProduct', [
         'fields' => [
             'databaseId' => ['type' => 'Int'],
+            'sku' => ['type' => 'String'],
             'name' => ['type' => 'String'],
             'slug' => ['type' => 'String'],
             'url' => ['type' => 'String'],
@@ -144,7 +145,8 @@ function maruderm_resolve_product_search(string $term, int $limit, string $langu
     foreach (maruderm_headless_catalog_products() as $product) {
         $mappedProduct = maruderm_map_catalog_product($repository, $product, $language);
 
-        if (mb_stripos($mappedProduct['name'], $term) !== false) {
+        if (mb_stripos($mappedProduct['name'], $term) !== false
+            || mb_stripos($mappedProduct['sku'], $term) !== false) {
             $matches[] = $mappedProduct;
 
             if (count($matches) >= $limit) {
@@ -249,6 +251,7 @@ function maruderm_map_catalog_product(
 
     return [
         'databaseId' => $product->get_id(),
+        'sku' => (string) $product->get_sku(),
         'name' => $presentation instanceof \WP_Post ? $presentation->post_title : $product->get_name(),
         'slug' => $presentation instanceof \WP_Post ? $presentation->post_name : $product->get_slug(),
         'url' => $presentation instanceof \WP_Post && $language === 'ru'

@@ -27,6 +27,8 @@
 !.agents/skills/optimize-project-images/**
 !.agents/skills/sync-maruderm-local-db-to-production/
 !.agents/skills/sync-maruderm-local-db-to-production/**
+!.agents/skills/build-maruderm-kasta-feed/
+!.agents/skills/build-maruderm-kasta-feed/**
 
 *~
 
@@ -47,6 +49,9 @@ scripts/*
 !scripts/import-russian-product-categories.php
 !scripts/import-russian-product-attributes.php
 !scripts/generate-russian-product-translations.mjs
+!scripts/kasta/
+!scripts/kasta/**
+scripts/kasta/__pycache__/
 !products/
 products/*
 !products/prom-product-translations-ru.json

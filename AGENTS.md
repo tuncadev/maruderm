@@ -42,16 +42,22 @@ Load the global rules from `/home/pardus/.codex/AGENTS.md` first. These rules ar
 - Map WooCommerce categories to explicit Prom marketplace category IDs or URLs through a reviewed project mapping. Do not rely on automatic category detection for publication and do not import a product whose deepest applicable category is unmapped or ambiguous.
 - Use stable WooCommerce product/variation IDs as external import IDs and unique SKU/barcode for reconciliation. Store every import ID, poll the import to a terminal state, and read products back before allowing another import or enabling periodic synchronization.
 
+## Kasta XML Catalog
+
+- For Kasta XML creation or regeneration, use `.agents/skills/build-maruderm-kasta-feed/SKILL.md` and the MU-plugin at `wp-content/mu-plugins/maruderm-kasta-feed.php`. Settings live under WooCommerce → Kasta XML; diagnostic and test tools remain in `scripts/kasta/`.
+- Primary product names are Ukrainian; prices are WooCommerce regular website prices without sales; stock is KeyCRM total quantity minus reserves across all warehouses, matched by unique SKU. Include source product images.
+
 ## Image Optimization
 
 - For product or other project raster-image resizing, format conversion, or metadata reduction, use `.agents/skills/optimize-project-images/SKILL.md`.
 - Run its dry-run mode before mutating a real image folder. Runtime backups and manifests belong under `arch/backups/` and must not be deleted automatically.
 
-## Local Database to Production
+## Production Database Changes
 
-- When the user explicitly requests replacing the production database from local, use `.agents/skills/sync-maruderm-local-db-to-production/SKILL.md`.
-- Always run its read-only preflight before `--execute`; never bypass commerce-divergence checks, verified source/rollback exports, maintenance mode, serialization-safe URL migration, automatic rollback, or post-import validation.
-- This workflow changes only the production database. It must not deploy code or media, and it must retain the downloaded production rollback backup locally.
+- Never export the local database and import it into production.
+- Apply targeted production database changes over SSH using WP-CLI or a reviewed migration, preserving live orders, customers, and unrelated data.
+- If SSH is unavailable, make the required changes manually in production.
+- The former `sync-maruderm-local-db-to-production` skill is retired and must not be executed.
 
 ## Completion
 
@@ -59,3 +65,13 @@ Load the global rules from `/home/pardus/.codex/AGENTS.md` first. These rules ar
 - Run proportional PHP, JavaScript, build, reference-contract, and browser/runtime checks.
 - Append the required activity and progress logs.
 - Leave successful task-owned changes uncommitted unless the user explicitly requests a commit.
+
+## Shipment Status Synchronization
+
+- KeyCRM workspace: https://hzlglobal2026.keycrm.app/.
+- For carrier, KeyCRM, website, or Rozetka order-status work, read `docs/shipment-status-rules.md` and use the global KeyCRM core/orders skills. Inspect the production branch because active synchronizers may not be present on older development branches.
+- Reuse the existing shipment synchronizer and authenticated website status handler; preserve source identity, terminal statuses, and payment records.
+
+## Database synchronization prohibition
+
+- User instruction (2026-09-15): never sync databases between environments, including during commits, pushes or deployments. Do not run database copy, export/import or synchronization workflows. Code publication does not authorize database synchronization.
