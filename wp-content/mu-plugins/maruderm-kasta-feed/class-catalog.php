@@ -76,6 +76,7 @@ final class Catalog
         }
         $previous = $this->previous($previousXml);
         $overrides = json_decode(file_get_contents(__DIR__ . '/category-overrides.json'), true, 512, JSON_THROW_ON_ERROR);
+        $mapping = json_decode(file_get_contents(__DIR__ . '/rozetka-category-mapping.json'), true, 512, JSON_THROW_ON_ERROR);
         $offers = $categories = $seenSku = $seenId = [];
         $report = ['excluded' => [], 'warnings' => [], 'offers' => [], 'source_generated_at_utc' => $source['generated_at_utc']];
         foreach ($source['products'] as $product) {
@@ -121,7 +122,18 @@ final class Catalog
             $images = array_values(array_unique($product['images'] ?? []));
             if (count($images) < 1 || count($images) > 20) { throw new \RuntimeException("Expected 1–20 images: {$sku}."); }
             $category = $selected[0];
-            $categories[$category['id']] = self::text($category['name']);
+            $mapped = $mapping['by_sku'][$sku] ?? null;
+            if (! is_array($mapped) || ($mapped['supplier_category_id'] ?? null) !== $category['id']
+                || ! is_int($mapped['rz_id'] ?? null) || $mapped['rz_id'] <= 0
+                || ! is_int($mapped['feed_category_id'] ?? null) || $mapped['feed_category_id'] <= 0
+                || empty($mapped['name'])) {
+                throw new \RuntimeException("Missing or outdated verified Rozetka category mapping: {$sku}.");
+            }
+            $category = ['id' => $mapped['feed_category_id'], 'name' => self::text($mapped['name']), 'rz_id' => $mapped['rz_id']];
+            if (isset($categories[$category['id']]) && $categories[$category['id']] !== $category) {
+                throw new \RuntimeException('Conflicting Rozetka mappings for one feed category.');
+            }
+            $categories[$category['id']] = $category;
             $params = $product['params'] ?? [];
             if (isset($product['weight_kg']) && (float) $product['weight_kg'] > 0) {
                 $params['Вага в упаковці, кг'] = (string) $product['weight_kg'];
@@ -152,8 +164,10 @@ final class Catalog
         $writer->startElement('currencies'); $writer->startElement('currency');
         $writer->writeAttribute('id', 'UAH'); $writer->writeAttribute('rate', '1'); $writer->endElement(); $writer->endElement();
         $writer->startElement('categories');
-        foreach ($catalog['categories'] as $id => $name) {
-            $writer->startElement('category'); $writer->writeAttribute('id', (string) $id); $writer->text($name); $writer->endElement();
+        foreach ($catalog['categories'] as $id => $category) {
+            $writer->startElement('category'); $writer->writeAttribute('id', (string) $id);
+            $writer->writeAttribute('rz_id', (string) $category['rz_id']);
+            $writer->text($category['name']); $writer->endElement();
         }
         $writer->endElement(); $writer->startElement('offers');
         foreach ($catalog['offers'] as $offer) {

@@ -1,0 +1,462 @@
+{
+  "verified_at_utc": "2026-09-15T13:21:25.441224+00:00",
+  "source": "Authenticated Rozetka seller catalog, exact article/SKU matches",
+  "by_sku": {
+    "8682397030635": {
+      "supplier_category_id": 465,
+      "feed_category_id": 465,
+      "rz_id": 4657262,
+      "name": "Креми для догляду за шкірою"
+    },
+    "8682397030642": {
+      "supplier_category_id": 467,
+      "feed_category_id": 467,
+      "rz_id": 4657286,
+      "name": "Сироватки для догляду за шкірою"
+    },
+    "8682397030659": {
+      "supplier_category_id": 467,
+      "feed_category_id": 467,
+      "rz_id": 4657286,
+      "name": "Сироватки для догляду за шкірою"
+    },
+    "8682397030666": {
+      "supplier_category_id": 467,
+      "feed_category_id": 467,
+      "rz_id": 4657286,
+      "name": "Сироватки для догляду за шкірою"
+    },
+    "8682397030673": {
+      "supplier_category_id": 467,
+      "feed_category_id": 467,
+      "rz_id": 4657286,
+      "name": "Сироватки для догляду за шкірою"
+    },
+    "8682397030680": {
+      "supplier_category_id": 465,
+      "feed_category_id": 465,
+      "rz_id": 4657262,
+      "name": "Креми для догляду за шкірою"
+    },
+    "8682397030697": {
+      "supplier_category_id": 465,
+      "feed_category_id": 465,
+      "rz_id": 4657262,
+      "name": "Креми для догляду за шкірою"
+    },
+    "8682397030703": {
+      "supplier_category_id": 472,
+      "feed_category_id": 472,
+      "rz_id": 4657274,
+      "name": "Засоби для очищення обличчя"
+    },
+    "8682397030710": {
+      "supplier_category_id": 472,
+      "feed_category_id": 472,
+      "rz_id": 4657274,
+      "name": "Засоби для очищення обличчя"
+    },
+    "8682397030734": {
+      "supplier_category_id": 468,
+      "feed_category_id": 468,
+      "rz_id": 4657316,
+      "name": "Тоніки для догляду за шкірою"
+    },
+    "8682397030758": {
+      "supplier_category_id": 467,
+      "feed_category_id": 467,
+      "rz_id": 4657286,
+      "name": "Сироватки для догляду за шкірою"
+    },
+    "8682397030772": {
+      "supplier_category_id": 467,
+      "feed_category_id": 467,
+      "rz_id": 4657286,
+      "name": "Сироватки для догляду за шкірою"
+    },
+    "8682397030796": {
+      "supplier_category_id": 467,
+      "feed_category_id": 467,
+      "rz_id": 4657286,
+      "name": "Сироватки для догляду за шкірою"
+    },
+    "8682397030802": {
+      "supplier_category_id": 465,
+      "feed_category_id": 465,
+      "rz_id": 4657262,
+      "name": "Креми для догляду за шкірою"
+    },
+    "8682397030819": {
+      "supplier_category_id": 465,
+      "feed_category_id": 465,
+      "rz_id": 4657262,
+      "name": "Креми для догляду за шкірою"
+    },
+    "8682397030826": {
+      "supplier_category_id": 465,
+      "feed_category_id": 465,
+      "rz_id": 4657262,
+      "name": "Креми для догляду за шкірою"
+    },
+    "8682397030833": {
+      "supplier_category_id": 465,
+      "feed_category_id": 465,
+      "rz_id": 4657262,
+      "name": "Креми для догляду за шкірою"
+    },
+    "8682397030857": {
+      "supplier_category_id": 497,
+      "feed_category_id": 497,
+      "rz_id": 4657484,
+      "name": "Креми проти целюліту"
+    },
+    "8682397030864": {
+      "supplier_category_id": 467,
+      "feed_category_id": 467,
+      "rz_id": 4657286,
+      "name": "Сироватки для догляду за шкірою"
+    },
+    "8682397030871": {
+      "supplier_category_id": 467,
+      "feed_category_id": 467,
+      "rz_id": 4657286,
+      "name": "Сироватки для догляду за шкірою"
+    },
+    "8682397030888": {
+      "supplier_category_id": 467,
+      "feed_category_id": 467,
+      "rz_id": 4657286,
+      "name": "Сироватки для догляду за шкірою"
+    },
+    "8682397030895": {
+      "supplier_category_id": 468,
+      "feed_category_id": 468,
+      "rz_id": 4657316,
+      "name": "Тоніки для догляду за шкірою"
+    },
+    "8682397030901": {
+      "supplier_category_id": 468,
+      "feed_category_id": 468,
+      "rz_id": 4657316,
+      "name": "Тоніки для догляду за шкірою"
+    },
+    "8682397030925": {
+      "supplier_category_id": 472,
+      "feed_category_id": 4724657292,
+      "rz_id": 4657292,
+      "name": "Олія для обличчя"
+    },
+    "8682397030932": {
+      "supplier_category_id": 472,
+      "feed_category_id": 472,
+      "rz_id": 4657274,
+      "name": "Засоби для очищення обличчя"
+    },
+    "8682397030949": {
+      "supplier_category_id": 472,
+      "feed_category_id": 4724657292,
+      "rz_id": 4657292,
+      "name": "Олія для обличчя"
+    },
+    "8682397030956": {
+      "supplier_category_id": 472,
+      "feed_category_id": 472,
+      "rz_id": 4657274,
+      "name": "Засоби для очищення обличчя"
+    },
+    "8682397031120": {
+      "supplier_category_id": 466,
+      "feed_category_id": 466,
+      "rz_id": 4657310,
+      "name": "Маски для догляду за шкірою"
+    },
+    "8682397031151": {
+      "supplier_category_id": 499,
+      "feed_category_id": 499,
+      "rz_id": 4657508,
+      "name": "Скраби для тіла"
+    },
+    "8682397031168": {
+      "supplier_category_id": 499,
+      "feed_category_id": 499,
+      "rz_id": 4657508,
+      "name": "Скраби для тіла"
+    },
+    "8682397031175": {
+      "supplier_category_id": 499,
+      "feed_category_id": 499,
+      "rz_id": 4657508,
+      "name": "Скраби для тіла"
+    },
+    "8682397031182": {
+      "supplier_category_id": 477,
+      "feed_category_id": 477,
+      "rz_id": 4676068,
+      "name": "Сонцезахисні креми для обличчя"
+    },
+    "8682397031199": {
+      "supplier_category_id": 477,
+      "feed_category_id": 477,
+      "rz_id": 4676068,
+      "name": "Сонцезахисні креми для обличчя"
+    },
+    "8682397031205": {
+      "supplier_category_id": 477,
+      "feed_category_id": 477,
+      "rz_id": 4676068,
+      "name": "Сонцезахисні креми для обличчя"
+    },
+    "8682397031212": {
+      "supplier_category_id": 477,
+      "feed_category_id": 477,
+      "rz_id": 4676068,
+      "name": "Сонцезахисні креми для обличчя"
+    },
+    "8682397031342": {
+      "supplier_category_id": 477,
+      "feed_category_id": 477,
+      "rz_id": 4676068,
+      "name": "Сонцезахисні креми для обличчя"
+    },
+    "8682397031359": {
+      "supplier_category_id": 498,
+      "feed_category_id": 498,
+      "rz_id": 4657484,
+      "name": "Креми для тіла"
+    },
+    "8682397031366": {
+      "supplier_category_id": 498,
+      "feed_category_id": 498,
+      "rz_id": 4657484,
+      "name": "Креми для тіла"
+    },
+    "8682397031373": {
+      "supplier_category_id": 498,
+      "feed_category_id": 498,
+      "rz_id": 4657484,
+      "name": "Креми для тіла"
+    },
+    "8682397031403": {
+      "supplier_category_id": 472,
+      "feed_category_id": 472,
+      "rz_id": 4657274,
+      "name": "Засоби для очищення обличчя"
+    },
+    "8682397031410": {
+      "supplier_category_id": 471,
+      "feed_category_id": 471,
+      "rz_id": 4657274,
+      "name": "Пілінги"
+    },
+    "8682397031427": {
+      "supplier_category_id": 471,
+      "feed_category_id": 471,
+      "rz_id": 4657274,
+      "name": "Пілінги"
+    },
+    "8682397031434": {
+      "supplier_category_id": 471,
+      "feed_category_id": 471,
+      "rz_id": 4657274,
+      "name": "Пілінги"
+    },
+    "8682397031458": {
+      "supplier_category_id": 468,
+      "feed_category_id": 468,
+      "rz_id": 4657316,
+      "name": "Тоніки для догляду за шкірою"
+    },
+    "8682397031465": {
+      "supplier_category_id": 465,
+      "feed_category_id": 465,
+      "rz_id": 4657262,
+      "name": "Креми для догляду за шкірою"
+    },
+    "8682397031472": {
+      "supplier_category_id": 467,
+      "feed_category_id": 467,
+      "rz_id": 4657286,
+      "name": "Сироватки для догляду за шкірою"
+    },
+    "8682397031632": {
+      "supplier_category_id": 469,
+      "feed_category_id": 469,
+      "rz_id": 4657262,
+      "name": "Догляд за шкірою навколо очей"
+    },
+    "8682397031649": {
+      "supplier_category_id": 476,
+      "feed_category_id": 476,
+      "rz_id": 4676068,
+      "name": "Сонцезахисні креми для тіла"
+    },
+    "8682397031656": {
+      "supplier_category_id": 476,
+      "feed_category_id": 476,
+      "rz_id": 4676068,
+      "name": "Сонцезахисні креми для тіла"
+    },
+    "8682397031663": {
+      "supplier_category_id": 475,
+      "feed_category_id": 475,
+      "rz_id": 4676077,
+      "name": "Догляд після засмаги"
+    },
+    "8682397031670": {
+      "supplier_category_id": 476,
+      "feed_category_id": 476,
+      "rz_id": 4676068,
+      "name": "Сонцезахисні креми для тіла"
+    },
+    "8682397031687": {
+      "supplier_category_id": 474,
+      "feed_category_id": 474,
+      "rz_id": 4676068,
+      "name": "Дитячі сонцезахисні креми"
+    },
+    "8682397031779": {
+      "supplier_category_id": 473,
+      "feed_category_id": 473,
+      "rz_id": 4676074,
+      "name": "Засоби для засмаги"
+    },
+    "8682397031786": {
+      "supplier_category_id": 473,
+      "feed_category_id": 473,
+      "rz_id": 4676074,
+      "name": "Засоби для засмаги"
+    },
+    "8682397031939": {
+      "supplier_category_id": 465,
+      "feed_category_id": 465,
+      "rz_id": 4657262,
+      "name": "Креми для догляду за шкірою"
+    },
+    "8682397031946": {
+      "supplier_category_id": 477,
+      "feed_category_id": 477,
+      "rz_id": 4676068,
+      "name": "Сонцезахисні креми для обличчя"
+    },
+    "8682397031960": {
+      "supplier_category_id": 472,
+      "feed_category_id": 472,
+      "rz_id": 4657274,
+      "name": "Засоби для очищення обличчя"
+    },
+    "8682397031977": {
+      "supplier_category_id": 465,
+      "feed_category_id": 465,
+      "rz_id": 4657262,
+      "name": "Креми для догляду за шкірою"
+    },
+    "8682397031984": {
+      "supplier_category_id": 468,
+      "feed_category_id": 468,
+      "rz_id": 4657316,
+      "name": "Тоніки для догляду за шкірою"
+    },
+    "8682397032066": {
+      "supplier_category_id": 496,
+      "feed_category_id": 496,
+      "rz_id": 4657532,
+      "name": "Гелі для душу"
+    },
+    "8682397032073": {
+      "supplier_category_id": 496,
+      "feed_category_id": 496,
+      "rz_id": 4657532,
+      "name": "Гелі для душу"
+    },
+    "8682397032080": {
+      "supplier_category_id": 496,
+      "feed_category_id": 496,
+      "rz_id": 4657532,
+      "name": "Гелі для душу"
+    },
+    "8682397032097": {
+      "supplier_category_id": 496,
+      "feed_category_id": 496,
+      "rz_id": 4657532,
+      "name": "Гелі для душу"
+    },
+    "8682397032585": {
+      "supplier_category_id": 470,
+      "feed_category_id": 470,
+      "rz_id": 4657322,
+      "name": "Догляд за бровами та віями"
+    },
+    "8682397032868": {
+      "supplier_category_id": 466,
+      "feed_category_id": 466,
+      "rz_id": 4657310,
+      "name": "Маски для догляду за шкірою"
+    },
+    "8682397032875": {
+      "supplier_category_id": 465,
+      "feed_category_id": 465,
+      "rz_id": 4657262,
+      "name": "Креми для догляду за шкірою"
+    },
+    "8682397032882": {
+      "supplier_category_id": 467,
+      "feed_category_id": 467,
+      "rz_id": 4657286,
+      "name": "Сироватки для догляду за шкірою"
+    },
+    "8682397033384": {
+      "supplier_category_id": 465,
+      "feed_category_id": 465,
+      "rz_id": 4657262,
+      "name": "Креми для догляду за шкірою"
+    },
+    "8682397033414": {
+      "supplier_category_id": 494,
+      "feed_category_id": 494,
+      "rz_id": 4657710,
+      "name": "Шампуні"
+    },
+    "8682397033421": {
+      "supplier_category_id": 491,
+      "feed_category_id": 491,
+      "rz_id": 4657722,
+      "name": "Кондиціонери для волосся"
+    },
+    "8682397033469": {
+      "supplier_category_id": 494,
+      "feed_category_id": 494,
+      "rz_id": 4657710,
+      "name": "Шампуні"
+    },
+    "8682397033490": {
+      "supplier_category_id": 494,
+      "feed_category_id": 494,
+      "rz_id": 4657710,
+      "name": "Шампуні"
+    },
+    "8682397033513": {
+      "supplier_category_id": 494,
+      "feed_category_id": 494,
+      "rz_id": 4657710,
+      "name": "Шампуні"
+    },
+    "8682397033544": {
+      "supplier_category_id": 490,
+      "feed_category_id": 490,
+      "rz_id": 4657788,
+      "name": "Стайлінг, термозахист і олії для волосся"
+    },
+    "8682397033551": {
+      "supplier_category_id": 490,
+      "feed_category_id": 490,
+      "rz_id": 4657788,
+      "name": "Стайлінг, термозахист і олії для волосся"
+    },
+    "8682397033704": {
+      "supplier_category_id": 477,
+      "feed_category_id": 477,
+      "rz_id": 4676068,
+      "name": "Сонцезахисні креми для обличчя"
+    }
+  }
+}

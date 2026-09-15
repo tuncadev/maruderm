@@ -32,8 +32,8 @@ final class KastaPluginTests
     {
         return ['schema_version' => 1, 'currency' => 'UAH', 'stock_scope' => 'keycrm_account_total',
             'generated_at_utc' => gmdate('c'), 'completed_at_utc' => gmdate('c'),
-            'stocks' => [['id' => 1, 'sku' => 'SKU001', 'quantity' => 8, 'reserve' => 3]],
-            'products' => [['id' => 123, 'sku' => 'SKU001', 'language' => 'uk', 'type' => 'simple', 'regular_price' => '500',
+            'stocks' => [['id' => 1, 'sku' => '8682397031465', 'quantity' => 8, 'reserve' => 3]],
+            'products' => [['id' => 123, 'sku' => '8682397031465', 'language' => 'uk', 'type' => 'simple', 'regular_price' => '500',
                 'sale_price' => '300', 'name_ua' => 'Крем для обличчя & тіла', 'name_ru' => 'Крем для лица',
                 'description_ua' => '<p>Опис</p><script>bad()</script>', 'description_ru' => 'Описание',
                 'images' => ['https://wp.maruderm.com.ua/wp-content/uploads/test.png'],
@@ -80,6 +80,12 @@ final class KastaPluginTests
         $this->check($xpath->evaluate('string(//offer/price)') === '500.00' && $xpath->evaluate('string(//offer/price_old)') === '500.00', 'Regular prices');
         $this->check($xpath->evaluate('string(//offer/stock_quantity)') === '5', 'Quantity minus reserve');
         $this->check(! str_contains($xml, 'bad()'), 'Script removal');
+        $this->check($xpath->evaluate('string(//categories/category[@id="465"]/@rz_id)') === '4657262', 'Verified Rozetka ID serialized as category attribute');
+        $unmapped = $this->snapshot();
+        $unmapped['stocks'][0]['sku'] = $unmapped['products'][0]['sku'] = 'UNVERIFIED';
+        $this->fails(fn () => (new Catalog())->build($unmapped), 'Unverified new SKU must not publish without mapping');
+        $moved = $this->snapshot(); $moved['products'][0]['categories'][0]['id'] = 466;
+        $this->fails(fn () => (new Catalog())->build($moved), 'Changed supplier category invalidates old mapping');
         $this->check((fileperms($storage->path('products.xml')) & 0777) === 0600 && (fileperms($storage->directory()) & 0777) === 0700, 'Private permissions');
         $held = fopen($storage->path('generation.lock'), 'c'); flock($held, LOCK_EX);
         $this->check($generator->run()['state'] === 'running' && $storage->read() === $xml, 'Concurrent generator blocked');
@@ -128,6 +134,10 @@ final class KastaPluginTests
             $mapper = new Catalog(); $catalog = $mapper->build($data);
             $this->check(count($catalog['offers']) === 76 && $catalog['report']['matched_skus'] === 149, 'Recorded catalog coverage');
             $recorded = new DOMDocument(); $recorded->loadXML($mapper->xml($catalog)); $query = new DOMXPath($recorded);
+            $this->check($query->evaluate('count(//categories/category[@rz_id])') === 21.0, 'Every feed category has a Rozetka ID');
+            $this->check($query->evaluate('string(//category[@id="472"]/@rz_id)') === '4657274', 'Cleansers preserve existing category ID');
+            $this->check($query->evaluate('string(//category[@id="4724657292"]/@rz_id)') === '4657292', 'Facial oils have a separate verified category');
+            $this->check($query->evaluate('count(//offer[categoryId="4724657292"])') === 2.0, 'Only the two verified facial oils are split');
             $products = array_column($data['products'], null, 'id'); $stocks = array_column($data['stocks'], null, 'sku');
             foreach ($catalog['offers'] as $id => $offer) {
                 $product = $products[$id]; $stock = $stocks[$product['sku']]; $selector = '//offer[@id="' . $id . '"]';

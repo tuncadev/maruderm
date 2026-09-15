@@ -69,3 +69,9 @@ Initial production reads from the earlier XML task matched 149 canonical SKUs, w
 ## Scope
 
 This implementation generates and serves XML and optionally refreshes it through WordPress Cron. It does not import products into Kasta, change KeyCRM inventory, process orders, or call Kasta stock-write APIs. Coordinate Kasta's own order reservations with KeyCRM order ingestion separately. Deploy using the project's approved Git workflow; no production database replacement is needed.
+
+## Verified Rozetka mapping for Kasta
+
+`rozetka-category-mapping.json` records exact live Rozetka article/SKU matches and category IDs verified on 2026-09-15. The XML includes `rz_id` on every category for Kasta automatic classification. The existing 20 supplier category IDs are preserved; facial oils inside supplier category 472 use the additional stable feed category 4724657292 because Rozetka classifies them separately from cleansers. Product offer IDs remain unchanged.
+
+New exportable SKUs or changed supplier assignments without a verified mapping stop generation and preserve the previous XML. Verify them against the live Rozetka catalog before updating the mapping file; never guess IDs or use Prom IDs. Rozetka authentication is needed only for that maintenance audit, not for routine feed generation. Kasta must fetch/reprocess the updated feed; confirm its mapping report afterward.
