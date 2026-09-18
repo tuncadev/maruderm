@@ -15,6 +15,7 @@ final class Maruderm_KeyCRM_Order_Status_Sync
     {
         add_action('wp_loaded', [$this, 'separatePayments'], 100);
         add_action('woocommerce_order_status_changed', [$this, 'changed'], 1, 4);
+        add_action('woocommerce_payment_complete', [$this, 'paymentCompleted'], 30);
         add_action('woocommerce_store_api_checkout_order_processed', [$this, 'created'], 50);
         add_action('woocommerce_checkout_order_processed', [$this, 'created'], 50);
         add_action('maruderm_keycrm_sync_new_ttn_statuses', [$this, 'retryPending'], 5);
@@ -70,6 +71,25 @@ final class Maruderm_KeyCRM_Order_Status_Sync
     {
         $order = $order instanceof WC_Order ? $order : wc_get_order((int) $order);
         if ($order) $this->changed($order->get_id(), '', $order->get_status(), $order);
+    }
+
+    public function paymentCompleted(int $id): void
+    {
+        $order = wc_get_order($id);
+        // Processing can be unpaid COD. A payment-complete event plus a recorded
+        // payment is required; do not regress fulfillment or terminal stages.
+        if (! $order instanceof WC_Order || ! $order->get_meta('_keycrm_order_id')
+            || ! $order->is_paid() || $order->get_date_paid() === null
+            || ! in_array(self::target($order->get_status()), [1, 2, 4], true)
+            || self::terminal($order->get_status())) return;
+
+        $mapping = Maruderm_KeyCRM_Status_Config::instance()->mappings()[20] ?? [];
+        $paid = (string) ($mapping['slug'] ?? '');
+        if (empty($mapping['include']) || $paid === '' || self::target($paid) !== 20) return;
+
+        // Reuse the identity checks, pending retries, and loop protection in
+        // changed(). This transition never creates or edits a payment entry.
+        $order->update_status($paid, 'Payment confirmed; advancing to Paid.', false);
     }
 
     public function changed(int $id, string $from, string $to, $order): void

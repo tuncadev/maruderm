@@ -50,6 +50,10 @@ $wpdb = new class {
 };
 class WC_Order {
     public array $meta = ['_keycrm_order_id' => 7]; public array $notes = [];
+    public bool $paid = false;
+    public $paidAt = null;
+    public function is_paid() { return $this->paid; }
+    public function get_date_paid() { return $this->paidAt; }
     public function __construct(public string $status) {}
     public function get_id() { return 1; }
     public function get_status() { return $this->status; }
@@ -115,3 +119,39 @@ $vendor=new WC_Keycrm_Base();$payment=new Maruderm_KeyCRM_Order_Payment_Sync();
 add_action('woocommerce_order_status_changed',[$vendor,'update_order_status'],11,4);add_action('woocommerce_order_status_changed',[$payment,'handle_status_change'],20,4);add_action('woocommerce_payment_complete',[$payment,'handle_payment_complete'],20);
 $sync->separatePayments();check(empty($wp_filter['woocommerce_order_status_changed']->callbacks[11])&&empty($wp_filter['woocommerce_order_status_changed']->callbacks[20]),'Stage callbacks cannot change payment');check(!empty($wp_filter['woocommerce_payment_complete']->callbacks[20]),'Real payment completion remains');
 echo "PASS: nine stages both directions, native aliases, unmapped statuses, loop/identity/terminal guards, retries, locks, payment isolation\n";
+
+foreach (['pending','processing','on-hold','keycrm-new','confirmed','wait-prepayment'] as $stage) {
+    resetCase($stage, 2);
+    $order->paid = true;
+    $order->paidAt = new DateTimeImmutable();
+    $sync->paymentCompleted(1);
+    check($order->get_status() === 'keycrm-20', 'Recorded payment advances early Woo stage: '.$stage);
+    check($remote['status']['id'] === 20, 'Recorded payment advances CRM to Paid: '.$stage);
+    check(count(array_filter($calls, fn($c) => $c[0] === 'PUT')) === 1, 'One status update, no payment write');
+    $sync->paymentCompleted(1);
+    check(count(array_filter($calls, fn($c) => $c[0] === 'PUT')) === 1, 'Duplicate completion is a no-op');
+}
+foreach (['processing','completed','ttn-created','keycrm-20'] as $stage) {
+    resetCase($stage);
+    $order->paid = true;
+    $sync->paymentCompleted(1);
+    check($order->get_status() === $stage && $calls === [], 'No date_paid: never promote COD '.$stage);
+}
+foreach (['ttn-created','ready-to-send','departing','completed','keycrm-12','cancelled','keycrm-19','refunded','failed','keycrm-20'] as $stage) {
+    resetCase($stage);
+    $order->paid = true; $order->paidAt = new DateTimeImmutable();
+    $sync->paymentCompleted(1);
+    check($order->get_status() === $stage && $calls === [], 'Preserve later/terminal stage '.$stage);
+}
+resetCase('processing', 2);
+$order->paid = true; $order->paidAt = new DateTimeImmutable(); $fail = true;
+$sync->paymentCompleted(1);
+check($order->get_meta(Maruderm_KeyCRM_Order_Status_Sync::PENDING) === 'keycrm-20', 'Failed CRM request retains Paid intent');
+$fail = false; $sync->retryPending();
+check($remote['status']['id'] === 20, 'Scheduler retries Paid transition');
+check($order->get_meta(Maruderm_KeyCRM_Order_Status_Sync::PENDING) === '', 'Paid retry clears pending intent');
+resetCase('processing', 2);
+$order->paid = true; $order->paidAt = new DateTimeImmutable(); unset($order->meta['_keycrm_order_id']);
+$sync->paymentCompleted(1);
+check($order->get_status() === 'processing' && $calls === [], 'Unlinked orders are untouched');
+echo "PASS: recorded payments advance early stages to Paid; unpaid COD, later stages and duplicate callbacks preserved; failure retry works\n";

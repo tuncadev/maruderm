@@ -70,3 +70,18 @@ Both directions require exact website source2 + source_uuid + stored CRM ID. Per
 Validation: `php scripts/test-bidirectional-status.php`. Cover all nine configured stages both directions, native aliases, API failures/retry, identity/terminal protection, pending-local priority, a concurrent newer change, lock ownership and payment callback isolation. Production end-to-end stage cycling must not use real paid/completed orders as test fixtures.
 
 Payment confirmation requires a recorded WooCommerce `date_paid` as well as paid-state eligibility. Never use `is_paid()` alone: native Processing includes unpaid COD orders. An earlier unpaid status callback must not suppress a later payment-complete event in the same request. Validate with `php scripts/test-cod-payment-sync.php`. Website `cod` maps to KeyCRM payment method6 (Наложенный платеж), not method1 (Cash). Correcting payment bookkeeping does not modify an existing TTN's collection amount; verify that separately in the carrier dashboard.
+
+## Recorded payment advances early stages to Paid
+
+On `woocommerce_payment_complete` (priority 30, after payment-record synchronization),
+linked orders with a recorded `date_paid` and paid-state eligibility advance from
+New, Confirmed, Waiting for Prepayment, or their native aliases to configured
+KeyCRM stage 20 / WooCommerce `keycrm-20`. The existing outbound adapter performs
+identity validation, status-only writes, and retry bookkeeping. No payment is
+created by this stage transition. Processing without recorded payment remains
+Confirmed, which preserves unpaid COD behavior.
+
+TTN Created, Ready to Send, Departing, Paid, and terminal stages remain unchanged
+on payment confirmation. Repeated payment callbacks do not repeat the transition.
+Validate with `php scripts/test-bidirectional-status.php` and
+`php scripts/test-cod-payment-sync.php`.
